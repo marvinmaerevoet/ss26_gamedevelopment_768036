@@ -2,55 +2,100 @@
 
 ## Ziel der Demo
 
-Diese Demo soll eine kleine, robuste Behavior-Tree-Grundlage fuer NPC-Polizisten bereitstellen. Der Fokus liegt auf gut lesbarem Demo-Code, der spaeter Patrol, Sichtkontakt, Verfolgung, Festnahme und Untersuchung einer letzten bekannten Position abbilden kann.
+Diese Demo zeigt eine kleine Behavior-Tree-KI fuer NPC-Polizisten in einer Western-Stadt. Der Spieler bewegt sich durch die Szene, Sheriffs patrouillieren, erkennen verdachtig wirkendes Verhalten, verfolgen den Spieler, nehmen ihn in Reichweite fest oder untersuchen seine letzte bekannte Position.
 
-Die Runtime ist bewusst unabhaengig von Game Creator und veraendert keine Szene automatisch.
+Alles liegt unter `Assets/_Demo/BehaviorTreePolice/` und ist optional. Die Demo veraendert keine Game-Creator-Dateien, Packages, Synty-Prefabs oder Szenen automatisch.
 
-## BTStatus
+## Warum eine eigene Lightweight-BT-Runtime?
 
-Jeder Node gibt genau einen Status zurueck:
+Game Creator 2 Core und Game Creator 2 Behavior Trees sind im Projekt vorhanden. Fuer diese Demo ist eine eigene sehr kleine Runtime robuster, weil sie ohne direkte Abhaengigkeit auf interne Game-Creator-APIs funktioniert, leicht lesbar bleibt und ohne Risiko fuer bestehende Game-Creator-Setups erweitert werden kann.
 
-- `Success`: Der Node ist erfolgreich abgeschlossen.
-- `Failure`: Der Node ist fehlgeschlagen.
-- `Running`: Der Node arbeitet weiter und soll im naechsten Tick erneut ausgefuehrt werden.
+Die Demo kann neben Game Creator existieren. Sie ersetzt Game Creator nicht, sondern dient als didaktische, isolierte KI-Demo.
 
-Alle Nodes speichern ihren letzten Status in `LastStatus`.
+## Geeignete Szene und Charaktere
 
-## Selector
+Nutze eine vorhandene Western-Demo-Szene aus den Synty-Assets, zum Beispiel aus `PolygonWestern` oder `PolygonWesternFrontier`. Geeignet sind einfache Humanoid-Charaktere wie Sheriff-, Cowboy- oder Townsfolk-Modelle. Ein Sheriff/NPC braucht fuer die Demo einen `NavMeshAgent`, einen gebackenen NavMesh und die Police-Demo-Komponenten.
 
-Ein Selector probiert seine Child-Nodes der Reihe nach. Er liefert `Success`, sobald ein Child erfolgreich ist. Er liefert `Running`, wenn das aktuelle Child noch laeuft. Erst wenn alle Children fehlschlagen, liefert er `Failure`.
+## Setup-Schritte
 
-Der laufende Child-Index wird gemerkt, damit laufende Aktionen nicht bei jedem Tick neu starten.
+1. Western-Demo-Szene oeffnen.
+2. Spieler-Charakter auswaehlen.
+3. `DemoPlayerState` oder per ContextMenu `Add Simple Player Controller To Selected` hinzufuegen.
+4. Sheriff/NPC auswaehlen.
+5. Per ContextMenu `Add Police Components To Selected` ausfuehren.
+6. Per ContextMenu `Create Patrol Points Around Selected Police` ausfuehren.
+7. Per ContextMenu `Create Restricted Area Trigger` erzeugen und bewusst platzieren.
+8. Per ContextMenu `Create Debug UI` erzeugen.
+9. NavMesh pruefen oder backen.
+10. Play druecken.
 
-## Sequence
+Optional kann `Create Full Demo Helpers For Selected Police` die Police-Komponenten, Patrol Points, Safe Point und Player-Verknuepfung in einem Schritt vorbereiten. Die Restricted Area wird absichtlich nicht automatisch erstellt, weil ihre Position fuer das Verhalten wichtig ist.
 
-Eine Sequence fuehrt ihre Child-Nodes der Reihe nach aus. Sie liefert `Failure`, sobald ein Child fehlschlaegt. Sie liefert `Running`, wenn das aktuelle Child noch laeuft. Erst wenn alle Children erfolgreich waren, liefert sie `Success`.
+## NavMesh-Hinweise
 
-Der laufende Child-Index wird gemerkt, damit laufende Aktionen nicht bei jedem Tick neu starten.
+- Der Sheriff braucht einen `NavMeshAgent`.
+- Der Boden muss Teil des NavMesh sein.
+- Das Package `AI Navigation` ist vorhanden.
+- Wenn kein `NavMeshSurface` existiert, muss eines in der Szene angelegt und gebacken werden.
+- Wenn der Agent beim Start nicht auf dem NavMesh steht, schlagen Bewegungs-Actions fehl.
 
-## Decorator
+## Erwarteter Demo-Ablauf
 
-Decorator-Nodes kapseln genau einen Child-Node und veraendern dessen Ergebnis oder Laufzeitverhalten.
+- Der Sheriff startet in `Patrol`.
+- Ein normal sichtbarer Spieler wird nicht verfolgt, solange er nicht verdachtig ist.
+- Rennen oder Betreten einer Restricted Area setzt `Suspicious`.
+- Bei Sichtkontakt und Verdacht wechselt der Tree in `Chase`.
+- In Arrest-Reichweite wird `A_ArrestPlayer` ausgefuehrt.
+- Bei Sichtverlust bewegt sich der Sheriff zur letzten bekannten Position und schaut sich um.
+- Danach wird die letzte bekannte Position geloescht und der Sheriff kehrt zur Patrouille zurueck.
 
-Enthalten sind:
+## Gezeigte Behavior-Tree-Features
 
-- `BTInverter`: dreht `Success` und `Failure` um; `Running` bleibt `Running`.
-- `BTRepeater`: wiederholt einen Child-Node, aber maximal einmal pro Tick.
-- `BTRetry`: versucht einen fehlgeschlagenen Child-Node erneut bis zur maximalen Versuchszahl.
-- `BTTimeout`: bricht einen laufenden Child-Node nach einer Zeitgrenze mit `Failure` ab.
-
-## Parallel
-
-`BTParallel` tickt alle Children in einem Frame.
-
-Wenn `requiredChildIndex` gesetzt ist, bestimmt dieser Child den Hauptstatus. Ohne `requiredChildIndex` gilt:
-
-- `Success`, wenn alle Children `Success` liefern.
-- `Failure`, wenn ein Child `Failure` liefert.
-- sonst `Running`.
+- Root
+- Selector
+- Sequence
+- Condition
+- Action
+- Running
+- Success/Failure
+- Inverter
+- Timeout
+- Retry
+- Repeater
+- Parallel
+- Blackboard
+- Subtrees
 
 ## Blackboard
 
-Ein Blackboard ist fuer den naechsten Ausbauschritt vorgesehen. Es soll gemeinsame Demo-Daten halten, zum Beispiel Spieler-Referenz, letzte bekannte Spielerposition, Verdachtswert, Sichtkontakt und aktuelle Patrol-Ziele.
+`PoliceBlackboard` speichert die gemeinsamen Demo-Daten, unter anderem Spieler-Referenz, letzte bekannte Spielerposition, Sichtkontakt, Verdachtsstatus, Arrest-Reichweite, Backup-Status, Patrol-Ziel, aktuellen Behavior-Namen, aktuellen Node-Namen und den letzten Tree-Status.
 
-In dieser Grundstruktur ist noch keine Polizeilogik implementiert.
+## Troubleshooting
+
+### Sheriff bewegt sich nicht
+
+Pruefe, ob ein `NavMeshAgent` vorhanden ist, der Sheriff auf dem NavMesh steht und ein NavMesh gebacken wurde. Pruefe ausserdem, ob Patrol Points im `PoliceAIContext` gesetzt sind.
+
+### Player wird nicht erkannt
+
+Pruefe `PoliceAIContext.PlayerState`, `PoliceBlackboard.Player`, `EyePoint`, `viewDistance`, `viewAngle` und `obstacleMask`. Eine zu breite Obstacle-Maske kann den Sicht-Ray blockieren.
+
+### Restricted Area funktioniert nicht
+
+Der Trigger braucht einen `BoxCollider` mit `isTrigger = true` und `RestrictedAreaTrigger`. Der Spieler braucht `DemoPlayerState` am Collider-Objekt oder in einem Parent.
+
+### UI bleibt leer
+
+Pruefe, ob `PoliceBTDebugUI.Target` gesetzt ist oder ein `PoliceBehaviorTreeRunner` in der Szene existiert. Die UI erzeugt Canvas/Text zur Laufzeit, wenn nichts zugewiesen ist.
+
+### Sheriff verfolgt immer oder nie
+
+Pruefe `suspiciousIfRunning`, `suspiciousIfInRestrictedArea`, `DemoPlayerState.IsRunning`, `DemoPlayerState.IsInRestrictedArea`, `viewDistance`, `viewAngle` und `arrestRange`.
+
+### Unity Input funktioniert nicht
+
+Die Demo nutzt die alte Unity-Input-API fuer den optionalen Fallback-Controller. Wenn das Projekt nur das neue Input System aktiviert hat, loggt der Controller eine Warnung. Aktiviere Legacy Input Support oder nutze einen bestehenden Player Controller.
+
+### NavMeshAgent not on NavMesh
+
+Setze den Sheriff auf eine gebackene NavMesh-Flaeche. Falls noetig, verschiebe den NPC leicht ueber den Boden und backe den NavMesh erneut.

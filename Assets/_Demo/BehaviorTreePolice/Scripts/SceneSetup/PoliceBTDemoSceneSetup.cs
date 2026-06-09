@@ -246,6 +246,50 @@ namespace Demo.BehaviorTreePolice.SceneSetup
             #endif
         }
 
+        [ContextMenu("Police BT Demo/Add Simple Player Controller To Selected")]
+        public void AddSimplePlayerControllerToSelected()
+        {
+            #if UNITY_EDITOR
+            GameObject selected = Selection.activeGameObject;
+            if (selected == null)
+            {
+                Debug.LogWarning("Select a player GameObject first.");
+                return;
+            }
+
+            CharacterController characterController = GetOrAddComponent<CharacterController>(selected);
+            DemoPlayerState playerState = GetOrAddComponent<DemoPlayerState>(selected);
+            DemoSimplePlayerController playerController = GetOrAddComponent<DemoSimplePlayerController>(selected);
+
+            Undo.RecordObject(playerController, "Configure Simple Player Controller");
+            playerController.playerState = playerState;
+            EditorUtility.SetDirty(playerController);
+            EditorUtility.SetDirty(characterController);
+            EditorUtility.SetDirty(playerState);
+            #else
+            Debug.LogWarning("Add Simple Player Controller To Selected is only available in the Unity Editor.");
+            #endif
+        }
+
+        [ContextMenu("Police BT Demo/Create Full Demo Helpers For Selected Police")]
+        public void CreateFullDemoHelpersForSelectedPolice()
+        {
+            #if UNITY_EDITOR
+            if (Selection.activeGameObject == null)
+            {
+                Debug.LogWarning("Select a police NPC GameObject first.");
+                return;
+            }
+
+            AddPoliceComponentsToSelected();
+            CreatePatrolPointsAroundSelectedPolice();
+            CreateSafePoint();
+            AutoWireSelectedPoliceToFirstPlayer();
+            #else
+            Debug.LogWarning("Create Full Demo Helpers For Selected Police is only available in the Unity Editor.");
+            #endif
+        }
+
         #if UNITY_EDITOR
         private static T GetOrAddComponent<T>(GameObject target) where T : Component
         {
