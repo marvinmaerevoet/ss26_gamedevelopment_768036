@@ -9,6 +9,7 @@ namespace Demo.BehaviorTreePolice.Player
         public float runSpeed = 6f;
         public float gravity = -20f;
         public bool disableWhenArrested = true;
+        public bool rotateCharacterToMoveDirection = true;
         public DemoPlayerState playerState;
 
         private CharacterController characterController;
@@ -42,6 +43,11 @@ namespace Demo.BehaviorTreePolice.Player
             bool hasMovement = moveDirection.sqrMagnitude > 0.001f;
             bool isRunning = hasMovement && wantsToRun;
             float speed = isRunning ? runSpeed : walkSpeed;
+
+            if (hasMovement && rotateCharacterToMoveDirection)
+            {
+                transform.rotation = Quaternion.LookRotation(moveDirection, Vector3.up);
+            }
 
             Move(moveDirection * speed);
             SetRunning(isRunning);

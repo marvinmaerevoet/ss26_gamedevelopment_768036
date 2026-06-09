@@ -31,6 +31,17 @@ Nutze eine vorhandene Western-Demo-Szene aus den Synty-Assets, zum Beispiel aus 
 
 Optional kann `Create Full Demo Helpers For Selected Police` die Police-Komponenten, Patrol Points, Safe Point und Player-Verknuepfung in einem Schritt vorbereiten. Die Restricted Area wird absichtlich nicht automatisch erstellt, weil ihre Position fuer das Verhalten wichtig ist.
 
+## Third-Person-Kamera
+
+Fuer eine spielbare Demo kann die Main Camera den optionalen `DemoThirdPersonCamera` bekommen. Der schnellste Weg:
+
+1. Spieler mit `DemoPlayerState` vorbereiten.
+2. GameObject mit `PoliceBTDemoSceneSetup` auswaehlen.
+3. Per ContextMenu `Add Third Person Camera To Main Camera` ausfuehren.
+4. Play druecken.
+
+Die Kamera sucht automatisch den ersten `DemoPlayerState`, folgt dem Player und schaut auf ihn. Standardmaessig rotiert die Maus dauerhaft um den Player. Wenn `rotateOnlyWhileRightMouseHeld` aktiv ist, rotiert die Kamera nur bei gedrueckter rechter Maustaste. Das Mausrad zoomt zwischen `minDistance` und `maxDistance`.
+
 ## NavMesh-Hinweise
 
 - Der Sheriff braucht einen `NavMeshAgent`.
@@ -87,6 +98,14 @@ Der Trigger braucht einen `BoxCollider` mit `isTrigger = true` und `RestrictedAr
 ### UI bleibt leer
 
 Pruefe, ob `PoliceBTDebugUI.Target` gesetzt ist oder ein `PoliceBehaviorTreeRunner` in der Szene existiert. Die UI erzeugt Canvas/Text zur Laufzeit, wenn nichts zugewiesen ist.
+
+### Kamera bewegt sich nicht
+
+Pruefe, ob `DemoThirdPersonCamera.target` gesetzt ist oder ein `DemoPlayerState` in der Szene existiert. Pruefe ausserdem, ob die Kamera den Tag `MainCamera` hat, damit der Player Controller kamera-relative Bewegung verwenden kann.
+
+### Cursor locked
+
+`DemoThirdPersonCamera.lockCursorOnPlay` sperrt den Cursor im Play Mode. Deaktiviere das Feld im Inspector, wenn du den Cursor frei behalten willst.
 
 ### Sheriff verfolgt immer oder nie
 

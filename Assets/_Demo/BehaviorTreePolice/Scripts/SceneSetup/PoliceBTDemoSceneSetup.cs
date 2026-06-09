@@ -315,6 +315,43 @@ namespace Demo.BehaviorTreePolice.SceneSetup
             #endif
         }
 
+        [ContextMenu("Police BT Demo/Add Third Person Camera To Main Camera")]
+        public void AddThirdPersonCameraToMainCamera()
+        {
+            #if UNITY_EDITOR
+            Camera camera = Camera.main;
+            if (camera == null)
+            {
+                camera = FindAnyObjectByType<Camera>();
+            }
+
+            if (camera == null)
+            {
+                GameObject cameraObject = CreateUndoGameObject("Main Camera");
+                camera = Undo.AddComponent<Camera>(cameraObject);
+            }
+
+            if (!camera.CompareTag("MainCamera"))
+            {
+                Undo.RecordObject(camera.gameObject, "Set Main Camera Tag");
+                camera.gameObject.tag = "MainCamera";
+                EditorUtility.SetDirty(camera.gameObject);
+            }
+
+            DemoThirdPersonCamera thirdPersonCamera = GetOrAddComponent<DemoThirdPersonCamera>(camera.gameObject);
+            DemoPlayerState playerState = FindAnyObjectByType<DemoPlayerState>();
+
+            if (playerState != null)
+            {
+                Undo.RecordObject(thirdPersonCamera, "Assign Third Person Camera Target");
+                thirdPersonCamera.target = playerState.transform;
+                EditorUtility.SetDirty(thirdPersonCamera);
+            }
+            #else
+            Debug.LogWarning("Add Third Person Camera To Main Camera is only available in the Unity Editor.");
+            #endif
+        }
+
         [ContextMenu("Police BT Demo/Create Full Demo Helpers For Selected Police")]
         public void CreateFullDemoHelpersForSelectedPolice()
         {
