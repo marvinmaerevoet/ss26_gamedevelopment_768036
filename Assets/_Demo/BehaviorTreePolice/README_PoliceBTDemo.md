@@ -42,6 +42,19 @@ Fuer eine spielbare Demo kann die Main Camera den optionalen `DemoThirdPersonCam
 
 Die Kamera sucht automatisch den ersten `DemoPlayerState`, folgt dem Player und schaut auf ihn. Standardmaessig rotiert die Maus dauerhaft um den Player. Wenn `rotateOnlyWhileRightMouseHeld` aktiv ist, rotiert die Kamera nur bei gedrueckter rechter Maustaste. Das Mausrad zoomt zwischen `minDistance` und `maxDistance`.
 
+## Safe Synty Animation Setup
+
+Fuer einfache Synty-Animationen gibt es einen sicheren Demo-Workflow, der nur Assets unter `Assets/_Demo/BehaviorTreePolice/` erzeugt:
+
+1. In der Unity-Menueleiste `Tools/Police BT Demo/Create Safe Synty Animator Controllers` ausfuehren.
+2. Ein GameObject mit `PoliceBTDemoSceneSetup` auswaehlen und im Component-ContextMenu `Police BT Demo/Setup Safe Synty Animations` ausfuehren.
+
+Der erste Schritt sucht Idle-, Walk- und Run-Clips aus `Assets/Synty/AnimationBaseLocomotion` und erstellt `Player_Demo_Safe.controller` sowie `Sheriff_Demo_Safe.controller` im Demo-Ordner. Wenn passende Spezialclips gefunden werden, werden zusaetzlich einfache States fuer Investigate, Emergency und Arrest angelegt.
+
+Der zweite Schritt sucht den ersten `DemoPlayerState` und den ersten `PoliceAIContext` in der Szene, verdrahtet `DemoBasicAnimationDriver`, weist die Demo-Controller zu und setzt `Animator.applyRootMotion = false`. Szene-Instanzen werden nur geaendert, wenn du diesen ContextMenu-Punkt manuell ausfuehrst.
+
+`DemoBasicAnimationDriver` nutzt einfache Animator-Parameter und keine Positionsdelta-Speed-Berechnung. Beim Sheriff kommt `Speed` aus `NavMeshAgent.velocity.magnitude`; beim Player werden feste visuelle Werte fuer Gehen und Rennen genutzt.
+
 ## NavMesh-Hinweise
 
 - Der Sheriff braucht einen `NavMeshAgent`.
@@ -118,3 +131,19 @@ Die Demo nutzt `UnityEngine.InputSystem.Keyboard.current` fuer den optionalen Fa
 ### NavMeshAgent not on NavMesh
 
 Setze den Sheriff auf eine gebackene NavMesh-Flaeche. Falls noetig, verschiebe den NPC leicht ueber den Boden und backe den NavMesh erneut.
+
+### Animation bleibt Idle
+
+Fuehre zuerst `Tools/Police BT Demo/Create Safe Synty Animator Controllers` aus und danach `Police BT Demo/Setup Safe Synty Animations`. Pruefe, ob `DemoBasicAnimationDriver` am Player und Sheriff vorhanden ist und ob im Animator der passende Demo-Controller zugewiesen wurde.
+
+### Animator Controller fehlt
+
+Die Demo-Controller liegen nach dem Erzeugen unter `Assets/_Demo/BehaviorTreePolice/Animations/`. Wenn sie fehlen, konnte der Editor-Builder keine passenden Idle/Walk/Run-Clips finden oder wurde noch nicht ausgefuehrt.
+
+### Speed bleibt 0
+
+Beim Player muss `DemoPlayerState.CurrentSpeed` ueber `movingThreshold` liegen. Beim Sheriff muss der `NavMeshAgent` tatsaechlich laufen und im `DemoBasicAnimationDriver.agent` Feld referenziert sein.
+
+### Falsche Clips gefunden
+
+Der Editor-Builder bevorzugt masculine Polygon-Clips aus `Assets/Synty/AnimationBaseLocomotion`. Die verwendeten Clip-Pfade werden nach dem Erzeugen in der Console geloggt.

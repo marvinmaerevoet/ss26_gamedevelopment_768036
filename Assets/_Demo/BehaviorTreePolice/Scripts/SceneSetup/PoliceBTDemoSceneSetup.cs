@@ -1,5 +1,6 @@
 using Demo.BehaviorTreePolice.Player;
 using Demo.BehaviorTreePolice.Police;
+using Demo.BehaviorTreePolice.Polish;
 using Demo.BehaviorTreePolice.UI;
 using UnityEngine;
 using UnityEngine.AI;
@@ -13,6 +14,8 @@ namespace Demo.BehaviorTreePolice.SceneSetup
     public sealed class PoliceBTDemoSceneSetup : MonoBehaviour
     {
         private const string EyePointName = "EyePoint";
+        private const string PlayerSafeAnimatorControllerPath = "Assets/_Demo/BehaviorTreePolice/Animations/Player_Demo_Safe.controller";
+        private const string SheriffSafeAnimatorControllerPath = "Assets/_Demo/BehaviorTreePolice/Animations/Sheriff_Demo_Safe.controller";
 
         [ContextMenu("Police BT Demo/Add Player Demo State To Selected")]
         public void AddPlayerDemoStateToSelected()
@@ -352,6 +355,122 @@ namespace Demo.BehaviorTreePolice.SceneSetup
             #endif
         }
 
+        [ContextMenu("Police BT Demo/Add Basic Animation Driver To Selected")]
+        public void AddBasicAnimationDriverToSelected()
+        {
+            #if UNITY_EDITOR
+            GameObject selected = Selection.activeGameObject;
+            if (selected == null)
+            {
+                Debug.LogWarning("Select a player or sheriff GameObject first.");
+                return;
+            }
+
+            DemoBasicAnimationDriver driver = GetOrAddComponent<DemoBasicAnimationDriver>(selected);
+            Animator animator = selected.GetComponentInChildren<Animator>();
+            NavMeshAgent agent = selected.GetComponent<NavMeshAgent>();
+            DemoPlayerState playerState = selected.GetComponent<DemoPlayerState>();
+            PoliceBlackboard blackboard = selected.GetComponent<PoliceBlackboard>();
+
+            if (agent == null)
+            {
+                agent = selected.GetComponentInParent<NavMeshAgent>();
+            }
+
+            if (playerState == null)
+            {
+                playerState = selected.GetComponentInParent<DemoPlayerState>();
+            }
+
+            if (blackboard == null)
+            {
+                blackboard = selected.GetComponentInParent<PoliceBlackboard>();
+            }
+
+            Undo.RecordObject(driver, "Configure Basic Animation Driver");
+            driver.animator = animator;
+            driver.agent = agent;
+            driver.playerState = playerState;
+            driver.blackboard = blackboard;
+            EditorUtility.SetDirty(driver);
+
+            if (animator != null)
+            {
+                Undo.RecordObject(animator, "Disable Animator Root Motion");
+                animator.applyRootMotion = false;
+                EditorUtility.SetDirty(animator);
+            }
+            #else
+            Debug.LogWarning("Add Basic Animation Driver To Selected is only available in the Unity Editor.");
+            #endif
+        }
+
+        [ContextMenu("Police BT Demo/Setup Safe Synty Animations")]
+        public void SetupSafeSyntyAnimations()
+        {
+            #if UNITY_EDITOR
+            DemoPlayerState playerState = FindAnyObjectByType<DemoPlayerState>();
+            PoliceAIContext sheriffContext = FindAnyObjectByType<PoliceAIContext>();
+
+            RuntimeAnimatorController playerController =
+                AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(PlayerSafeAnimatorControllerPath);
+            RuntimeAnimatorController sheriffController =
+                AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(SheriffSafeAnimatorControllerPath);
+
+            if (playerController == null || sheriffController == null)
+            {
+                Debug.LogWarning("Bitte zuerst Tools/Police BT Demo/Create Safe Synty Animator Controllers ausfuehren.");
+            }
+
+            if (playerState == null)
+            {
+                Debug.LogWarning("No DemoPlayerState found in the scene. Player animation setup skipped.");
+            }
+            else
+            {
+                Animator playerAnimator = FindOrAddAnimator(playerState.gameObject);
+                ConfigureAnimator(playerAnimator, playerController);
+
+                DemoBasicAnimationDriver playerDriver = GetOrAddComponent<DemoBasicAnimationDriver>(playerState.gameObject);
+                Undo.RecordObject(playerDriver, "Configure Player Basic Animation Driver");
+                playerDriver.animator = playerAnimator;
+                playerDriver.agent = null;
+                playerDriver.playerState = playerState;
+                playerDriver.blackboard = null;
+                playerDriver.forceRootMotionOff = true;
+                EditorUtility.SetDirty(playerDriver);
+            }
+
+            if (sheriffContext == null)
+            {
+                Debug.LogWarning("No PoliceAIContext found in the scene. Sheriff animation setup skipped.");
+            }
+            else
+            {
+                Animator sheriffAnimator = FindOrAddAnimator(sheriffContext.gameObject);
+                ConfigureAnimator(sheriffAnimator, sheriffController);
+
+                NavMeshAgent sheriffAgent = sheriffContext.NavMeshAgent != null
+                    ? sheriffContext.NavMeshAgent
+                    : sheriffContext.GetComponent<NavMeshAgent>();
+                PoliceBlackboard sheriffBlackboard = sheriffContext.PoliceBlackboard != null
+                    ? sheriffContext.PoliceBlackboard
+                    : sheriffContext.GetComponent<PoliceBlackboard>();
+
+                DemoBasicAnimationDriver sheriffDriver = GetOrAddComponent<DemoBasicAnimationDriver>(sheriffContext.gameObject);
+                Undo.RecordObject(sheriffDriver, "Configure Sheriff Basic Animation Driver");
+                sheriffDriver.animator = sheriffAnimator;
+                sheriffDriver.agent = sheriffAgent;
+                sheriffDriver.playerState = null;
+                sheriffDriver.blackboard = sheriffBlackboard;
+                sheriffDriver.forceRootMotionOff = true;
+                EditorUtility.SetDirty(sheriffDriver);
+            }
+            #else
+            Debug.LogWarning("Setup Safe Synty Animations is only available in the Unity Editor.");
+            #endif
+        }
+
         [ContextMenu("Police BT Demo/Create Full Demo Helpers For Selected Police")]
         public void CreateFullDemoHelpersForSelectedPolice()
         {
@@ -399,6 +518,29 @@ namespace Demo.BehaviorTreePolice.SceneSetup
             GameObject instance = new GameObject(objectName);
             Undo.RegisterCreatedObjectUndo(instance, $"Create {objectName}");
             return instance;
+        }
+
+        private static Animator FindOrAddAnimator(GameObject target)
+        {
+            Animator animator = target.GetComponentInChildren<Animator>();
+            return animator != null ? animator : Undo.AddComponent<Animator>(target);
+        }
+
+        private static void ConfigureAnimator(Animator animator, RuntimeAnimatorController controller)
+        {
+            if (animator == null)
+            {
+                return;
+            }
+
+            Undo.RecordObject(animator, "Configure Demo Animator");
+            if (controller != null)
+            {
+                animator.runtimeAnimatorController = controller;
+            }
+
+            animator.applyRootMotion = false;
+            EditorUtility.SetDirty(animator);
         }
         #endif
     }
