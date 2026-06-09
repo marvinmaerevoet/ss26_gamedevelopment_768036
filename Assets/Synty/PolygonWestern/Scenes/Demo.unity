@@ -16115,6 +16115,7 @@ MonoBehaviour:
   runSpeed: 6
   gravity: -20
   disableWhenArrested: 1
+  rotateCharacterToMoveDirection: 1
   playerState: {fileID: 439849588}
 --- !u!114 &439849588
 MonoBehaviour:
@@ -16135,11 +16136,49 @@ MonoBehaviour:
   runSimulationKey: 304
   simulateRunningFromKey: 1
   runningSpeedThreshold: 3.5
+--- !u!95 &439849589 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 95217205003396926, guid: e169e4d9dbd157b498e582065a5f9302, type: 3}
+  m_PrefabInstance: {fileID: 1638956116}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &439849590 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4670764120559952, guid: e169e4d9dbd157b498e582065a5f9302, type: 3}
   m_PrefabInstance: {fileID: 1638956116}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &439849591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439849585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7533e249b0ef8a44abde25762db5d2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Demo.BehaviorTreePolice.Polish.DemoBasicAnimationDriver
+  animator: {fileID: 439849589}
+  agent: {fileID: 0}
+  playerState: {fileID: 439849588}
+  blackboard: {fileID: 0}
+  walkingVisualSpeed: 1.5
+  runningVisualSpeed: 4
+  movingThreshold: 0.1
+  playerIdleDeadzone: 0.25
+  agentIdleDeadzone: 0.05
+  speedDampTime: 0.08
+  forceRootMotionOff: 1
+  logMissingParametersOnce: 0
+  snapSpeedToZeroWhenIdle: 1
+  useInputForPlayerMovement: 1
+  debugSourceSpeed: 0
+  debugAnimatorSpeed: 0
+  debugIsMoving: 0
+  debugIsRunning: 0
+  debugInputMoving: 0
+  debugInputRunning: 0
+  debugUsedInputForPlayer: 0
 --- !u!1001 &442715797
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22819,6 +22858,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 95474626191974340, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 80eee54396e62d946a13922b7af6ebfc, type: 2}
+    - target: {fileID: 95474626191974340, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -22841,6 +22888,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1040643676778012, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
       insertIndex: -1
       addedObject: {fileID: 920719313}
+    - targetCorrespondingSourceObject: {fileID: 1040643676778012, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 920719317}
+    - targetCorrespondingSourceObject: {fileID: 1040643676778012, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 920719318}
   m_SourcePrefab: {fileID: 100100000, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
 --- !u!1001 &658464809
 PrefabInstance:
@@ -32497,6 +32550,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1040643676778012, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
   m_PrefabInstance: {fileID: 647430893}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &920719310 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 95474626191974340, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
+  m_PrefabInstance: {fileID: 647430893}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &920719311 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4457282994381246, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
@@ -32561,7 +32619,7 @@ MonoBehaviour:
     m_Bits: 0
   suspiciousIfRunning: 1
   suspiciousIfInRestrictedArea: 1
-  lowHealthDemoToggle: 1
+  lowHealthDemoToggle: 0
   safePoint: {fileID: 1452696486}
   lookAroundDuration: 2
 --- !u!114 &920719315
@@ -32611,6 +32669,72 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &920719317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920719309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a569fb6d384b134db85e590a2019513, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Demo.BehaviorTreePolice.Animation.PoliceBTAnimatorBridge
+  Animator: {fileID: 920719310}
+  NavMeshAgent: {fileID: 920719316}
+  PoliceAIContext: {fileID: 920719314}
+  PoliceBlackboard: {fileID: 920719315}
+  forceDisableRootMotion: 1
+  logMissingParametersOnce: 1
+  maxReasonableSpeed: 12
+  speedSmoothing: 12
+  useSmoothedSpeed: 1
+  debugValues: 0
+  lastAppliedSpeed: 0
+  rawSpeed: 0
+  fallbackSpeed: 0
+  lastBehaviorName: 
+  lastAppliedIsChasing: 0
+  lastAppliedIsInvestigating: 0
+  lastAppliedIsArresting: 0
+  lastAppliedIsEmergency: 0
+  warnedMissingAnimator: 0
+  previousPosition: {x: 0, y: 0, z: 0}
+  hasPreviousPosition: 0
+--- !u!114 &920719318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920719309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7533e249b0ef8a44abde25762db5d2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Demo.BehaviorTreePolice.Polish.DemoBasicAnimationDriver
+  animator: {fileID: 920719310}
+  agent: {fileID: 920719316}
+  playerState: {fileID: 0}
+  blackboard: {fileID: 920719315}
+  walkingVisualSpeed: 1.5
+  runningVisualSpeed: 4
+  movingThreshold: 0.1
+  playerIdleDeadzone: 0.25
+  agentIdleDeadzone: 0.05
+  speedDampTime: 0.08
+  forceRootMotionOff: 1
+  logMissingParametersOnce: 0
+  snapSpeedToZeroWhenIdle: 1
+  useInputForPlayerMovement: 1
+  debugSourceSpeed: 0
+  debugAnimatorSpeed: 0
+  debugIsMoving: 0
+  debugIsRunning: 0
+  debugInputMoving: 0
+  debugInputRunning: 0
+  debugUsedInputForPlayer: 0
 --- !u!1001 &921214709
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -46308,6 +46432,7 @@ GameObject:
   - component: {fileID: 1276274267}
   - component: {fileID: 1276274266}
   - component: {fileID: 1276274271}
+  - component: {fileID: 1276274272}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -46409,6 +46534,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1276274272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276274265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae6bc362155c17a4bb08b0c7fe9d769a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Demo.BehaviorTreePolice.Player.DemoThirdPersonCamera
+  target: {fileID: 439849590}
+  targetOffset: {x: 0, y: 1.4, z: 0}
+  distance: 5
+  minDistance: 2
+  maxDistance: 10
+  height: 2
+  mouseSensitivity: 120
+  zoomSensitivity: 2
+  minPitch: -20
+  maxPitch: 65
+  rotateOnlyWhileRightMouseHeld: 0
+  lockCursorOnPlay: 1
+  followInLateUpdate: 1
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 0
+  collisionRadius: 0.2
 --- !u!1001 &1277450185
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -55506,6 +55660,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4891207191253534, guid: 7de9d83e7cf93764d841d97ec6bcad60, type: 3}
   m_PrefabInstance: {fileID: 1526477011}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1527001079
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1527001081}
+  - component: {fileID: 1527001080}
+  m_Layer: 0
+  m_Name: Police BT Tree Debug UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1527001080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527001079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e40d9c776416b14394f97d7890b62be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Demo.BehaviorTreePolice.UI.PoliceBTTreeDebugUI
+  target: {fileID: 920719312}
+  canvas: {fileID: 0}
+  text: {fileID: 0}
+  fontSize: 20
+  titleFontSize: 26
+  showBlackboardSummary: 1
+  showTree: 1
+  showLegend: 1
+  refreshInterval: 0.1
+  maxDepth: 8
+  onlyShowImportantBranches: 0
+  useRichText: 1
+  useAsciiSymbols: 0
+--- !u!4 &1527001081
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527001079}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1527628555
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -60342,6 +60553,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 95217205003396926, guid: e169e4d9dbd157b498e582065a5f9302, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 1b7c1dc6ac59c7a4cbdae0d3d764210b, type: 2}
+    - target: {fileID: 95217205003396926, guid: e169e4d9dbd157b498e582065a5f9302, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -60355,6 +60574,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1800371080893130, guid: e169e4d9dbd157b498e582065a5f9302, type: 3}
       insertIndex: -1
       addedObject: {fileID: 439849586}
+    - targetCorrespondingSourceObject: {fileID: 1800371080893130, guid: e169e4d9dbd157b498e582065a5f9302, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 439849591}
   m_SourcePrefab: {fileID: 100100000, guid: e169e4d9dbd157b498e582065a5f9302, type: 3}
 --- !u!1001 &1640016048
 PrefabInstance:
@@ -68283,6 +68505,61 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4964086646461976, guid: 5278b16ea019ebd46828c7ff64b50651, type: 3}
   m_PrefabInstance: {fileID: 1793986076}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1794410441
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1794410443}
+  - component: {fileID: 1794410442}
+  m_Layer: 0
+  m_Name: Police BT Demo Reset
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1794410442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1794410441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a41ca4ff24c2ee04a8a1707843d1e3d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Demo.BehaviorTreePolice.SceneSetup.PoliceBTDemoReset
+  playerState: {fileID: 439849588}
+  playerTransform: {fileID: 439849590}
+  policeRunner: {fileID: 920719312}
+  policeContext: {fileID: 920719314}
+  policeTransform: {fileID: 920719311}
+  resetPlayerPosition: 1
+  resetPolicePosition: 1
+  resetArrestedState: 1
+  resetBlackboard: 1
+  resetAgent: 1
+  resetTree: 1
+--- !u!4 &1794410443
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1794410441}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1795648741
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -80270,3 +80547,5 @@ SceneRoots:
   - {fileID: 1134667781}
   - {fileID: 786903824}
   - {fileID: 1452696486}
+  - {fileID: 1794410443}
+  - {fileID: 1527001081}

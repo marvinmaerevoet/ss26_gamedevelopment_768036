@@ -3,11 +3,10 @@ using Demo.BehaviorTreePolice.Player;
 using Demo.BehaviorTreePolice.Police;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
-namespace Demo.BehaviorTreePolice.Polish
-{
-    public sealed class DemoBasicAnimationDriver : MonoBehaviour
-    {
+namespace Demo.BehaviorTreePolice.Polish {
+    public sealed class DemoBasicAnimationDriver : MonoBehaviour {
         public Animator animator;
         public NavMeshAgent agent;
         public DemoPlayerState playerState;
@@ -16,144 +15,223 @@ namespace Demo.BehaviorTreePolice.Polish
         public float walkingVisualSpeed = 1.5f;
         public float runningVisualSpeed = 4f;
         public float movingThreshold = 0.1f;
+        public float playerIdleDeadzone = 0.25f;
+        public float agentIdleDeadzone = 0.05f;
+        public float speedDampTime = 0.08f;
         public bool forceRootMotionOff = true;
         public bool logMissingParametersOnce;
+        public bool snapSpeedToZeroWhenIdle = true;
+
+        [Header("Player Input")]
+        public bool useInputForPlayerMovement = true;
+
+        [Header("Debug")]
+        public float debugSourceSpeed;
+        public float debugAnimatorSpeed;
+        public bool debugIsMoving;
+        public bool debugIsRunning;
+        public bool debugInputMoving;
+        public bool debugInputRunning;
+        public bool debugUsedInputForPlayer;
 
         private readonly HashSet<string> warnedMissingParameters = new HashSet<string>();
 
-        private void Awake()
-        {
+        private void Awake() {
             ResolveReferences();
             ApplyAnimatorOptions();
         }
 
-        private void Update()
-        {
+        private void Update() {
             ResolveReferences();
             ApplyAnimatorOptions();
 
-            if (animator == null)
-            {
+            if(animator == null) {
                 return;
             }
 
-            float speed = CalculateSpeed();
             bool chasing = HasBehavior("Chase");
             bool investigating = HasBehavior("Investigate");
             bool arrested = (playerState != null && playerState.IsArrested) || HasBehavior("Arrest");
             bool emergency = HasBehavior("Emergency") || (blackboard != null && blackboard.OfficerHealthLow);
-            bool running = (playerState != null && playerState.IsRunning) || chasing;
 
-            SetFloat("Speed", speed);
-            SetBool("IsMoving", speed > movingThreshold);
-            SetBool("IsRunning", running);
+            AnimationValues values = CalculateAnimationValues(chasing);
+
+            debugSourceSpeed = values.SourceSpeed;
+            debugAnimatorSpeed = values.Speed;
+            debugIsMoving = values.IsMoving;
+            debugIsRunning = values.IsRunning;
+
+            SetSpeed(values.Speed);
+            SetBool("IsMoving", values.IsMoving);
+            SetBool("IsRunning", values.IsRunning);
             SetBool("IsChasing", chasing);
             SetBool("IsInvestigating", investigating);
             SetBool("IsArrested", arrested);
             SetBool("IsEmergency", emergency);
         }
 
-        private void ResolveReferences()
-        {
-            if (animator == null)
-            {
+        private void ResolveReferences() {
+            if(animator == null) {
                 animator = GetComponentInChildren<Animator>();
             }
 
-            if (agent == null)
-            {
+            if(agent == null) {
                 agent = GetComponent<NavMeshAgent>();
             }
 
-            if (agent == null)
-            {
+            if(agent == null) {
                 agent = GetComponentInParent<NavMeshAgent>();
             }
 
-            if (playerState == null)
-            {
+            if(playerState == null) {
                 playerState = GetComponent<DemoPlayerState>();
             }
 
-            if (playerState == null)
-            {
+            if(playerState == null) {
                 playerState = GetComponentInParent<DemoPlayerState>();
             }
 
-            if (blackboard == null)
-            {
+            if(blackboard == null) {
                 blackboard = GetComponent<PoliceBlackboard>();
             }
 
-            if (blackboard == null)
-            {
+            if(blackboard == null) {
                 blackboard = GetComponentInParent<PoliceBlackboard>();
             }
         }
 
-        private void ApplyAnimatorOptions()
-        {
-            if (animator != null && forceRootMotionOff)
-            {
+        private void ApplyAnimatorOptions() {
+            if(animator != null && forceRootMotionOff) {
                 animator.applyRootMotion = false;
             }
         }
 
-        private float CalculateSpeed()
-        {
+        private AnimationValues CalculateAnimationValues(bool chasing) {
+            float sourceSpeed = 0f;
             float speed = 0f;
+            bool isMoving = false;
+            bool isRunning = false;
 
-            if (agent != null)
-            {
-                speed = agent.velocity.magnitude;
+            debugInputMoving = false;
+            debugInputRunning = false;
+            debugUsedInputForPlayer = false;
+
+            // Sheriff / NPC: use NavMeshAgent velocity.
+            if(agent != null) {
+                sourceSpeed = SanitizeSpeed(agent.velocity.magnitude);
+
+                if(sourceSpeed > agentIdleDeadzone) {
+                    speed = Mathf.Clamp(sourceSpeed, 0f, 6f);
+                    isMoving = true;
+                    isRunning = chasing;
+                }
             }
-            else if (playerState != null && playerState.CurrentSpeed > movingThreshold)
-            {
-                speed = playerState.IsRunning ? runningVisualSpeed : walkingVisualSpeed;
+            // Player: prefer direct input, because CurrentSpeed can contain tiny residual values.
+            else if(playerState != null) {
+                if(useInputForPlayerMovement && TryReadPlayerInput(out bool inputMoving, out bool inputRunning)) {
+                    debugInputMoving = inputMoving;
+                    debugInputRunning = inputRunning;
+                    debugUsedInputForPlayer = true;
+
+                    isMoving = inputMoving;
+                    isRunning = inputMoving && inputRunning;
+
+                    if(isMoving) {
+                        speed = isRunning ? runningVisualSpeed : walkingVisualSpeed;
+                        sourceSpeed = speed;
+                    } else {
+                        speed = 0f;
+                        sourceSpeed = 0f;
+                    }
+                } else {
+                    sourceSpeed = SanitizeSpeed(playerState.CurrentSpeed);
+                    isMoving = sourceSpeed > playerIdleDeadzone;
+
+                    if(isMoving) {
+                        isRunning = playerState.IsRunning;
+                        speed = isRunning ? runningVisualSpeed : walkingVisualSpeed;
+                    } else {
+                        speed = 0f;
+                        isRunning = false;
+                    }
+                }
             }
 
-            if (float.IsNaN(speed) || float.IsInfinity(speed) || speed < 0f)
-            {
-                speed = 0f;
-            }
+            speed = SanitizeSpeed(speed);
+            speed = isMoving ? Mathf.Clamp(speed, 0f, 6f) : 0f;
 
-            return Mathf.Clamp(speed, 0f, 6f);
+            return new AnimationValues(sourceSpeed, speed, isMoving, isRunning);
         }
 
-        private bool HasBehavior(string token)
-        {
+        private static bool TryReadPlayerInput(out bool moving, out bool running) {
+            moving = false;
+            running = false;
+
+            Keyboard keyboard = Keyboard.current;
+            if(keyboard == null) {
+                return false;
+            }
+
+            moving =
+                keyboard.wKey.isPressed ||
+                keyboard.aKey.isPressed ||
+                keyboard.sKey.isPressed ||
+                keyboard.dKey.isPressed ||
+                keyboard.upArrowKey.isPressed ||
+                keyboard.downArrowKey.isPressed ||
+                keyboard.leftArrowKey.isPressed ||
+                keyboard.rightArrowKey.isPressed;
+
+            running =
+                keyboard.leftShiftKey.isPressed ||
+                keyboard.rightShiftKey.isPressed;
+
+            return true;
+        }
+
+        private static float SanitizeSpeed(float speed) {
+            return float.IsNaN(speed) || float.IsInfinity(speed) || speed < 0f ? 0f : speed;
+        }
+
+        private bool HasBehavior(string token) {
             return blackboard != null &&
                    !string.IsNullOrEmpty(blackboard.CurrentBehaviorName) &&
                    blackboard.CurrentBehaviorName.IndexOf(token, System.StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
-        private void SetFloat(string parameterName, float value)
-        {
-            if (HasParameter(parameterName, AnimatorControllerParameterType.Float))
-            {
-                animator.SetFloat(parameterName, value);
+        private void SetSpeed(float value) {
+            if(!HasParameter("Speed", AnimatorControllerParameterType.Float)) {
+                return;
             }
+
+            if(snapSpeedToZeroWhenIdle && value <= 0f) {
+                animator.SetFloat("Speed", 0f);
+                debugAnimatorSpeed = 0f;
+                return;
+            }
+
+            if(speedDampTime > 0f) {
+                animator.SetFloat("Speed", value, speedDampTime, Time.deltaTime);
+            } else {
+                animator.SetFloat("Speed", value);
+            }
+
+            debugAnimatorSpeed = animator.GetFloat("Speed");
         }
 
-        private void SetBool(string parameterName, bool value)
-        {
-            if (HasParameter(parameterName, AnimatorControllerParameterType.Bool))
-            {
+        private void SetBool(string parameterName, bool value) {
+            if(HasParameter(parameterName, AnimatorControllerParameterType.Bool)) {
                 animator.SetBool(parameterName, value);
             }
         }
 
-        private bool HasParameter(string parameterName, AnimatorControllerParameterType expectedType)
-        {
-            if (animator == null)
-            {
+        private bool HasParameter(string parameterName, AnimatorControllerParameterType expectedType) {
+            if(animator == null) {
                 return false;
             }
 
-            foreach (AnimatorControllerParameter parameter in animator.parameters)
-            {
-                if (parameter.name == parameterName && parameter.type == expectedType)
-                {
+            foreach(AnimatorControllerParameter parameter in animator.parameters) {
+                if(parameter.name == parameterName && parameter.type == expectedType) {
                     return true;
                 }
             }
@@ -162,14 +240,26 @@ namespace Demo.BehaviorTreePolice.Polish
             return false;
         }
 
-        private void WarnMissingParameter(string parameterName, AnimatorControllerParameterType expectedType)
-        {
-            if (!logMissingParametersOnce || !warnedMissingParameters.Add(parameterName))
-            {
+        private void WarnMissingParameter(string parameterName, AnimatorControllerParameterType expectedType) {
+            if(!logMissingParametersOnce || !warnedMissingParameters.Add(parameterName)) {
                 return;
             }
 
             Debug.LogWarning($"Animator on {name} is missing parameter '{parameterName}' of type {expectedType}.", this);
+        }
+
+        private readonly struct AnimationValues {
+            public readonly float SourceSpeed;
+            public readonly float Speed;
+            public readonly bool IsMoving;
+            public readonly bool IsRunning;
+
+            public AnimationValues(float sourceSpeed, float speed, bool isMoving, bool isRunning) {
+                SourceSpeed = sourceSpeed;
+                Speed = speed;
+                IsMoving = isMoving;
+                IsRunning = isRunning;
+            }
         }
     }
 }
