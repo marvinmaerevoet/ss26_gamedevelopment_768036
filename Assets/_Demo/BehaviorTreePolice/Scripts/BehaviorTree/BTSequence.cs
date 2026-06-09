@@ -12,9 +12,9 @@ namespace Demo.BehaviorTreePolice.BehaviorTree
 
         protected override BTStatus OnTick()
         {
-            while (currentChildIndex < Children.Count)
+            while (currentChildIndex < ChildNodes.Count)
             {
-                BTStatus childStatus = Children[currentChildIndex].Tick();
+                BTStatus childStatus = ChildNodes[currentChildIndex].Tick();
 
                 if (childStatus == BTStatus.Running)
                 {

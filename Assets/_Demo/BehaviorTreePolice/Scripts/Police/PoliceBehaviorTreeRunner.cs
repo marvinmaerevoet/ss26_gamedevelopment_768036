@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Demo.BehaviorTreePolice.BehaviorTree;
 using Demo.BehaviorTreePolice.Police.Nodes;
 using UnityEngine;
@@ -33,6 +34,12 @@ namespace Demo.BehaviorTreePolice.Police
         private BTNode deepestRunningNode;
         private BTNode lastMeaningfulNode;
         private string activeBehaviorName;
+        private readonly List<BTNode> lastTickPath = new List<BTNode>();
+
+        public BTNode TreeRoot => treeRoot;
+        public BTNode LastTickedNode { get; private set; }
+        public IReadOnlyList<BTNode> LastTickPath => lastTickPath;
+        public float LastTickTime { get; private set; } = -1f;
 
         private void Awake()
         {
@@ -177,8 +184,11 @@ namespace Demo.BehaviorTreePolice.Police
             deepestRunningNode = null;
             lastMeaningfulNode = null;
             activeBehaviorName = null;
+            LastTickedNode = null;
             treePausedAfterArrest = false;
             nextTickTime = Time.time;
+            LastTickTime = -1f;
+            lastTickPath.Clear();
 
             if (blackboard != null)
             {
@@ -191,6 +201,7 @@ namespace Demo.BehaviorTreePolice.Police
             deepestRunningNode = null;
             lastMeaningfulNode = null;
             activeBehaviorName = null;
+            LastTickedNode = null;
 
             BTNode.NodeTicked += OnNodeTicked;
 
@@ -205,6 +216,7 @@ namespace Demo.BehaviorTreePolice.Police
             }
 
             blackboard.LastTreeStatus = status;
+            LastTickTime = Time.time;
 
             if (!string.IsNullOrEmpty(activeBehaviorName))
             {
@@ -215,6 +227,11 @@ namespace Demo.BehaviorTreePolice.Police
             if (debugNode != null)
             {
                 blackboard.CurrentNodeName = debugNode.Name;
+                BuildLastTickPath(debugNode);
+            }
+            else
+            {
+                lastTickPath.Clear();
             }
         }
 
@@ -249,6 +266,7 @@ namespace Demo.BehaviorTreePolice.Police
             if (!IsControlNode(node))
             {
                 lastMeaningfulNode = node;
+                LastTickedNode = node;
             }
 
             if (status == BTStatus.Running && deepestRunningNode == null && !IsControlNode(node))
@@ -268,6 +286,8 @@ namespace Demo.BehaviorTreePolice.Police
             blackboard.LastTreeStatus = BTStatus.Success;
             blackboard.CurrentBehaviorName = "Arrested / Paused";
             blackboard.CurrentNodeName = "Player Arrested";
+            LastTickedNode = null;
+            lastTickPath.Clear();
         }
 
         private void EnsureReferences()
@@ -312,6 +332,16 @@ namespace Demo.BehaviorTreePolice.Police
                    node is BTSelector ||
                    node is BTParallel ||
                    node is BTDecorator;
+        }
+
+        private void BuildLastTickPath(BTNode node)
+        {
+            lastTickPath.Clear();
+
+            for (BTNode current = node; current != null; current = current.Parent)
+            {
+                lastTickPath.Insert(0, current);
+            }
         }
 
         private static void WarnOnce(string message, ref bool warned)

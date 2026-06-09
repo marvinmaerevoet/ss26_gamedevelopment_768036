@@ -17,9 +17,9 @@ namespace Demo.BehaviorTreePolice.BehaviorTree
         {
             int startIndex = rememberRunningChild ? currentChildIndex : 0;
 
-            for (int i = startIndex; i < Children.Count; i++)
+            for (int i = startIndex; i < ChildNodes.Count; i++)
             {
-                BTStatus childStatus = Children[i].Tick();
+                BTStatus childStatus = ChildNodes[i].Tick();
 
                 if (childStatus == BTStatus.Running)
                 {
@@ -65,19 +65,19 @@ namespace Demo.BehaviorTreePolice.BehaviorTree
 
         private void ResetPreviouslyRunningChildIfChanged(int activeChildIndex)
         {
-            if (runningChildIndex < 0 || runningChildIndex == activeChildIndex || runningChildIndex >= Children.Count)
+            if (runningChildIndex < 0 || runningChildIndex == activeChildIndex || runningChildIndex >= ChildNodes.Count)
             {
                 return;
             }
 
-            Children[runningChildIndex].Reset();
+            ChildNodes[runningChildIndex].Reset();
         }
 
         private void ResetLowerPriorityChildren(int activeChildIndex)
         {
-            for (int i = activeChildIndex + 1; i < Children.Count; i++)
+            for (int i = activeChildIndex + 1; i < ChildNodes.Count; i++)
             {
-                Children[i].Reset();
+                ChildNodes[i].Reset();
             }
         }
     }

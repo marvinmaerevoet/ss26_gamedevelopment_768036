@@ -14,13 +14,13 @@ namespace Demo.BehaviorTreePolice.BehaviorTree
 
         protected override BTStatus OnTick()
         {
-            if (Children.Count == 0)
+            if (ChildNodes.Count == 0)
             {
                 return BTStatus.Success;
             }
 
             if (requiredChildIndex.HasValue &&
-                (requiredChildIndex.Value < 0 || requiredChildIndex.Value >= Children.Count))
+                (requiredChildIndex.Value < 0 || requiredChildIndex.Value >= ChildNodes.Count))
             {
                 return BTStatus.Failure;
             }
@@ -28,9 +28,9 @@ namespace Demo.BehaviorTreePolice.BehaviorTree
             bool allSucceeded = true;
             BTStatus requiredStatus = BTStatus.Running;
 
-            for (int i = 0; i < Children.Count; i++)
+            for (int i = 0; i < ChildNodes.Count; i++)
             {
-                BTStatus childStatus = Children[i].Tick();
+                BTStatus childStatus = ChildNodes[i].Tick();
 
                 if (requiredChildIndex.HasValue && i == requiredChildIndex.Value)
                 {

@@ -199,6 +199,25 @@ namespace Demo.BehaviorTreePolice.SceneSetup
             #endif
         }
 
+        [ContextMenu("Police BT Demo/Create Tree Debug UI")]
+        public void CreateTreeDebugUI()
+        {
+            #if UNITY_EDITOR
+            GameObject debugUIObject = CreateUndoGameObject("Police BT Tree Debug UI");
+            PoliceBTTreeDebugUI debugUI = GetOrAddComponent<PoliceBTTreeDebugUI>(debugUIObject);
+
+            PoliceBehaviorTreeRunner runner = FindAnyObjectByType<PoliceBehaviorTreeRunner>();
+            if (runner != null)
+            {
+                Undo.RecordObject(debugUI, "Assign Police BT Tree Debug Target");
+                debugUI.target = runner;
+                EditorUtility.SetDirty(debugUI);
+            }
+            #else
+            Debug.LogWarning("Create Tree Debug UI is only available in the Unity Editor.");
+            #endif
+        }
+
         [ContextMenu("Police BT Demo/Create Demo Reset")]
         public void CreateDemoReset()
         {
