@@ -199,6 +199,31 @@ namespace Demo.BehaviorTreePolice.SceneSetup
             #endif
         }
 
+        [ContextMenu("Police BT Demo/Create Demo Reset")]
+        public void CreateDemoReset()
+        {
+            #if UNITY_EDITOR
+            GameObject resetObject = CreateUndoGameObject("Police BT Demo Reset");
+            PoliceBTDemoReset demoReset = GetOrAddComponent<PoliceBTDemoReset>(resetObject);
+
+            DemoPlayerState playerState = FindAnyObjectByType<DemoPlayerState>();
+            PoliceBehaviorTreeRunner runner = FindAnyObjectByType<PoliceBehaviorTreeRunner>();
+            PoliceAIContext context = runner != null
+                ? runner.GetComponent<PoliceAIContext>()
+                : FindAnyObjectByType<PoliceAIContext>();
+
+            Undo.RecordObject(demoReset, "Configure Police BT Demo Reset");
+            demoReset.playerState = playerState;
+            demoReset.playerTransform = playerState != null ? playerState.transform : null;
+            demoReset.policeRunner = runner;
+            demoReset.policeContext = context;
+            demoReset.policeTransform = context != null ? context.transform : null;
+            EditorUtility.SetDirty(demoReset);
+            #else
+            Debug.LogWarning("Create Demo Reset is only available in the Unity Editor.");
+            #endif
+        }
+
         [ContextMenu("Police BT Demo/Auto Wire Selected Police To First Player")]
         public void AutoWireSelectedPoliceToFirstPlayer()
         {

@@ -164,6 +164,28 @@ namespace Demo.BehaviorTreePolice.Police
                 rememberRunningChild: false);
         }
 
+        public void ResetTree()
+        {
+            EnsureReferences();
+
+            if (treeRoot == null)
+            {
+                BuildTree();
+            }
+
+            treeRoot?.Reset();
+            deepestRunningNode = null;
+            lastMeaningfulNode = null;
+            activeBehaviorName = null;
+            treePausedAfterArrest = false;
+            nextTickTime = Time.time;
+
+            if (blackboard != null)
+            {
+                blackboard.LastTreeStatus = BTStatus.Running;
+            }
+        }
+
         private void TickTree()
         {
             deepestRunningNode = null;
