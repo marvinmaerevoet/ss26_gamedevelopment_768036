@@ -160,7 +160,8 @@ namespace Demo.BehaviorTreePolice.Police
                     chaseBehavior,
                     investigateBehavior,
                     patrolBehavior
-                });
+                },
+                rememberRunningChild: false);
         }
 
         private void TickTree()
