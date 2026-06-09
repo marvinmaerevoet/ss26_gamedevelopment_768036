@@ -22,6 +22,7 @@ namespace Demo.BehaviorTreePolice.UI
 
         private PoliceAIContext context;
         private PoliceBlackboard blackboard;
+        private bool warnedMissingFont;
 
         private void Awake()
         {
@@ -89,7 +90,7 @@ namespace Demo.BehaviorTreePolice.UI
                 textObject.transform.SetParent(Canvas.transform, false);
 
                 Text = textObject.AddComponent<Text>();
-                Text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                Text.font = LoadBuiltinFont();
                 Text.alignment = TextAnchor.UpperLeft;
                 Text.horizontalOverflow = HorizontalWrapMode.Wrap;
                 Text.verticalOverflow = VerticalWrapMode.Overflow;
@@ -106,6 +107,38 @@ namespace Demo.BehaviorTreePolice.UI
             RectTransform textRect = Text.rectTransform;
             textRect.anchoredPosition = anchoredPosition;
             textRect.sizeDelta = panelSize;
+        }
+
+        private Font LoadBuiltinFont()
+        {
+            Font font = null;
+
+            try
+            {
+                font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            }
+            catch (System.Exception exception)
+            {
+                WarnMissingFont($"Could not load Unity built-in font LegacyRuntime.ttf: {exception.Message}");
+            }
+
+            if (font == null)
+            {
+                WarnMissingFont("Unity built-in font LegacyRuntime.ttf was not found. Police BT Debug UI will continue without assigning a font.");
+            }
+
+            return font;
+        }
+
+        private void WarnMissingFont(string message)
+        {
+            if (warnedMissingFont)
+            {
+                return;
+            }
+
+            Debug.LogWarning(message, this);
+            warnedMissingFont = true;
         }
 
         private void UpdateText()
