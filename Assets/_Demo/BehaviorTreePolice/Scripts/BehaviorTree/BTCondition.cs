@@ -2,9 +2,13 @@ using System;
 
 namespace Demo.BehaviorTreePolice.BehaviorTree
 {
-    public sealed class BTCondition : BTNode
+    public class BTCondition : BTNode
     {
         private readonly Func<bool> condition;
+
+        protected BTCondition(string name) : base(name)
+        {
+        }
 
         public BTCondition(string name, Func<bool> condition) : base(name)
         {
@@ -13,9 +17,12 @@ namespace Demo.BehaviorTreePolice.BehaviorTree
 
         protected override BTStatus OnTick()
         {
-            return condition != null && condition.Invoke()
-                ? BTStatus.Success
-                : BTStatus.Failure;
+            return Evaluate() ? BTStatus.Success : BTStatus.Failure;
+        }
+
+        protected virtual bool Evaluate()
+        {
+            return condition != null && condition.Invoke();
         }
     }
 }

@@ -2,9 +2,13 @@ using System;
 
 namespace Demo.BehaviorTreePolice.BehaviorTree
 {
-    public sealed class BTAction : BTNode
+    public class BTAction : BTNode
     {
         private readonly Func<BTStatus> action;
+
+        protected BTAction(string name) : base(name)
+        {
+        }
 
         public BTAction(string name, Func<BTStatus> action) : base(name)
         {
@@ -12,6 +16,11 @@ namespace Demo.BehaviorTreePolice.BehaviorTree
         }
 
         protected override BTStatus OnTick()
+        {
+            return Execute();
+        }
+
+        protected virtual BTStatus Execute()
         {
             return action?.Invoke() ?? BTStatus.Failure;
         }
