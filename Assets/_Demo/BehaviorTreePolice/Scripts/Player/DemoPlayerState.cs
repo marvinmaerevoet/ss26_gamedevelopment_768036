@@ -1,5 +1,5 @@
-using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Demo.BehaviorTreePolice.Player
 {
@@ -9,12 +9,11 @@ namespace Demo.BehaviorTreePolice.Player
         public bool IsInRestrictedArea;
         public bool IsArrested;
         public float CurrentSpeed;
-        public KeyCode runSimulationKey = KeyCode.LeftShift;
+        public Key runSimulationKey = Key.LeftShift;
         public bool simulateRunningFromKey = true;
         public float runningSpeedThreshold = 3.5f;
 
         private Vector3 previousPosition;
-        private bool warnedInputUnavailable;
 
         private void Awake()
         {
@@ -44,20 +43,13 @@ namespace Demo.BehaviorTreePolice.Player
                 return false;
             }
 
-            try
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard == null)
             {
-                return Input.GetKey(runSimulationKey);
-            }
-            catch (InvalidOperationException)
-            {
-                if (!warnedInputUnavailable)
-                {
-                    Debug.LogWarning("DemoPlayerState could not read UnityEngine.Input. Running detection still works through CurrentSpeed.", this);
-                    warnedInputUnavailable = true;
-                }
-
                 return false;
             }
+
+            return keyboard[runSimulationKey].isPressed;
         }
     }
 }

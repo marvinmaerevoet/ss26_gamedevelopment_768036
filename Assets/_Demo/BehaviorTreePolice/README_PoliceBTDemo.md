@@ -94,7 +94,7 @@ Pruefe `suspiciousIfRunning`, `suspiciousIfInRestrictedArea`, `DemoPlayerState.I
 
 ### Unity Input funktioniert nicht
 
-Die Demo nutzt die alte Unity-Input-API fuer den optionalen Fallback-Controller. Wenn das Projekt nur das neue Input System aktiviert hat, loggt der Controller eine Warnung. Aktiviere Legacy Input Support oder nutze einen bestehenden Player Controller.
+Die Demo nutzt `UnityEngine.InputSystem.Keyboard.current` fuer den optionalen Fallback-Controller. Pruefe, ob das Input System Package installiert und eine Tastatur im Play Mode verfuegbar ist.
 
 ### NavMeshAgent not on NavMesh
 

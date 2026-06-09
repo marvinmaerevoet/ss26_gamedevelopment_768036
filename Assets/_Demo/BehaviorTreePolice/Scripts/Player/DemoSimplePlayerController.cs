@@ -1,5 +1,5 @@
-using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Demo.BehaviorTreePolice.Player
 {
@@ -13,7 +13,6 @@ namespace Demo.BehaviorTreePolice.Player
 
         private CharacterController characterController;
         private float verticalVelocity;
-        private bool warnedInputUnavailable;
 
         private void Awake()
         {
@@ -53,45 +52,38 @@ namespace Demo.BehaviorTreePolice.Player
             input = Vector2.zero;
             wantsToRun = false;
 
-            try
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard == null)
             {
-                float horizontal = 0f;
-                float vertical = 0f;
-
-                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-                {
-                    horizontal -= 1f;
-                }
-
-                if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-                {
-                    horizontal += 1f;
-                }
-
-                if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-                {
-                    vertical -= 1f;
-                }
-
-                if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-                {
-                    vertical += 1f;
-                }
-
-                input = Vector2.ClampMagnitude(new Vector2(horizontal, vertical), 1f);
-                wantsToRun = Input.GetKey(KeyCode.LeftShift);
-                return true;
-            }
-            catch (InvalidOperationException)
-            {
-                if (!warnedInputUnavailable)
-                {
-                    Debug.LogWarning("DemoSimplePlayerController could not read UnityEngine.Input. Enable legacy input support or use another controller.", this);
-                    warnedInputUnavailable = true;
-                }
-
                 return false;
             }
+
+            float horizontal = 0f;
+            float vertical = 0f;
+
+            if (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed)
+            {
+                horizontal -= 1f;
+            }
+
+            if (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed)
+            {
+                horizontal += 1f;
+            }
+
+            if (keyboard.sKey.isPressed || keyboard.downArrowKey.isPressed)
+            {
+                vertical -= 1f;
+            }
+
+            if (keyboard.wKey.isPressed || keyboard.upArrowKey.isPressed)
+            {
+                vertical += 1f;
+            }
+
+            input = Vector2.ClampMagnitude(new Vector2(horizontal, vertical), 1f);
+            wantsToRun = keyboard.leftShiftKey.isPressed;
+            return true;
         }
 
         private Vector3 GetCameraRelativeDirection(Vector2 input)
