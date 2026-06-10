@@ -1,0 +1,98 @@
+digraph PoliceBehaviorTree {
+    graph [
+        rankdir=TB,
+        splines=ortho,
+        nodesep=0.45,
+        ranksep=0.7,
+        bgcolor="white",
+        fontname="Arial",
+        label="Police Behavior Tree Demo",
+        labelloc="t",
+        fontsize=22
+    ];
+
+    node [
+        shape=box,
+        style="rounded,filled",
+        fontname="Arial",
+        fontsize=11,
+        color="#1f2937",
+        penwidth=1.5
+    ];
+
+    edge [
+        color="#4b5563",
+        arrowsize=0.7,
+        fontname="Arial",
+        fontsize=9
+    ];
+
+    root [label="Root Selector\n(Reactive)", fillcolor="#ffb454", color="#b45309", penwidth=3];
+
+    emergency [label="EmergencyBehavior\nSequence", fillcolor="#93c5fd", color="#1d4ed8"];
+    arrest [label="ArrestBehavior\nSequence", fillcolor="#93c5fd", color="#1d4ed8"];
+    chase [label="ChaseBehavior\nSequence", fillcolor="#93c5fd", color="#1d4ed8"];
+    investigate [label="InvestigateBehavior\nSequence", fillcolor="#93c5fd", color="#1d4ed8"];
+    patrol [label="PatrolBehavior\nRepeater", fillcolor="#ddd6fe", color="#7c3aed"];
+
+    root -> emergency;
+    root -> arrest;
+    root -> chase;
+    root -> investigate;
+    root -> patrol;
+
+    emergencyHealth [label="OfficerHealthLow?", shape=diamond, fillcolor="#fde68a", color="#b45309"];
+    emergencySelector [label="Emergency Selector\nSelector", fillcolor="#93c5fd", color="#1d4ed8"];
+    callBackupSequence [label="Call Backup Sequence\nSequence", fillcolor="#93c5fd", color="#1d4ed8"];
+    notBackupCalled [label="Backup not called?", shape=diamond, fillcolor="#fde68a", color="#b45309"];
+    callBackup [label="CallBackup", fillcolor="#bbf7d0", color="#15803d"];
+    fleeSafe [label="FleeToSafePoint", fillcolor="#bbf7d0", color="#15803d"];
+
+    emergency -> emergencyHealth -> emergencySelector;
+    emergencySelector -> callBackupSequence;
+    emergencySelector -> fleeSafe;
+    callBackupSequence -> notBackupCalled -> callBackup;
+
+    arrestVisible [label="PlayerVisible?", shape=diamond, fillcolor="#fde68a", color="#b45309"];
+    arrestSuspicious [label="PlayerSuspicious?", shape=diamond, fillcolor="#fde68a", color="#b45309"];
+    arrestRange [label="PlayerInArrestRange?", shape=diamond, fillcolor="#fde68a", color="#b45309"];
+    arrestPlayer [label="ArrestPlayer", fillcolor="#bbf7d0", color="#15803d"];
+
+    arrest -> arrestVisible -> arrestSuspicious -> arrestRange -> arrestPlayer;
+
+    chaseVisible [label="PlayerVisible?", shape=diamond, fillcolor="#fde68a", color="#b45309"];
+    chaseSuspicious [label="PlayerSuspicious?", shape=diamond, fillcolor="#fde68a", color="#b45309"];
+    inverter [label="Inverter\nNot In Arrest Range", fillcolor="#ddd6fe", color="#7c3aed"];
+    chaseRange [label="PlayerInArrestRange?", shape=diamond, fillcolor="#fde68a", color="#b45309"];
+    chaseParallel [label="Chase Parallel\nrequiredChildIndex: 0", fillcolor="#93c5fd", color="#1d4ed8"];
+    chasePlayer [label="ChasePlayer\ndetermines status", fillcolor="#bbf7d0", color="#15803d"];
+    lookAtPlayer [label="LookAtPlayer\nsupport only", fillcolor="#bbf7d0", color="#15803d"];
+    chaseNote [label="A_ChasePlayer determines\nParallel status", fillcolor="#e5e7eb", color="#6b7280"];
+
+    chase -> chaseVisible -> chaseSuspicious -> inverter -> chaseRange;
+    inverter -> chaseParallel;
+    chaseParallel -> chasePlayer;
+    chaseParallel -> lookAtPlayer;
+    chaseParallel -> chaseNote [style=dashed, arrowhead=none];
+
+    hasLastKnown [label="HasLastKnownPlayerPosition?", shape=diamond, fillcolor="#fde68a", color="#b45309"];
+    timeout [label="Timeout(5s)", fillcolor="#ddd6fe", color="#7c3aed"];
+    moveLastKnown [label="MoveToLastKnownPosition", fillcolor="#bbf7d0", color="#15803d"];
+    lookAround [label="LookAround", fillcolor="#bbf7d0", color="#15803d"];
+    clearLastKnown [label="ClearLastKnownPlayerPosition", fillcolor="#bbf7d0", color="#15803d"];
+
+    investigate -> hasLastKnown -> timeout -> moveLastKnown;
+    timeout -> lookAround -> clearLastKnown;
+
+    patrolSequence [label="Patrol Sequence\nSequence", fillcolor="#93c5fd", color="#1d4ed8"];
+    selectPatrol [label="SelectNextPatrolPoint", fillcolor="#bbf7d0", color="#15803d"];
+    retryPatrol [label="Retry(2)", fillcolor="#ddd6fe", color="#7c3aed"];
+    movePatrol [label="MoveToPatrolPoint", fillcolor="#bbf7d0", color="#15803d"];
+    patrolWait [label="Wait(1s)", fillcolor="#bbf7d0", color="#15803d"];
+
+    patrol -> patrolSequence -> selectPatrol -> retryPatrol -> movePatrol;
+    retryPatrol -> patrolWait;
+
+    blackboard [label="Blackboard\nPerception, LastKnownPosition,\nCurrentBehaviorName, LastTreeStatus", fillcolor="#e5e7eb", color="#6b7280"];
+    root -> blackboard [style=dashed, arrowhead=none, label="reads/writes"];
+}
