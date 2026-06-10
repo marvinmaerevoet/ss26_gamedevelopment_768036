@@ -27,7 +27,8 @@ The other debug UI is legacy.
 My whole chat with ChatGPT 5.5:
 https://chatgpt.com/share/6a29a199-8208-83ed-bf46-1fdf8fa06a55
 
-This includes all prompts I used in codex with GPT 5.5 (High reasoning)
+I put the whole chat with codex (GPT 5.5 (High reasoning)) in a file CHATWITHCODEX.md right next to this readme.md :)
+
 Every commit that actually changes code has its prompts in the description aswell.
 
-AI is crazy and it was a blast :) 
+AI is crazy and it was a blast :)
