@@ -10,6 +10,7 @@ Shader "CustomApproachDemo/Police Vision Cone"
         _FarFadePower ("Far Fade Power", Range(0.25, 4)) = 1.6
         _EdgeSoftness ("Edge Softness", Range(0.05, 2)) = 0.55
         _CenterBoost ("Center Boost", Range(0, 2)) = 0.8
+        _DepthFade ("Depth Fade", Range(0, 4)) = 1.25
         _NoiseScale ("Noise Scale", Range(0.1, 12)) = 3.5
         _NoiseStrength ("Noise Strength", Range(0, 1)) = 0.22
     }
@@ -33,6 +34,7 @@ Shader "CustomApproachDemo/Police Vision Cone"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            #pragma multi_compile_particles
 
             #include "UnityCG.cginc"
 
@@ -44,8 +46,10 @@ Shader "CustomApproachDemo/Police Vision Cone"
             float _FarFadePower;
             float _EdgeSoftness;
             float _CenterBoost;
+            float _DepthFade;
             float _NoiseScale;
             float _NoiseStrength;
+            UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
 
             struct appdata
             {
@@ -59,6 +63,7 @@ Shader "CustomApproachDemo/Police Vision Cone"
                 float4 vertex : SV_POSITION;
                 float3 localPos : TEXCOORD0;
                 float2 uv : TEXCOORD1;
+                float4 projectedPosition : TEXCOORD2;
                 fixed4 color : COLOR;
             };
 
@@ -68,6 +73,8 @@ Shader "CustomApproachDemo/Police Vision Cone"
                 output.vertex = UnityObjectToClipPos(input.vertex);
                 output.localPos = input.vertex.xyz;
                 output.uv = input.uv;
+                output.projectedPosition = ComputeScreenPos(output.vertex);
+                output.projectedPosition.z = -UnityObjectToViewPos(input.vertex).z;
                 output.color = input.color;
                 return output;
             }
@@ -94,20 +101,26 @@ Shader "CustomApproachDemo/Police Vision Cone"
             fixed4 frag(v2f input) : SV_Target
             {
                 float length01 = saturate(input.uv.y);
-                float angleRadians = radians(max(_ConeAngle, 1.0) * 0.5);
-                float maxRadius = max(tan(angleRadians) * max(_Range, 0.01) * max(length01, 0.01), 0.01);
-                float radial01 = saturate(length(input.localPos.xy) / maxRadius);
+                float radial01 = saturate(input.uv.x);
 
                 float nearFade = smoothstep(0.0, _NearFade, length01);
                 float farFade = pow(saturate(1.0 - length01), _FarFadePower);
-                float edgeFade = pow(saturate(1.16 - radial01), _EdgeSoftness);
-                float centerGlow = lerp(1.0, saturate(1.0 - radial01 * 0.65), _CenterBoost);
+                float edgeFade = pow(saturate(1.0 - radial01), _EdgeSoftness);
+                float centerGlow = 1.0 + pow(saturate(1.0 - radial01), 2.0) * _CenterBoost;
 
-                float softNoise = ValueNoise(float2(input.uv.x * _NoiseScale, length01 * _NoiseScale * 1.7));
-                float noise = lerp(1.0, 0.72 + softNoise * 0.56, _NoiseStrength);
+                float softNoise = ValueNoise(float2(input.uv.x * _NoiseScale * 2.1, length01 * _NoiseScale * 1.7));
+                float screenDither = Hash(floor(input.projectedPosition.xy / max(input.projectedPosition.w, 0.0001) * 640.0));
+                float noise = lerp(1.0, 0.74 + softNoise * 0.42 + screenDither * 0.1, _NoiseStrength);
 
-                float alpha = _Alpha * input.color.a * nearFade * farFade * edgeFade * centerGlow * noise;
-                float3 color = _Color.rgb * (0.8 + centerGlow * 0.35);
+                float depthFade = 1.0;
+                #if defined(SOFTPARTICLES_ON)
+                    float sceneZ = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(input.projectedPosition)));
+                    float partZ = input.projectedPosition.z;
+                    depthFade = saturate(_DepthFade * (sceneZ - partZ));
+                #endif
+
+                float alpha = _Alpha * input.color.a * nearFade * farFade * edgeFade * centerGlow * noise * depthFade;
+                float3 color = _Color.rgb * (0.65 + centerGlow * 0.45);
 
                 return fixed4(color, saturate(alpha));
             }

@@ -1,5 +1,6 @@
 using CustomApproachDemo.Police;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -34,20 +35,24 @@ namespace CustomApproachDemo.Police.Visuals
         [SerializeField] private bool showCone = true;
         [SerializeField] private Color coneColor = new Color(1f, 0.66f, 0.3f, 1f);
         [SerializeField, Range(0f, 1f)] private float coneAlpha = 0.2f;
+        [SerializeField, Range(0.001f, 0.5f)] private float nearFade = 0.08f;
         [SerializeField, Range(0.05f, 2f)] private float edgeSoftness = 0.55f;
         [SerializeField, Range(0.25f, 4f)] private float farFadePower = 1.6f;
+        [SerializeField, Range(0f, 2f)] private float centerBoost = 0.8f;
+        [SerializeField, Range(0f, 4f)] private float depthFade = 1.25f;
         [SerializeField, Range(0f, 1f)] private float noiseStrength = 0.22f;
         [SerializeField, Range(0.1f, 12f)] private float noiseScale = 3.5f;
-        [SerializeField, Range(12, 96)] private int coneSegments = 48;
+        [SerializeField, Range(32, 128)] private int coneSegments = 80;
         [SerializeField, Range(3, 16)] private int coneLengthSteps = 8;
-        [SerializeField, Range(1, 8)] private int coneSheets = 5;
+        [FormerlySerializedAs("coneSheets")]
+        [SerializeField, Range(3, 8)] private int coneRadialLayers = 5;
 
         private Mesh coneMesh;
         private float lastRange = -1f;
         private float lastAngle = -1f;
         private int lastSegments = -1;
         private int lastLengthSteps = -1;
-        private int lastSheets = -1;
+        private int lastRadialLayers = -1;
 
         private void Reset()
         {
@@ -68,11 +73,11 @@ namespace CustomApproachDemo.Police.Visuals
             SyncVisuals();
         }
 
-            private void OnValidate()
+        private void OnValidate()
         {
             coneSegments = Mathf.Max(MinimumSegments, coneSegments);
             coneLengthSteps = Mathf.Max(3, coneLengthSteps);
-            coneSheets = Mathf.Max(1, coneSheets);
+            coneRadialLayers = Mathf.Max(3, coneRadialLayers);
             EnsureVisualObjects();
             SyncVisuals();
         }
@@ -252,17 +257,17 @@ namespace CustomApproachDemo.Police.Visuals
                 && Mathf.Approximately(lastAngle, angle)
                 && lastSegments == coneSegments
                 && lastLengthSteps == coneLengthSteps
-                && lastSheets == coneSheets)
+                && lastRadialLayers == coneRadialLayers)
             {
                 return;
             }
 
-            RebuildConeMesh(coneMesh, range, angle, coneSegments, coneLengthSteps, coneSheets);
+            RebuildConeMesh(coneMesh, range, angle, coneSegments, coneLengthSteps, coneRadialLayers);
             lastRange = range;
             lastAngle = angle;
             lastSegments = coneSegments;
             lastLengthSteps = coneLengthSteps;
-            lastSheets = coneSheets;
+            lastRadialLayers = coneRadialLayers;
         }
 
         private void SyncConeMaterial(Material material, float range, float angle)
@@ -294,9 +299,24 @@ namespace CustomApproachDemo.Police.Visuals
                 material.SetFloat("_EdgeSoftness", edgeSoftness);
             }
 
+            if (material.HasProperty("_NearFade"))
+            {
+                material.SetFloat("_NearFade", nearFade);
+            }
+
             if (material.HasProperty("_FarFadePower"))
             {
                 material.SetFloat("_FarFadePower", farFadePower);
+            }
+
+            if (material.HasProperty("_CenterBoost"))
+            {
+                material.SetFloat("_CenterBoost", centerBoost);
+            }
+
+            if (material.HasProperty("_DepthFade"))
+            {
+                material.SetFloat("_DepthFade", depthFade);
             }
 
             if (material.HasProperty("_NoiseStrength"))
@@ -310,70 +330,72 @@ namespace CustomApproachDemo.Police.Visuals
             }
         }
 
-        private static void RebuildConeMesh(Mesh mesh, float range, float angle, int segments, int lengthSteps, int sheetCount)
+        private static void RebuildConeMesh(Mesh mesh, float range, float angle, int segments, int lengthSteps, int radialLayers)
         {
             segments = Mathf.Max(MinimumSegments, segments);
             lengthSteps = Mathf.Max(3, lengthSteps);
-            sheetCount = Mathf.Max(1, sheetCount);
+            radialLayers = Mathf.Max(3, radialLayers);
 
-            int columns = Mathf.Max(4, segments / 8);
             int rows = lengthSteps + 1;
-            int verticesPerSheet = rows * columns;
-            Vector3[] vertices = new Vector3[sheetCount * verticesPerSheet];
+            int radialRows = radialLayers;
+            int verticesPerRing = segments + 1;
+            Vector3[] vertices = new Vector3[rows * radialRows * verticesPerRing];
             Vector2[] uvs = new Vector2[vertices.Length];
             Color[] colors = new Color[vertices.Length];
-            int[] triangles = new int[sheetCount * lengthSteps * (columns - 1) * 6];
+            int[] triangles = new int[lengthSteps * radialRows * segments * 6];
 
             float radius = Mathf.Tan(angle * 0.5f * Mathf.Deg2Rad) * range;
 
-            for (int sheet = 0; sheet < sheetCount; sheet++)
+            for (int row = 0; row < rows; row++)
             {
-                float rotation = sheet * Mathf.PI / sheetCount;
-                Vector3 right = new Vector3(Mathf.Cos(rotation), Mathf.Sin(rotation), 0f);
+                float length01 = row / (float) lengthSteps;
+                float easedLength = Mathf.Lerp(0.02f, 1f, length01);
+                float rowRadius = radius * easedLength;
 
-                for (int row = 0; row < rows; row++)
+                for (int radial = 0; radial < radialRows; radial++)
                 {
-                    float length01 = row / (float) lengthSteps;
-                    float softenedLength = Mathf.Lerp(0.015f, 1f, length01);
-                    float halfWidth = radius * softenedLength;
+                    float radial01 = (radial + 1f) / radialRows;
+                    float easedRadial = Mathf.Pow(radial01, 0.78f);
+                    float ringRadius = rowRadius * easedRadial;
+                    float radialAlpha = Mathf.Lerp(0.95f, 0.04f, Mathf.SmoothStep(0f, 1f, radial01));
 
-                    for (int column = 0; column < columns; column++)
+                    for (int segment = 0; segment <= segments; segment++)
                     {
-                        float across01 = column / (float) (columns - 1);
-                        float centered = across01 * 2f - 1f;
-                        float wobble = Mathf.Sin(across01 * Mathf.PI * 5f + length01 * Mathf.PI * 3f + sheet) * 0.035f;
-                        int vertexIndex = sheet * verticesPerSheet + row * columns + column;
+                        float segment01 = segment / (float) segments;
+                        float radians = segment01 * Mathf.PI * 2f;
+                        float wobble = 1f + Mathf.Sin(segment01 * Mathf.PI * 6f + length01 * Mathf.PI * 2.7f) * 0.012f;
+                        int vertexIndex = VertexIndex(row, radial, segment, radialRows, verticesPerRing);
 
-                        vertices[vertexIndex] = right * centered * halfWidth * (1f + wobble)
-                            + Vector3.forward * range * softenedLength;
+                        vertices[vertexIndex] = new Vector3(
+                            Mathf.Cos(radians) * ringRadius * wobble,
+                            Mathf.Sin(radians) * ringRadius * wobble,
+                            range * easedLength);
 
-                        uvs[vertexIndex] = new Vector2(across01, length01);
-                        colors[vertexIndex] = new Color(1f, 1f, 1f, 1f);
+                        uvs[vertexIndex] = new Vector2(radial01, length01);
+                        colors[vertexIndex] = new Color(1f, 1f, 1f, radialAlpha);
                     }
                 }
             }
 
             int triangleIndex = 0;
-            for (int sheet = 0; sheet < sheetCount; sheet++)
+            for (int row = 0; row < lengthSteps; row++)
             {
-                int sheetOffset = sheet * verticesPerSheet;
-
-                for (int row = 0; row < lengthSteps; row++)
+                for (int radial = 0; radial < radialRows; radial++)
                 {
-                    for (int column = 0; column < columns - 1; column++)
+                    for (int segment = 0; segment < segments; segment++)
                     {
-                        int current = sheetOffset + row * columns + column;
-                        int next = current + 1;
-                        int upper = current + columns;
-                        int upperNext = upper + 1;
+                        int current = VertexIndex(row, radial, segment, radialRows, verticesPerRing);
+                        int next = VertexIndex(row, radial, segment + 1, radialRows, verticesPerRing);
+                        int forward = VertexIndex(row + 1, radial, segment, radialRows, verticesPerRing);
+                        int forwardNext = VertexIndex(row + 1, radial, segment + 1, radialRows, verticesPerRing);
 
                         triangles[triangleIndex++] = current;
-                        triangles[triangleIndex++] = upper;
+                        triangles[triangleIndex++] = forward;
                         triangles[triangleIndex++] = next;
 
                         triangles[triangleIndex++] = next;
-                        triangles[triangleIndex++] = upper;
-                        triangles[triangleIndex++] = upperNext;
+                        triangles[triangleIndex++] = forward;
+                        triangles[triangleIndex++] = forwardNext;
                     }
                 }
             }
@@ -385,6 +407,11 @@ namespace CustomApproachDemo.Police.Visuals
             mesh.triangles = triangles;
             mesh.RecalculateBounds();
             mesh.RecalculateNormals();
+        }
+
+        private static int VertexIndex(int row, int radial, int segment, int radialRows, int verticesPerRing)
+        {
+            return (row * radialRows + radial) * verticesPerRing + segment;
         }
     }
 }

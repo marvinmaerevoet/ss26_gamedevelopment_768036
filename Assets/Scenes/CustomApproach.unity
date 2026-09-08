@@ -32977,14 +32977,17 @@ MonoBehaviour:
   castShadows: 0
   showCone: 1
   coneColor: {r: 1, g: 0.66, b: 0.3, a: 1}
-  coneAlpha: 0.16
-  edgeSoftness: 0.7
-  farFadePower: 1.95
-  noiseStrength: 0.3
-  noiseScale: 4.4
-  coneSegments: 64
+  coneAlpha: 0.12
+  nearFade: 0.1
+  edgeSoftness: 0.95
+  farFadePower: 2.15
+  centerBoost: 0.65
+  depthFade: 1.25
+  noiseStrength: 0.26
+  noiseScale: 4
+  coneSegments: 96
   coneLengthSteps: 12
-  coneSheets: 5
+  coneRadialLayers: 5
 --- !u!1001 &921214709
 PrefabInstance:
   m_ObjectHideFlags: 0

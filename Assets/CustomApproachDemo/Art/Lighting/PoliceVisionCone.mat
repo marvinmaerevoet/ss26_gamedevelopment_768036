@@ -25,14 +25,15 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Alpha: 0.16
-    - _CenterBoost: 0.8
+    - _Alpha: 0.12
+    - _CenterBoost: 0.65
     - _ConeAngle: 90
-    - _EdgeSoftness: 0.7
-    - _FarFadePower: 1.95
-    - _NearFade: 0.08
-    - _NoiseScale: 4.4
-    - _NoiseStrength: 0.3
+    - _DepthFade: 1.25
+    - _EdgeSoftness: 0.95
+    - _FarFadePower: 2.15
+    - _NearFade: 0.1
+    - _NoiseScale: 4
+    - _NoiseStrength: 0.26
     - _Range: 12
     m_Colors:
     - _Color: {r: 1, g: 0.66, b: 0.3, a: 1}
