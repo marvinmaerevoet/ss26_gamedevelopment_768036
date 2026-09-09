@@ -28,6 +28,7 @@ namespace CustomApproachDemo.Gameplay.Carry
         private bool[] colliderEnabledStates;
 
         public bool IsCarried { get; private set; }
+        public bool IsPickupLocked { get; private set; }
         public Rigidbody Rigidbody => carriedRigidbody;
         public float DropGroundOffset => Mathf.Max(0f, dropGroundOffset);
 
@@ -48,7 +49,7 @@ namespace CustomApproachDemo.Gameplay.Carry
 
         public void BeginCarry(Transform carryAnchor)
         {
-            if (carryAnchor == null || IsCarried)
+            if (carryAnchor == null || IsCarried || IsPickupLocked)
             {
                 return;
             }
@@ -133,6 +134,22 @@ namespace CustomApproachDemo.Gameplay.Carry
             {
                 carriedColliders = GetComponentsInChildren<Collider>();
             }
+        }
+
+        public void LockPickupAtCurrentPosition()
+        {
+            if (IsCarried) return;
+            IsPickupLocked = true;
+            if (carriedRigidbody == null) return;
+            carriedRigidbody.interpolation = RigidbodyInterpolation.None;
+            carriedRigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
+            if (!carriedRigidbody.isKinematic)
+            {
+                carriedRigidbody.linearVelocity = Vector3.zero;
+                carriedRigidbody.angularVelocity = Vector3.zero;
+            }
+            carriedRigidbody.useGravity = false;
+            carriedRigidbody.isKinematic = true;
         }
 
         private void StorePhysicsState()

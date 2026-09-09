@@ -28,4 +28,23 @@ Polish game:
 
 
 
+| Status     | Feature                                                                          |
+| ---------- | -------------------------------------------------------------------------------- |
+| ✅          | Level-Punkte platziert: PlayerSpawn, DeliveryPoint, CrateReset, JailSpawn, Lydia |
+| ✅          | MissionCrate platziert                                                           |
+| ✅          | Nacht-Look                                                                       |
+| ✅          | Sheriff-Licht-/Vision-Cone                                                       |
+| ⏳          | Kiste mit `E` aufnehmen / ablegen                                                |
+| ⏳          | Mit Kiste deutlich langsamer laufen, kein Sprint                                 |
+| ⏳          | Start-Overlay mit Missionsziel                                                   |
+| ⏳          | Delivery bei Lydia                                                               |
+| ⏳          | Mission-Success-Zustand/UI                                                       |
+| ⏳          | Arrest-Präsentation / „Verhaftet“-Screen                                         |
+| ⏳          | Fade Out / Jail-Teleport / Fade In                                               |
+| ⏳          | Kiste nach Arrest zu `CrateReset`                                                |
+| ⏳          | sauberer Reset aller Gameplay-Zustände                                           |
+| ⏳          | zusätzliche Sheriffs aus deinen Spawnpunkten                                     |
+| ⏳          | Patrol = Walk, Chase = Run sauber darstellen                                     |
+| ⏳          | finales UI-/Animations-/Presentation-Polish                                      |
+| **später** | eigentliche Patrol/Chase/Investigate/Arrest-Entscheidungen der fünf BT-Systeme   |
 

@@ -116,6 +116,16 @@ namespace CustomApproachDemo.Gameplay.Carry
             }
         }
 
+        public bool PlaceCurrentCarryable(DemoCarryable expected, Transform destination)
+        {
+            if (expected == null || destination == null || currentCarryable != expected || !expected.IsCarried)
+                return false;
+
+            expected.EndCarry(destination.position, destination.rotation);
+            currentCarryable = null;
+            return true;
+        }
+
         private DemoCarryable FindNearestCarryable()
         {
             Vector3 origin = transform.position + pickupOriginOffset;
@@ -140,7 +150,7 @@ namespace CustomApproachDemo.Gameplay.Carry
                 }
 
                 DemoCarryable carryable = hit.GetComponentInParent<DemoCarryable>();
-                if (carryable == null || carryable.IsCarried)
+                if (carryable == null || carryable.IsCarried || carryable.IsPickupLocked)
                 {
                     continue;
                 }
