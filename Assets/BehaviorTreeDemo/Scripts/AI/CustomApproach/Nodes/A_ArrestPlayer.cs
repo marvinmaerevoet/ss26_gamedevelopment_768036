@@ -59,8 +59,7 @@ namespace CustomApproachDemo.Police.Nodes
             // sheriff acquire a second local arrest latch.
             if (playerState.IsArrested)
             {
-                approachStarted = false;
-                context.ResetArrestState();
+                ResetOwnedArrest();
                 return BTStatus.Failure;
             }
 
@@ -80,7 +79,7 @@ namespace CustomApproachDemo.Police.Nodes
 
             if (approachStatus == PoliceMovementStatus.Failed)
             {
-                approachStarted = false;
+                ResetOwnedArrest();
                 return BTStatus.Failure;
             }
 
@@ -103,9 +102,24 @@ namespace CustomApproachDemo.Police.Nodes
         public override void Reset()
         {
             base.Reset();
+            ResetOwnedArrest();
+        }
+
+        private void ResetOwnedArrest()
+        {
+            bool ownedArrest = approachStarted || arrestCommitted;
+            bool stillOwnsMovement = ownedArrest &&
+                                     context != null &&
+                                     (context.PoliceBlackboard == null ||
+                                      context.PoliceBlackboard.CurrentBehaviorMode == PoliceBehaviorMode.Arrest);
+
             approachStarted = false;
             arrestCommitted = false;
-            context?.ResetArrestState();
+
+            if (ownedArrest)
+            {
+                context.ResetArrestState(stillOwnsMovement);
+            }
         }
     }
 }

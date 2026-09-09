@@ -288,11 +288,14 @@ namespace CustomApproachDemo.Police
             FacePlayer();
         }
 
-        public void ResetArrestState()
+        public void ResetArrestState(bool stopOwnedMovement = true)
         {
             IsArrestLatched = false;
             IsArrestApproachActive = false;
-            StopMovement();
+            if (stopOwnedMovement)
+            {
+                StopMovement();
+            }
         }
 
         public void CancelArrestApproach()
