@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using CustomApproachDemo.Player;
 
 namespace CustomApproachDemo.Gameplay.Carry
 {
@@ -28,6 +29,7 @@ namespace CustomApproachDemo.Gameplay.Carry
 
         private readonly Collider[] carryableHits = new Collider[MaxCarryableHits];
         private DemoCarryable currentCarryable;
+        private DemoPlayerState playerState;
 
         public bool IsCarrying => currentCarryable != null;
         public DemoCarryable CurrentCarryable => currentCarryable;
@@ -59,6 +61,11 @@ namespace CustomApproachDemo.Gameplay.Carry
 
         private void Update()
         {
+            if (playerState != null && playerState.IsArrested)
+            {
+                return;
+            }
+
             Keyboard keyboard = Keyboard.current;
             if (keyboard == null || !keyboard[interactKey].wasPressedThisFrame)
             {
@@ -110,6 +117,11 @@ namespace CustomApproachDemo.Gameplay.Carry
 
         private void ResolveReferences()
         {
+            if (playerState == null)
+            {
+                playerState = GetComponent<DemoPlayerState>();
+            }
+
             if (carryAnchor != null)
             {
                 return;

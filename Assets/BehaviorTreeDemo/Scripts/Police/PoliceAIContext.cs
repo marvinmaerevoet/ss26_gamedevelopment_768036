@@ -193,6 +193,7 @@ namespace CustomApproachDemo.Police
 
             return playerCarryController != null &&
                    suspiciousCarryable != null &&
+                   !suspiciousCarryable.IsPickupLocked &&
                    playerCarryController.IsCarrying &&
                    playerCarryController.CurrentCarryable == suspiciousCarryable;
         }
@@ -293,6 +294,11 @@ namespace CustomApproachDemo.Police
                 return false;
             }
 
+            if (!IsPlayerSuspicious())
+            {
+                return false;
+            }
+
             arrestPhase = ArrestPhase.Approaching;
             PoliceBlackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
             StopFacingPlayer();
@@ -331,6 +337,14 @@ namespace CustomApproachDemo.Police
 
             // A different officer may have committed before this approach did.
             if (PlayerState.IsArrested)
+            {
+                ResetArrestState();
+                return PoliceArrestStatus.Failed;
+            }
+
+            // Delivery or a manual drop can win until this officer commits the arrest.
+            // Recheck the shared mission rule so stale decision input cannot commit both outcomes.
+            if (!IsPlayerSuspicious())
             {
                 ResetArrestState();
                 return PoliceArrestStatus.Failed;

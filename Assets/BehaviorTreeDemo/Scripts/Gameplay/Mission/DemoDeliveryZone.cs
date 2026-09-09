@@ -1,5 +1,6 @@
 using System;
 using CustomApproachDemo.Gameplay.Carry;
+using CustomApproachDemo.Player;
 using UnityEngine;
 
 namespace CustomApproachDemo.Gameplay.Mission
@@ -28,9 +29,14 @@ namespace CustomApproachDemo.Gameplay.Mission
 
         private void TryDeliver(Collider other)
         {
+            DemoPlayerCarryController enteringCarryController =
+                other.GetComponentInParent<DemoPlayerCarryController>();
+            DemoPlayerState enteringPlayerState = other.GetComponentInParent<DemoPlayerState>();
+
             if (IsDelivered || playerCarryController == null || expectedCarryable == null ||
                 deliveredCrateAnchor == null ||
-                other.GetComponentInParent<DemoPlayerCarryController>() != playerCarryController ||
+                enteringCarryController != playerCarryController ||
+                enteringPlayerState == null || enteringPlayerState.IsArrested ||
                 playerCarryController.CurrentCarryable != expectedCarryable)
                 return;
 
