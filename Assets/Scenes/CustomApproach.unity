@@ -37632,6 +37632,8 @@ MonoBehaviour:
   - {fileID: 1887785970}
   - {fileID: 900862267}
   PlayerState: {fileID: 439849588}
+  walkSpeed: 3
+  runSpeed: 6
   viewDistance: 12
   viewAngle: 90
   arrestRange: 2
@@ -37676,7 +37678,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -53289,6 +53291,8 @@ MonoBehaviour:
   - {fileID: 1887785970}
   - {fileID: 900862267}
   PlayerState: {fileID: 439849588}
+  walkSpeed: 3
+  runSpeed: 6
   viewDistance: 12
   viewAngle: 90
   arrestRange: 2
@@ -53333,7 +53337,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -58899,6 +58903,8 @@ MonoBehaviour:
   - {fileID: 1887785970}
   - {fileID: 900862267}
   PlayerState: {fileID: 439849588}
+  walkSpeed: 3
+  runSpeed: 6
   viewDistance: 12
   viewAngle: 90
   arrestRange: 2
@@ -58943,7 +58949,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -91400,6 +91406,8 @@ MonoBehaviour:
   - {fileID: 1887785970}
   - {fileID: 900862267}
   PlayerState: {fileID: 439849588}
+  walkSpeed: 3
+  runSpeed: 6
   viewDistance: 12
   viewAngle: 90
   arrestRange: 2
@@ -91444,7 +91452,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

@@ -100,6 +100,7 @@ namespace CustomApproachDemo.Setup
             if (policeContext != null)
             {
                 policeContext.lowHealthDemoToggle = false;
+                policeContext.SetMovementMode(PoliceMovementMode.Walk);
             }
 
             if (resetDecisionState && policeDecisionController != null)
@@ -287,6 +288,7 @@ namespace CustomApproachDemo.Setup
                 if (resetBlackboard && context.PoliceBlackboard != null)
                     ClearBlackboard(context.PoliceBlackboard, additionalPatrolIndices[i]);
                 context.lowHealthDemoToggle = false;
+                context.SetMovementMode(PoliceMovementMode.Walk);
                 if (resetDecisionState) context.GetComponent<PoliceDecisionController>()?.ResetDecisionState();
             }
         }

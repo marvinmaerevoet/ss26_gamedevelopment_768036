@@ -19,6 +19,7 @@ namespace CustomApproachDemo.Police.Nodes
                 return false;
             }
 
+            Context.SetMovementMode(PoliceMovementMode.Walk);
             blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Patrol;
             destination = blackboard.CurrentPatrolPoint.position;
             return true;

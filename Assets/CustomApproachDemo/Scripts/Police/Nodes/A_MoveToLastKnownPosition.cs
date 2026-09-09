@@ -16,6 +16,7 @@ namespace CustomApproachDemo.Police.Nodes
                 return false;
             }
 
+            Context.SetMovementMode(PoliceMovementMode.Walk);
             blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Investigate;
             destination = blackboard.LastKnownPlayerPosition;
             return true;

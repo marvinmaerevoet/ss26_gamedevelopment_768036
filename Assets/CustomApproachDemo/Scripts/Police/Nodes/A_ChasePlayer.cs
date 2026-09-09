@@ -46,6 +46,7 @@ namespace CustomApproachDemo.Police.Nodes
                 return BTStatus.Success;
             }
 
+            context.SetMovementMode(PoliceMovementMode.Run);
             if (!context.TrySetDestination(blackboard.Player.position))
             {
                 return BTStatus.Failure;

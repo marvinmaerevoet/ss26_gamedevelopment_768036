@@ -14,6 +14,14 @@ namespace CustomApproachDemo.Police
         public Transform[] PatrolPoints;
         public DemoPlayerState PlayerState;
 
+        [Header("Movement")]
+        [SerializeField, Min(0f)] private float walkSpeed = 3f;
+        [SerializeField, Min(0f)] private float runSpeed = 6f;
+
+        public float WalkSpeed => walkSpeed;
+        public float RunSpeed => runSpeed;
+        public PoliceMovementMode CurrentMovementMode { get; private set; } = PoliceMovementMode.Walk;
+
         [Header("Perception")]
         public float viewDistance = 12f;
         public float viewAngle = 90f;
@@ -35,11 +43,20 @@ namespace CustomApproachDemo.Police
         private void Awake()
         {
             EnsureReferences();
+            ApplyMovementSpeed();
         }
 
         private void Reset()
         {
             EnsureReferences();
+            CurrentMovementMode = PoliceMovementMode.Walk;
+            ApplyMovementSpeed();
+        }
+
+        private void OnValidate()
+        {
+            walkSpeed = Mathf.Max(0f, walkSpeed);
+            runSpeed = Mathf.Max(0f, runSpeed);
         }
 
         public void RefreshPerception()
@@ -123,6 +140,13 @@ namespace CustomApproachDemo.Police
         public void SetDestination(Vector3 destination)
         {
             TrySetDestination(destination);
+        }
+
+        public void SetMovementMode(PoliceMovementMode mode)
+        {
+            EnsureReferences();
+            CurrentMovementMode = mode;
+            ApplyMovementSpeed();
         }
 
         public bool TrySetDestination(Vector3 destination)
@@ -327,6 +351,19 @@ namespace CustomApproachDemo.Police
 
             Debug.LogWarning("PoliceAIContext has no NavMeshAgent assigned or found on this GameObject.", this);
             warnedMissingAgent = true;
+        }
+
+        private void ApplyMovementSpeed()
+        {
+            if (NavMeshAgent == null)
+            {
+                WarnMissingAgent();
+                return;
+            }
+
+            NavMeshAgent.speed = CurrentMovementMode == PoliceMovementMode.Run
+                ? runSpeed
+                : walkSpeed;
         }
     }
 }
