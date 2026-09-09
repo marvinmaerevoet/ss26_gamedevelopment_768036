@@ -13,12 +13,15 @@ namespace CustomApproachDemo.Police.Visuals
     public sealed class PoliceVisionLight : MonoBehaviour
     {
         private const string DefaultLightName = "VisionLight";
+        private const string DefaultVisualOriginName = "VisionLightCone";
         private const string DefaultConeName = "VisionCone";
         private const string DefaultConeMaterialPath = "Assets/CustomApproachDemo/Art/Lighting/PoliceVisionCone.mat";
         private const int MinimumSegments = 12;
 
         [Header("References")]
         [SerializeField] private PoliceAIContext context;
+        [Tooltip("Independent visual position. Move this Transform to place the lamp; direction follows EyePoint.")]
+        [SerializeField] private Transform visualOrigin;
         [SerializeField] private Transform lightRoot;
         [SerializeField] private Light spotLight;
         [SerializeField] private MeshFilter coneMeshFilter;
@@ -78,9 +81,21 @@ namespace CustomApproachDemo.Police.Visuals
             coneSegments = Mathf.Max(MinimumSegments, coneSegments);
             coneLengthSteps = Mathf.Max(3, coneLengthSteps);
             coneRadialLayers = Mathf.Max(3, coneRadialLayers);
-            EnsureVisualObjects();
-            SyncVisuals();
+            #if UNITY_EDITOR
+            EditorApplication.delayCall -= SyncAfterValidation;
+            EditorApplication.delayCall += SyncAfterValidation;
+            #endif
         }
+
+        #if UNITY_EDITOR
+        private void SyncAfterValidation()
+        {
+            if (this != null && isActiveAndEnabled)
+            {
+                SyncVisuals();
+            }
+        }
+        #endif
 
         private void LateUpdate()
         {
@@ -122,11 +137,29 @@ namespace CustomApproachDemo.Police.Visuals
                 return;
             }
 
-            Transform parent = context.EyePoint != null ? context.EyePoint : transform;
+            if (visualOrigin == null)
+            {
+                visualOrigin = transform.Find(DefaultVisualOriginName);
+            }
+
+            if (visualOrigin == null)
+            {
+                visualOrigin = new GameObject(DefaultVisualOriginName).transform;
+                visualOrigin.SetParent(transform, false);
+                // Initial placement only. Inspector edits are never overwritten.
+                visualOrigin.localPosition = new Vector3(0f, 1.4f, 0.3f);
+            }
+
+            Transform parent = visualOrigin;
 
             if (lightRoot == null)
             {
                 lightRoot = parent.Find(DefaultLightName);
+                if (lightRoot == null && context.EyePoint != null)
+                {
+                    // Reuse the existing visual when migrating from EyePoint parenting.
+                    lightRoot = context.EyePoint.Find(DefaultLightName);
+                }
             }
 
             if (lightRoot == null)
@@ -194,7 +227,7 @@ namespace CustomApproachDemo.Police.Visuals
 
         private void SyncTransform()
         {
-            Transform parent = context.EyePoint != null ? context.EyePoint : transform;
+            Transform parent = visualOrigin;
 
             if (lightRoot.parent != parent)
             {
@@ -202,7 +235,7 @@ namespace CustomApproachDemo.Police.Visuals
             }
 
             lightRoot.localPosition = Vector3.zero;
-            lightRoot.localRotation = Quaternion.identity;
+            lightRoot.rotation = context.EyePoint != null ? context.EyePoint.rotation : transform.rotation;
             lightRoot.localScale = Vector3.one;
         }
 

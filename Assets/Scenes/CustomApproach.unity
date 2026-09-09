@@ -11234,6 +11234,19 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4586491893868304, guid: 3404b380759a4fe4d95fc9e046fdf8d9, type: 3}
   m_PrefabInstance: {fileID: 310774638}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &314081689
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &315111491
 GameObject:
   m_ObjectHideFlags: 0
@@ -12284,11 +12297,10 @@ Transform:
   m_GameObject: {fileID: 346196295}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.077, y: 1.6, z: -0.942}
+  m_LocalPosition: {x: 0, y: 1.6, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1271727695}
+  m_Children: []
   m_Father: {fileID: 920719311}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &350201850
@@ -13049,6 +13061,19 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4561428493897970, guid: 45474d70eaa8bda4e9db7db645bc8642, type: 3}
   m_PrefabInstance: {fileID: 371315160}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &371639494
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1001 &372548924
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16113,7 +16138,7 @@ CharacterController:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 439849585}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 371639494}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -16213,6 +16238,31 @@ MonoBehaviour:
   debugInputMoving: 0
   debugInputRunning: 0
   debugUsedInputForPlayer: 0
+--- !u!114 &439849592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439849585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77483a1aee3464749a901897cdbb69b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomApproachDemo.Gameplay.Carry.DemoPlayerCarryController
+  carryAnchor: {fileID: 1046218761}
+  interactKey: 19
+  pickupRange: 2
+  pickupOriginOffset: {x: 0, y: 0.9, z: 0}
+  pickupMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  dropDistance: 1.25
+  dropProbeHeight: 1.5
+  dropProbeDistance: 3
+  dropGroundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1001 &442715797
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22963,6 +23013,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4457282994381246, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
       insertIndex: -1
       addedObject: {fileID: 346196296}
+    - targetCorrespondingSourceObject: {fileID: 4457282994381246, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 697961793}
     - targetCorrespondingSourceObject: {fileID: 4064597838070624, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1610214502}
@@ -24198,6 +24251,38 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4827143267441304, guid: 45a2482876d3a49458bb3f38b77cb765, type: 3}
   m_PrefabInstance: {fileID: 696685688}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &697961792
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 697961793}
+  m_Layer: 0
+  m_Name: VisionLightCone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &697961793
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 697961792}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.4, z: 0.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1271727695}
+  m_Father: {fileID: 920719311}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &700146574
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27619,6 +27704,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23203791104802716, guid: a0aa2525ba693f54db86d05aa66bde7d, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 873323a4a06f61a488b17adac67c65ee, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -32966,6 +33055,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomApproachDemo.Police.Visuals.PoliceVisionLight
   context: {fileID: 920719314}
+  visualOrigin: {fileID: 697961793}
   lightRoot: {fileID: 1271727695}
   spotLight: {fileID: 1271727696}
   coneMeshFilter: {fileID: 1721523722}
@@ -46717,14 +46807,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1271727694}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1721523720}
-  m_Father: {fileID: 346196296}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 697961793}
+  m_LocalEulerAnglesHint: {x: 15.336, y: -22.371, z: -18.963}
 --- !u!108 &1271727696
 Light:
   m_ObjectHideFlags: 0
@@ -60985,6 +61075,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1800371080893130, guid: e169e4d9dbd157b498e582065a5f9302, type: 3}
       insertIndex: -1
       addedObject: {fileID: 439849591}
+    - targetCorrespondingSourceObject: {fileID: 1800371080893130, guid: e169e4d9dbd157b498e582065a5f9302, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 439849592}
   m_SourcePrefab: {fileID: 100100000, guid: e169e4d9dbd157b498e582065a5f9302, type: 3}
 --- !u!1001 &1640016048
 PrefabInstance:
@@ -74243,6 +74336,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1750966419667470, guid: 2a04a48432f7041458c8a677cbc2d6d3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2111562119}
+    - targetCorrespondingSourceObject: {fileID: 1750966419667470, guid: 2a04a48432f7041458c8a677cbc2d6d3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2111562124}
   m_SourcePrefab: {fileID: 100100000, guid: 2a04a48432f7041458c8a677cbc2d6d3, type: 3}
 --- !u!1001 &1938231923
 PrefabInstance:
@@ -80064,7 +80160,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2111562118}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 314081689}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -80078,6 +80174,26 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.50794667, y: 0.29862365, z: 0.43855667}
   m_Center: {x: 0, y: 0.14931183, z: 0}
+--- !u!114 &2111562124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111562118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b05af9394406d40b4a6f46dab5afd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomApproachDemo.Gameplay.Carry.DemoCarryable
+  carriedRigidbody: {fileID: 2111562119}
+  carriedColliders:
+  - {fileID: 0}
+  carriedLocalPosition: {x: 0, y: 0, z: 0}
+  carriedLocalEulerAngles: {x: 0, y: 0, z: 0}
+  disableCollidersWhileCarried: 1
+  disableRigidbodyCollisionsWhileCarried: 1
+  dropGroundOffset: 0.03
 --- !u!1001 &2111619196
 PrefabInstance:
   m_ObjectHideFlags: 0
