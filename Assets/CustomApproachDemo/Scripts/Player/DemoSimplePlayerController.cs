@@ -1,3 +1,4 @@
+using CustomApproachDemo.Gameplay.Carry;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,17 +8,20 @@ namespace CustomApproachDemo.Player
     {
         public float walkSpeed = 3f;
         public float runSpeed = 6f;
+        [SerializeField, Min(0f)] private float carryMoveSpeed = 1.5f;
         public float gravity = -20f;
         public bool disableWhenArrested = true;
         public bool rotateCharacterToMoveDirection = true;
         public DemoPlayerState playerState;
 
         private CharacterController characterController;
+        private DemoPlayerCarryController carryController;
         private float verticalVelocity;
 
         private void Awake()
         {
             characterController = GetComponent<CharacterController>();
+            carryController = GetComponent<DemoPlayerCarryController>();
 
             if (playerState == null)
             {
@@ -41,8 +45,9 @@ namespace CustomApproachDemo.Player
 
             Vector3 moveDirection = GetCameraRelativeDirection(input);
             bool hasMovement = moveDirection.sqrMagnitude > 0.001f;
-            bool isRunning = hasMovement && wantsToRun;
-            float speed = isRunning ? runSpeed : walkSpeed;
+            bool isCarrying = carryController != null && carryController.IsCarrying;
+            bool isRunning = hasMovement && wantsToRun && !isCarrying;
+            float speed = isCarrying ? Mathf.Max(0f, carryMoveSpeed) : (isRunning ? runSpeed : walkSpeed);
 
             if (hasMovement && rotateCharacterToMoveDirection)
             {

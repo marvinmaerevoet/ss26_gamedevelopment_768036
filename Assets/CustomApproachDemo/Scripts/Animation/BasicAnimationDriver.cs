@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CustomApproachDemo.Gameplay.Carry;
 using CustomApproachDemo.Player;
 using CustomApproachDemo.Police;
 using UnityEngine;
@@ -35,6 +36,7 @@ namespace CustomApproachDemo.Animation {
         public bool debugUsedInputForPlayer;
 
         private readonly HashSet<string> warnedMissingParameters = new HashSet<string>();
+        private DemoPlayerCarryController carryController;
 
         private void Awake() {
             ResolveReferences();
@@ -98,6 +100,10 @@ namespace CustomApproachDemo.Animation {
             if(blackboard == null) {
                 blackboard = GetComponentInParent<PoliceBlackboard>();
             }
+
+            if(playerState != null && carryController == null) {
+                carryController = playerState.GetComponent<DemoPlayerCarryController>();
+            }
         }
 
         private void ApplyAnimatorOptions() {
@@ -128,7 +134,9 @@ namespace CustomApproachDemo.Animation {
             }
             // Player: prefer direct input, because CurrentSpeed can contain tiny residual values.
             else if(playerState != null) {
+                bool isCarrying = carryController != null && carryController.IsCarrying;
                 if(useInputForPlayerMovement && TryReadPlayerInput(out bool inputMoving, out bool inputRunning)) {
+                    inputRunning = inputRunning && !isCarrying;
                     debugInputMoving = inputMoving;
                     debugInputRunning = inputRunning;
                     debugUsedInputForPlayer = true;
@@ -148,7 +156,7 @@ namespace CustomApproachDemo.Animation {
                     isMoving = sourceSpeed > playerIdleDeadzone;
 
                     if(isMoving) {
-                        isRunning = playerState.IsRunning;
+                        isRunning = playerState.IsRunning && !isCarrying;
                         speed = isRunning ? runningVisualSpeed : walkingVisualSpeed;
                     } else {
                         speed = 0f;
