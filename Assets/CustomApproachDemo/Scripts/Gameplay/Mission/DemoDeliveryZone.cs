@@ -14,6 +14,7 @@ namespace CustomApproachDemo.Gameplay.Mission
 
         public bool IsDelivered { get; private set; }
         public event Action Delivered;
+        public void ResetDeliveryState() => IsDelivered = false;
 
         private void OnTriggerEnter(Collider other)
         {

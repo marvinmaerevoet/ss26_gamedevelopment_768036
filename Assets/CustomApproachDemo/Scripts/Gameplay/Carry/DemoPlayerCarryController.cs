@@ -31,6 +31,12 @@ namespace CustomApproachDemo.Gameplay.Carry
 
         public bool IsCarrying => currentCarryable != null;
         public DemoCarryable CurrentCarryable => currentCarryable;
+        public void ResetCarryState()
+        {
+            if (currentCarryable != null)
+                currentCarryable.EndCarry(currentCarryable.transform.position, currentCarryable.transform.rotation);
+            currentCarryable = null;
+        }
 
         private void Reset()
         {

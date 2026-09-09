@@ -1,4 +1,8 @@
 using CustomApproachDemo.Player;
+using CustomApproachDemo.Gameplay.Carry;
+using CustomApproachDemo.Gameplay.Mission;
+using CustomApproachDemo.Gameplay.Arrest;
+using CustomApproachDemo.Gameplay.UI;
 using CustomApproachDemo.Police;
 using UnityEngine;
 using UnityEngine.AI;
@@ -14,6 +18,16 @@ namespace CustomApproachDemo.Setup
         public PoliceBehaviorTreeRunner policeRunner;
         public PoliceAIContext policeContext;
         public Transform policeTransform;
+        [SerializeField] private Transform playerSpawn;
+        [SerializeField] private DemoSimplePlayerController movement;
+        [SerializeField] private DemoPlayerCarryController carryController;
+        [SerializeField] private DemoCarryable missionCrate;
+        [SerializeField] private DemoDeliveryZone delivery;
+        [SerializeField] private DemoArrestSequence arrestSequence;
+        [SerializeField] private DemoMissionIntroUI introUI;
+        [SerializeField] private DemoMissionSuccessUI successUI;
+        [SerializeField] private DemoArrestUI arrestUI;
+        [SerializeField] private DemoJailReleaseUI releaseUI;
 
         [Header("Reset Options")]
         public bool resetPlayerPosition = true;
@@ -52,6 +66,15 @@ namespace CustomApproachDemo.Setup
         {
             ResolveReferences(true);
 
+            arrestSequence?.ResetSequence();
+            introUI?.ResetUI();
+            successUI?.ResetUI();
+            arrestUI?.ResetUI();
+            releaseUI?.ResetUI();
+            carryController?.ResetCarryState();
+            missionCrate?.ResetToInitialState();
+            delivery?.ResetDeliveryState();
+
             ResetPlayer();
             ResetPolice();
             ResetBlackboard();
@@ -67,6 +90,7 @@ namespace CustomApproachDemo.Setup
             }
 
             Debug.Log("Custom Approach Demo reset.", this);
+            introUI?.ShowIntro();
         }
 
         private void ResolveReferences(bool warnIfMissing)
@@ -135,7 +159,11 @@ namespace CustomApproachDemo.Setup
                 playerState.IsRunning = false;
             }
 
-            if (resetPlayerPosition && playerTransform != null)
+            if (resetPlayerPosition && movement != null && playerSpawn != null)
+            {
+                movement.TeleportTo(playerSpawn);
+            }
+            else if (resetPlayerPosition && playerTransform != null)
             {
                 CharacterController controller = playerTransform.GetComponent<CharacterController>();
                 if (controller != null)
@@ -193,6 +221,9 @@ namespace CustomApproachDemo.Setup
             blackboard.PlayerInArrestRange = false;
             blackboard.HasLastKnownPlayerPosition = false;
             blackboard.BackupCalled = false;
+            blackboard.CurrentPatrolIndex = 0;
+            blackboard.CurrentPatrolPoint = null;
+            blackboard.LastKnownPlayerPosition = Vector3.zero;
             blackboard.OfficerHealthLow = false;
             blackboard.CurrentBehaviorName = "Reset";
             blackboard.CurrentNodeName = "Reset";

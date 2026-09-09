@@ -49,6 +49,16 @@ namespace CustomApproachDemo.Gameplay.UI
             showing = true;
         }
 
+        public void ResetUI()
+        {
+            if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
+            showing = false;
+            elapsed = 0f;
+            canvasGroup.alpha = 0f;
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
+
+        }
         private void Update()
         {
             if (!showing || Time.frameCount == shownFrame) return;
@@ -62,3 +72,4 @@ namespace CustomApproachDemo.Gameplay.UI
         }
     }
 }
+

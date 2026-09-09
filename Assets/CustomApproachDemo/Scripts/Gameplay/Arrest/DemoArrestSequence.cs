@@ -49,6 +49,16 @@ namespace CustomApproachDemo.Gameplay.Arrest
             StartCoroutine(RunSequence());
         }
 
+        public void ResetSequence()
+        {
+            StopAllCoroutines();
+            IsSequenceRunning = false;
+            if (fadeGroup == null) return;
+            fadeGroup.alpha = 0f;
+            fadeGroup.blocksRaycasts = false;
+            fadeGroup.interactable = false;
+        }
+
         private IEnumerator RunSequence()
         {
             yield return new WaitForSecondsRealtime(Mathf.Max(0f, arrestWait));

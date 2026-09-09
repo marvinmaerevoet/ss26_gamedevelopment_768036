@@ -29,6 +29,11 @@ namespace CustomApproachDemo.Gameplay.Carry
         private Transform resetParent;
         private RigidbodyInterpolation resetInterpolation;
         private CollisionDetectionMode resetCollisionMode;
+        private Vector3 initialPosition;
+        private Quaternion initialRotation;
+        private Vector3 initialScale;
+        private bool initialGravity, initialKinematic, initialCollisions;
+        private bool[] initialColliderStates;
 
         public bool IsCarried { get; private set; }
         public bool IsPickupLocked { get; private set; }
@@ -44,11 +49,45 @@ namespace CustomApproachDemo.Gameplay.Carry
         {
             ResolveReferences();
             resetParent = transform.parent;
+            initialPosition = transform.position;
+            initialRotation = transform.rotation;
+            initialScale = transform.localScale;
+            initialColliderStates = new bool[carriedColliders.Length];
+            for (int i = 0; i < carriedColliders.Length; i++)
+                initialColliderStates[i] = carriedColliders[i] != null && carriedColliders[i].enabled;
             if (carriedRigidbody != null)
             {
                 resetInterpolation = carriedRigidbody.interpolation;
                 resetCollisionMode = carriedRigidbody.collisionDetectionMode;
+                initialGravity = carriedRigidbody.useGravity;
+                initialKinematic = carriedRigidbody.isKinematic;
+                initialCollisions = carriedRigidbody.detectCollisions;
             }
+        }
+
+        public void ResetToInitialState()
+        {
+            if (IsCarried) EndCarry(initialPosition, initialRotation);
+            IsPickupLocked = false;
+            transform.SetParent(resetParent, false);
+            transform.localScale = initialScale;
+            if (carriedRigidbody != null) carriedRigidbody.interpolation = RigidbodyInterpolation.None;
+            transform.SetPositionAndRotation(initialPosition, initialRotation);
+            if (carriedRigidbody != null)
+            {
+                carriedRigidbody.position = initialPosition;
+                carriedRigidbody.rotation = initialRotation;
+                carriedRigidbody.isKinematic = false;
+                carriedRigidbody.linearVelocity = Vector3.zero;
+                carriedRigidbody.angularVelocity = Vector3.zero;
+                carriedRigidbody.isKinematic = initialKinematic;
+                carriedRigidbody.useGravity = initialGravity;
+                carriedRigidbody.detectCollisions = initialCollisions;
+                carriedRigidbody.collisionDetectionMode = resetCollisionMode;
+                carriedRigidbody.interpolation = resetInterpolation;
+            }
+            for (int i = 0; i < carriedColliders.Length; i++)
+                if (carriedColliders[i] != null) carriedColliders[i].enabled = initialColliderStates[i];
         }
 
         // The owning carry controller must release its reference before calling this.

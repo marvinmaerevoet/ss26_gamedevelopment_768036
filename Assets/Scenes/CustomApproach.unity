@@ -70489,6 +70489,16 @@ MonoBehaviour:
   policeRunner: {fileID: 920719312}
   policeContext: {fileID: 920719314}
   policeTransform: {fileID: 920719311}
+  playerSpawn: {fileID: 1676240674}
+  movement: {fileID: 439849587}
+  carryController: {fileID: 439849592}
+  missionCrate: {fileID: 2111562124}
+  delivery: {fileID: 875378441}
+  arrestSequence: {fileID: 1642170448}
+  introUI: {fileID: 1908283640}
+  successUI: {fileID: 1745361388}
+  arrestUI: {fileID: 768651586}
+  releaseUI: {fileID: 1562964022}
   resetPlayerPosition: 1
   resetPolicePosition: 1
   resetArrestedState: 1
