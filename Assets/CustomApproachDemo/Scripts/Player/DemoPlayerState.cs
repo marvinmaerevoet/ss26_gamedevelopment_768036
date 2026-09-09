@@ -7,7 +7,19 @@ namespace CustomApproachDemo.Player
     {
         public bool IsRunning;
         public bool IsInRestrictedArea;
-        public bool IsArrested;
+        [UnityEngine.Serialization.FormerlySerializedAs("IsArrested")]
+        [SerializeField] private bool isArrested;
+        public event System.Action Arrested;
+        public bool IsArrested
+        {
+            get => isArrested;
+            set
+            {
+                if (isArrested == value) return;
+                isArrested = value;
+                if (value) Arrested?.Invoke();
+            }
+        }
         public float CurrentSpeed;
         public Key runSimulationKey = Key.LeftShift;
         public bool simulateRunningFromKey = true;
