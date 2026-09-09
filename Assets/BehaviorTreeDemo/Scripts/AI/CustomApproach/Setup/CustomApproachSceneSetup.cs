@@ -14,8 +14,8 @@ namespace CustomApproachDemo.Setup
     public sealed class CustomApproachSceneSetup : MonoBehaviour
     {
         private const string EyePointName = "EyePoint";
-        private const string PlayerAnimatorControllerPath = "Assets/CustomApproachDemo/Animations/Player.controller";
-        private const string SheriffAnimatorControllerPath = "Assets/CustomApproachDemo/Animations/Sheriff.controller";
+        private const string PlayerAnimatorControllerPath = "Assets/BehaviorTreeDemo/Animations/Player.controller";
+        private const string SheriffAnimatorControllerPath = "Assets/BehaviorTreeDemo/Animations/Sheriff.controller";
 
         [ContextMenu("Custom Approach Demo/Add Player Demo State To Selected")]
         public void AddPlayerDemoStateToSelected()

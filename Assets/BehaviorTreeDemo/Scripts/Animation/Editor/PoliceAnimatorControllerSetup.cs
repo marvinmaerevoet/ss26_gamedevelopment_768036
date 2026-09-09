@@ -8,7 +8,7 @@ namespace CustomApproachDemo.EditorTools
 {
     public static class PoliceAnimatorControllerSetup
     {
-        public const string AnimationsFolder = "Assets/CustomApproachDemo/Animations";
+        public const string AnimationsFolder = "Assets/BehaviorTreeDemo/Animations";
         public const string PlayerControllerPath = AnimationsFolder + "/Player.controller";
         public const string SheriffControllerPath = AnimationsFolder + "/Sheriff.controller";
 
@@ -22,11 +22,11 @@ namespace CustomApproachDemo.EditorTools
             {
                 Debug.LogError(
                     "Could not create Custom Approach animator controllers. " +
-                    "Required clips were not found. Search terms: Idle, Walk, Run under Assets/Synty/AnimationBaseLocomotion.");
+                    "Required clips were not found. Search terms: Idle, Walk, Run under Assets/ThirdParty/Synty/AnimationBaseLocomotion.");
                 return;
             }
 
-            EnsureFolder("Assets/CustomApproachDemo", "Animations");
+            EnsureFolder("Assets/BehaviorTreeDemo", "Animations");
 
             AnimatorController playerController = CreateController(PlayerControllerPath);
             ConfigurePlayerController(playerController, clips);
@@ -183,7 +183,7 @@ namespace CustomApproachDemo.EditorTools
         private static List<ClipCandidate> FindAllAnimationClips()
         {
             List<ClipCandidate> candidates = new List<ClipCandidate>();
-            string[] guids = AssetDatabase.FindAssets("t:AnimationClip", new[] { "Assets/Synty" });
+            string[] guids = AssetDatabase.FindAssets("t:AnimationClip", new[] { "Assets/ThirdParty/Synty" });
 
             foreach (string guid in guids)
             {

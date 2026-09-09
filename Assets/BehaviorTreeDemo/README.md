@@ -4,7 +4,7 @@
 
 Diese Demo zeigt eine kleine Behavior-Tree-KI fuer NPC-Polizisten in einer Western-Stadt. Der Spieler bewegt sich durch die Szene, Sheriffs patrouillieren, erkennen verdachtig wirkendes Verhalten, verfolgen den Spieler, nehmen ihn in Reichweite fest oder untersuchen seine letzte bekannte Position.
 
-Alles liegt unter `Assets/CustomApproachDemo/` und ist optional. Die Demo veraendert keine Game-Creator-Dateien, Packages, Synty-Prefabs oder Szenen automatisch.
+Alles liegt unter `Assets/BehaviorTreeDemo/` und ist optional. Die Demo veraendert keine Game-Creator-Dateien, Packages, Synty-Prefabs oder Szenen automatisch.
 
 ## Warum eine eigene Lightweight-BT-Runtime?
 
@@ -44,12 +44,12 @@ Die Kamera sucht automatisch den ersten `DemoPlayerState`, folgt dem Player und 
 
 ## Synty Animation Setup
 
-Fuer einfache Synty-Animationen gibt es einen sicheren Demo-Workflow, der nur Assets unter `Assets/CustomApproachDemo/` erzeugt:
+Fuer einfache Synty-Animationen gibt es einen sicheren Demo-Workflow, der nur Assets unter `Assets/BehaviorTreeDemo/` erzeugt:
 
 1. In der Unity-Menueleiste `Tools/Custom Approach Demo/Create Animator Controllers` ausfuehren.
 2. Ein GameObject mit `CustomApproachSceneSetup` auswaehlen und im Component-ContextMenu `Custom Approach Demo/Setup Synty Animations` ausfuehren.
 
-Der erste Schritt sucht Idle-, Walk- und Run-Clips aus `Assets/Synty/AnimationBaseLocomotion` und erstellt `Player.controller` sowie `Sheriff.controller` im Demo-Ordner. Wenn passende Spezialclips gefunden werden, werden zusaetzlich einfache States fuer Investigate, Emergency und Arrest angelegt.
+Der erste Schritt sucht Idle-, Walk- und Run-Clips aus `Assets/ThirdParty/Synty/AnimationBaseLocomotion` und erstellt `Player.controller` sowie `Sheriff.controller` im Demo-Ordner. Wenn passende Spezialclips gefunden werden, werden zusaetzlich einfache States fuer Investigate, Emergency und Arrest angelegt.
 
 Der zweite Schritt sucht den ersten `DemoPlayerState` und den ersten `PoliceAIContext` in der Szene, verdrahtet `BasicAnimationDriver`, weist die Demo-Controller zu und setzt `Animator.applyRootMotion = false`. Szene-Instanzen werden nur geaendert, wenn du diesen ContextMenu-Punkt manuell ausfuehrst.
 
@@ -138,7 +138,7 @@ Fuehre zuerst `Tools/Custom Approach Demo/Create Animator Controllers` aus und d
 
 ### Animator Controller fehlt
 
-Die Demo-Controller liegen nach dem Erzeugen unter `Assets/CustomApproachDemo/Animations/`. Wenn sie fehlen, konnte der Editor-Builder keine passenden Idle/Walk/Run-Clips finden oder wurde noch nicht ausgefuehrt.
+Die Demo-Controller liegen nach dem Erzeugen unter `Assets/BehaviorTreeDemo/Animations/`. Wenn sie fehlen, konnte der Editor-Builder keine passenden Idle/Walk/Run-Clips finden oder wurde noch nicht ausgefuehrt.
 
 ### Speed bleibt 0
 
@@ -146,4 +146,4 @@ Beim Player muss `DemoPlayerState.CurrentSpeed` ueber `movingThreshold` liegen. 
 
 ### Falsche Clips gefunden
 
-Der Editor-Builder bevorzugt masculine Polygon-Clips aus `Assets/Synty/AnimationBaseLocomotion`. Die verwendeten Clip-Pfade werden nach dem Erzeugen in der Console geloggt.
+Der Editor-Builder bevorzugt masculine Polygon-Clips aus `Assets/ThirdParty/Synty/AnimationBaseLocomotion`. Die verwendeten Clip-Pfade werden nach dem Erzeugen in der Console geloggt.

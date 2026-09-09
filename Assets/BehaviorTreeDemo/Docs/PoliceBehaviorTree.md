@@ -144,6 +144,6 @@ flowchart TD
 Die DOT-Version liegt in `PoliceBehaviorTree.dot`. Wenn Graphviz installiert ist, kann daraus ein SVG oder PNG erzeugt werden:
 
 ```powershell
-dot -Tsvg Assets/CustomApproachDemo/Docs/PoliceBehaviorTree.dot -o Assets/CustomApproachDemo/Docs/PoliceBehaviorTree.svg
-dot -Tpng Assets/CustomApproachDemo/Docs/PoliceBehaviorTree.dot -o Assets/CustomApproachDemo/Docs/PoliceBehaviorTree.png
+dot -Tsvg Assets/BehaviorTreeDemo/Docs/PoliceBehaviorTree.dot -o Assets/BehaviorTreeDemo/Docs/PoliceBehaviorTree.svg
+dot -Tpng Assets/BehaviorTreeDemo/Docs/PoliceBehaviorTree.dot -o Assets/BehaviorTreeDemo/Docs/PoliceBehaviorTree.png
 ```

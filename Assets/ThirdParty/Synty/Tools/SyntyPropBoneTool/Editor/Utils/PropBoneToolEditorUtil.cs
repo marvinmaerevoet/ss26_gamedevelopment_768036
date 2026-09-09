@@ -26,7 +26,7 @@ namespace Synty.Tools.SyntyPropBoneTool
         private const string CONFIG_ASSET_PATH_DEFAULT = FOLDER_PATH_DEFAULT + CONFIG_ASSET_NAME_DEFAULT;
 
         // Folder path where the prop bone binder tool stores config files by default.
-        private const string FOLDER_PATH_DEFAULT = "Assets/Synty/Tools/SyntyPropBoneTool/Configs/";
+        private const string FOLDER_PATH_DEFAULT = "Assets/ThirdParty/Synty/Tools/SyntyPropBoneTool/Configs/";
 
         /// <summary>
         ///     Generates a file name based on the targetRigName and the defined config folder path.
