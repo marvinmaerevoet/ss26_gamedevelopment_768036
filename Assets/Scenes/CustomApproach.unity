@@ -37566,8 +37566,8 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
-  suspiciousIfRunning: 1
-  suspiciousIfInRestrictedArea: 1
+  playerCarryController: {fileID: 439849592}
+  suspiciousCarryable: {fileID: 2111562124}
   lowHealthDemoToggle: 0
   safePoint: {fileID: 1452696486}
   lookAroundDuration: 2
@@ -53197,8 +53197,8 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
-  suspiciousIfRunning: 1
-  suspiciousIfInRestrictedArea: 1
+  playerCarryController: {fileID: 439849592}
+  suspiciousCarryable: {fileID: 2111562124}
   lowHealthDemoToggle: 0
   safePoint: {fileID: 1452696486}
   lookAroundDuration: 2
@@ -58796,8 +58796,8 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
-  suspiciousIfRunning: 1
-  suspiciousIfInRestrictedArea: 1
+  playerCarryController: {fileID: 439849592}
+  suspiciousCarryable: {fileID: 2111562124}
   lowHealthDemoToggle: 0
   safePoint: {fileID: 1452696486}
   lookAroundDuration: 2
@@ -91018,8 +91018,8 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
-  suspiciousIfRunning: 1
-  suspiciousIfInRestrictedArea: 1
+  playerCarryController: {fileID: 439849592}
+  suspiciousCarryable: {fileID: 2111562124}
   lowHealthDemoToggle: 0
   safePoint: {fileID: 1452696486}
   lookAroundDuration: 2

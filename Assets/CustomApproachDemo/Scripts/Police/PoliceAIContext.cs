@@ -1,4 +1,5 @@
 using CustomApproachDemo.Player;
+using CustomApproachDemo.Gameplay.Carry;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -35,9 +36,11 @@ namespace CustomApproachDemo.Police
         public LayerMask obstacleMask;
 
         [Header("Suspicion")]
-        public bool suspiciousIfRunning = true;
-        public bool suspiciousIfInRestrictedArea = true;
+        [SerializeField] private DemoPlayerCarryController playerCarryController;
+        [SerializeField] private DemoCarryable suspiciousCarryable;
         public bool lowHealthDemoToggle;
+
+        public DemoCarryable SuspiciousCarryable => suspiciousCarryable;
 
         [Header("Demo")]
         public Transform safePoint;
@@ -122,15 +125,10 @@ namespace CustomApproachDemo.Police
         {
             EnsureReferences();
 
-            if (!TryResolvePlayerState())
-            {
-                return false;
-            }
-
-            bool runningSuspicious = suspiciousIfRunning && PlayerState.IsRunning;
-            bool restrictedAreaSuspicious = suspiciousIfInRestrictedArea && PlayerState.IsInRestrictedArea;
-
-            return runningSuspicious || restrictedAreaSuspicious;
+            return playerCarryController != null &&
+                   suspiciousCarryable != null &&
+                   playerCarryController.IsCarrying &&
+                   playerCarryController.CurrentCarryable == suspiciousCarryable;
         }
 
         public bool IsPlayerInArrestRange()
@@ -484,6 +482,25 @@ namespace CustomApproachDemo.Police
             }
 
             TryResolvePlayerState();
+            ResolveSuspicionReferences();
+        }
+
+        private void ResolveSuspicionReferences()
+        {
+            if (playerCarryController != null)
+            {
+                return;
+            }
+
+            if (PlayerState != null)
+            {
+                playerCarryController = PlayerState.GetComponent<DemoPlayerCarryController>();
+            }
+
+            if (playerCarryController == null && PoliceBlackboard != null && PoliceBlackboard.Player != null)
+            {
+                playerCarryController = PoliceBlackboard.Player.GetComponentInParent<DemoPlayerCarryController>();
+            }
         }
 
         private bool TryResolvePlayerState()

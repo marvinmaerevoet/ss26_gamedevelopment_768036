@@ -50,12 +50,12 @@ Polish game:
 
 
 
-Okay, nun möchte ich dass das visionlightcone vom sheriff doch etwas subtiler ist. ausserdem habe ich eben an dem mission crate rumgefummelt und wieder rückgängig gemacht bitte nochmal prüfen ob da alles so ist wie es sein soll
+
 
 Okay dann soll er jetzt mal machen dass es so aussieht als würde man die kiste durch die gegend tragen, bevor du einen prompt schreibst gib mir ideen wie du das sinnvoll zu generieren findest, ich stell mir das nicht so leicht vor codex zu sagen er soll jetzt eine animation bauen und die sieht am ende nicht kacke aus. 
 
 
-Nun soll die logik so umgebaut werden: Bisher wird man arrested fürs rumrennen, das ist natürlich quatsch, man soll erwischt/verhaftet werden wenn man die kiste durch die gegend trägt und dabei erwischt wird, also einfach rennen als arrest grund ersetzen durch das rumtragen. 
+
 
 Nun möchte ich einen ausführlichen analysepart starten bevor ich dann in den teil übergehe die anderen behavior tree ansätze einzubauen. Erstmal habe ich eigene vorschläge und ideen. Ich möchte dabei die projektstruktur wirklich sauber halten das ist mir sehr sehr wichtig zum beispiel fallen mir folgende sachen auf: 
 1. unter assets/synty liegen diverse synty packages aber polygonwesternfrontier liegt daneben obwohl es auch ein synty package ist, kann das nicht einfach da rein? 
