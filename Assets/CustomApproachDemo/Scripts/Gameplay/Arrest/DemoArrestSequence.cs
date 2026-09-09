@@ -2,6 +2,7 @@ using System.Collections;
 using CustomApproachDemo.Gameplay.Carry;
 using CustomApproachDemo.Player;
 using CustomApproachDemo.Gameplay.UI;
+using CustomApproachDemo.Animation;
 using UnityEngine;
 
 namespace CustomApproachDemo.Gameplay.Arrest
@@ -16,9 +17,11 @@ namespace CustomApproachDemo.Gameplay.Arrest
         [SerializeField] private Transform crateReset;
         [SerializeField] private CanvasGroup fadeGroup;
         [SerializeField] private DemoJailReleaseUI releaseUI;
+        [SerializeField] private BasicAnimationDriver playerAnimation;
         [SerializeField, Min(0f)] private float arrestWait = 5f;
         [SerializeField, Min(0f)] private float fadeOutDuration = 0.8f;
         [SerializeField, Min(0f)] private float fadeInDuration = 0.8f;
+        [SerializeField, Min(0f)] private float releaseAnimationDuration = 3.233f;
         public bool IsSequenceRunning { get; private set; }
 
         private void OnEnable()
@@ -40,7 +43,7 @@ namespace CustomApproachDemo.Gameplay.Arrest
         {
             if (IsSequenceRunning) return;
             if (playerState == null || movement == null || jailSpawn == null || fadeGroup == null || releaseUI == null ||
-                carryController == null || missionCrate == null || crateReset == null)
+                carryController == null || missionCrate == null || crateReset == null || playerAnimation == null)
             {
                 Debug.LogError("Arrest sequence references are incomplete.", this);
                 return;
@@ -53,6 +56,7 @@ namespace CustomApproachDemo.Gameplay.Arrest
         {
             StopAllCoroutines();
             IsSequenceRunning = false;
+            if (playerAnimation != null) playerAnimation.ResetReleaseAnimationTrigger();
             if (fadeGroup == null) return;
             fadeGroup.alpha = 0f;
             fadeGroup.blocksRaycasts = false;
@@ -69,6 +73,14 @@ namespace CustomApproachDemo.Gameplay.Arrest
             carryController.ResetCarryable(missionCrate, crateReset);
             yield return null;
             yield return Fade(1f, 0f, fadeInDuration);
+
+            // Keep IsArrested true while the one-shot release animation plays so
+            // the existing movement lock remains responsible for player control.
+            if (playerAnimation.TriggerReleaseAnimation())
+            {
+                yield return new WaitForSecondsRealtime(Mathf.Max(0f, releaseAnimationDuration));
+            }
+
             playerState.IsArrested = false;
             IsSequenceRunning = false;
             releaseUI.ShowReleased();

@@ -70,7 +70,10 @@ namespace CustomApproachDemo.Animation {
             SetBool("IsMoving", values.IsMoving);
             SetBool("IsRunning", values.IsRunning);
             SetBool("IsChasing", chasing);
-            SetBool("IsInvestigating", investigating);
+            // Keep the locomotion blend tree active while an officer walks to the
+            // last known position. The investigate pose starts only once the agent
+            // has stopped for the actual look-around phase.
+            SetBool("IsInvestigating", investigating && !values.IsMoving);
             SetBool("IsArrested", arrested);
             SetBool("IsEmergency", emergency);
         }
@@ -227,6 +230,24 @@ namespace CustomApproachDemo.Animation {
         private void SetBool(string parameterName, bool value) {
             if(HasParameter(parameterName, AnimatorControllerParameterType.Bool)) {
                 animator.SetBool(parameterName, value);
+            }
+        }
+
+        public bool TriggerReleaseAnimation() {
+            ResolveReferences();
+            if(!HasParameter("ReleaseStretch", AnimatorControllerParameterType.Trigger)) {
+                return false;
+            }
+
+            animator.ResetTrigger("ReleaseStretch");
+            animator.SetTrigger("ReleaseStretch");
+            return true;
+        }
+
+        public void ResetReleaseAnimationTrigger() {
+            ResolveReferences();
+            if(HasParameter("ReleaseStretch", AnimatorControllerParameterType.Trigger)) {
+                animator.ResetTrigger("ReleaseStretch");
             }
         }
 

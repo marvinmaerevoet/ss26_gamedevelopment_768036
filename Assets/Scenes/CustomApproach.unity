@@ -23292,6 +23292,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 95511887735396104, guid: 24362449162558a49bc6904c0fda923a, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 4acf04a7379ce2842852351cdd21dce2, type: 2}
+    - target: {fileID: 95511887735396104, guid: 24362449162558a49bc6904c0fda923a, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -70338,9 +70346,11 @@ MonoBehaviour:
   crateReset: {fileID: 732542191}
   fadeGroup: {fileID: 1251797130}
   releaseUI: {fileID: 1562964022}
+  playerAnimation: {fileID: 439849591}
   arrestWait: 5
   fadeOutDuration: 0.8
   fadeInDuration: 0.8
+  releaseAnimationDuration: 3.2333336
 --- !u!4 &1642170449
 Transform:
   m_ObjectHideFlags: 0
