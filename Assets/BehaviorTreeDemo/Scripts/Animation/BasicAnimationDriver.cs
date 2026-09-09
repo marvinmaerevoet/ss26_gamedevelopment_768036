@@ -58,7 +58,9 @@ namespace CustomApproachDemo.Animation {
             bool isPolice = blackboard != null || policeContext != null;
             bool localArrestLatched = policeContext != null && policeContext.IsArrestLatched;
             bool chasing = !localArrestLatched && behaviorMode == PoliceBehaviorMode.Chase;
-            bool investigating = !localArrestLatched && behaviorMode == PoliceBehaviorMode.Investigate;
+            bool investigating = !localArrestLatched &&
+                policeContext != null &&
+                policeContext.InvestigationPhase == PoliceInvestigationPhase.LookingAround;
             bool emergency = !localArrestLatched &&
                 (behaviorMode == PoliceBehaviorMode.Emergency || (blackboard != null && blackboard.OfficerHealthLow));
 
@@ -77,10 +79,7 @@ namespace CustomApproachDemo.Animation {
             SetBool("IsMoving", values.IsMoving);
             SetBool("IsRunning", values.IsRunning);
             SetBool("IsChasing", chasing);
-            // Keep the locomotion blend tree active while an officer walks to the
-            // last known position. The investigate pose starts only once the agent
-            // has stopped for the actual look-around phase.
-            SetBool("IsInvestigating", investigating && !values.IsMoving);
+            SetBool("IsInvestigating", investigating);
             SetBool("IsArrested", arrested);
             SetBool("IsEmergency", emergency);
         }

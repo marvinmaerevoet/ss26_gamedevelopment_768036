@@ -1,12 +1,9 @@
 using CustomApproachDemo.BehaviorTree;
-using UnityEngine;
-
 namespace CustomApproachDemo.Police.Nodes
 {
     public sealed class A_LookAround : BTAction
     {
         private readonly PoliceAIContext context;
-        private float startTime;
         private bool started;
         private bool warnedMissingContext;
 
@@ -25,31 +22,32 @@ namespace CustomApproachDemo.Police.Nodes
 
             if (!started)
             {
-                started = true;
-                startTime = Time.time;
-                context.StopMovement();
+                started = context.BeginLookingAround();
+                if (!started)
+                {
+                    return BTStatus.Failure;
+                }
             }
 
-            if (context.Self != null)
+            PoliceInvestigationStatus status = context.UpdateLookingAround();
+            switch (status)
             {
-                context.Self.Rotate(Vector3.up, 120f * Time.deltaTime, Space.World);
+                case PoliceInvestigationStatus.Completed:
+                    started = false;
+                    return BTStatus.Success;
+                case PoliceInvestigationStatus.Failed:
+                    started = false;
+                    return BTStatus.Failure;
+                default:
+                    return BTStatus.Running;
             }
-
-            float duration = Mathf.Max(0f, context.lookAroundDuration);
-            if (Time.time - startTime < duration)
-            {
-                return BTStatus.Running;
-            }
-
-            started = false;
-            return BTStatus.Success;
         }
 
         public override void Reset()
         {
             base.Reset();
+            context?.CancelInvestigation();
             started = false;
-            startTime = 0f;
         }
     }
 }

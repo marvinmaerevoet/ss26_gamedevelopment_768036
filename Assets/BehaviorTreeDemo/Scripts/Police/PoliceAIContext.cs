@@ -53,16 +53,44 @@ namespace CustomApproachDemo.Police
         [Header("Demo")]
         public Transform safePoint;
         public float lookAroundDuration = 2f;
+        [SerializeField, Min(0f)] private float faceTurnSpeed = 720f;
+        [SerializeField, Min(0f)] private float lookAroundTurnSpeed = 120f;
+
+        public PoliceInvestigationPhase InvestigationPhase { get; private set; }
 
         private bool warnedMissingPlayerState;
         private bool warnedMissingAgent;
         private bool loggedArrest;
         private ArrestPhase arrestPhase;
+        private bool facePlayerContinuously;
+        private bool manualRotationActive;
+        private bool previousAgentUpdateRotation;
+        private float investigationStartedAt;
+        private bool investigationCompleted;
 
         private void Awake()
         {
             EnsureReferences();
             ApplyMovementSpeed();
+        }
+
+        private void Update()
+        {
+            if (facePlayerContinuously)
+            {
+                RotateTowardsPlayer(faceTurnSpeed * Time.deltaTime);
+            }
+            else if (InvestigationPhase == PoliceInvestigationPhase.LookingAround && Self != null)
+            {
+                if (Time.time - investigationStartedAt >= Mathf.Max(0f, lookAroundDuration))
+                {
+                    CompleteLookingAround();
+                }
+                else
+                {
+                    Self.Rotate(Vector3.up, lookAroundTurnSpeed * Time.deltaTime, Space.World);
+                }
+            }
         }
 
         private void Reset()
@@ -79,6 +107,8 @@ namespace CustomApproachDemo.Police
             arrestStandDistance = Mathf.Max(0f, arrestStandDistance);
             arrestStandTolerance = Mathf.Max(0f, arrestStandTolerance);
             arrestNavMeshSampleRadius = Mathf.Max(0f, arrestNavMeshSampleRadius);
+            faceTurnSpeed = Mathf.Max(0f, faceTurnSpeed);
+            lookAroundTurnSpeed = Mathf.Max(0f, lookAroundTurnSpeed);
         }
 
         public void RefreshPerception()
@@ -265,6 +295,8 @@ namespace CustomApproachDemo.Police
 
             arrestPhase = ArrestPhase.Approaching;
             PoliceBlackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
+            StopFacingPlayer();
+            CancelInvestigation();
             StopMovement();
             return true;
         }
@@ -424,6 +456,127 @@ namespace CustomApproachDemo.Police
             {
                 Self.rotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
             }
+        }
+
+        public bool BeginFacingPlayer()
+        {
+            EnsureReferences();
+            if (PoliceBlackboard == null || PoliceBlackboard.Player == null || Self == null)
+            {
+                return false;
+            }
+
+            facePlayerContinuously = true;
+            AcquireManualRotation();
+            return true;
+        }
+
+        public void StopFacingPlayer()
+        {
+            facePlayerContinuously = false;
+            ReleaseManualRotationIfUnused();
+        }
+
+        public void BeginInvestigationTravel()
+        {
+            StopFacingPlayer();
+            CancelInvestigation();
+            InvestigationPhase = PoliceInvestigationPhase.Moving;
+        }
+
+        public bool BeginLookingAround()
+        {
+            EnsureReferences();
+            if (Self == null)
+            {
+                return false;
+            }
+
+            StopFacingPlayer();
+            StopMovement();
+            InvestigationPhase = PoliceInvestigationPhase.LookingAround;
+            investigationStartedAt = Time.time;
+            investigationCompleted = false;
+            AcquireManualRotation();
+            return true;
+        }
+
+        public PoliceInvestigationStatus UpdateLookingAround()
+        {
+            if (investigationCompleted)
+            {
+                investigationCompleted = false;
+                return PoliceInvestigationStatus.Completed;
+            }
+
+            if (InvestigationPhase != PoliceInvestigationPhase.LookingAround || Self == null)
+            {
+                return PoliceInvestigationStatus.Failed;
+            }
+
+            return PoliceInvestigationStatus.Running;
+        }
+
+        public void CancelInvestigation()
+        {
+            InvestigationPhase = PoliceInvestigationPhase.None;
+            investigationStartedAt = 0f;
+            investigationCompleted = false;
+            ReleaseManualRotationIfUnused();
+        }
+
+        private void CompleteLookingAround()
+        {
+            InvestigationPhase = PoliceInvestigationPhase.None;
+            investigationStartedAt = 0f;
+            investigationCompleted = true;
+            ReleaseManualRotationIfUnused();
+        }
+
+        private void RotateTowardsPlayer(float maxDegreesDelta)
+        {
+            if (PoliceBlackboard == null || PoliceBlackboard.Player == null || Self == null)
+            {
+                return;
+            }
+
+            Vector3 direction = PoliceBlackboard.Player.position - Self.position;
+            direction.y = 0f;
+            if (direction.sqrMagnitude <= 0.001f)
+            {
+                return;
+            }
+
+            Quaternion targetRotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
+            Self.rotation = Quaternion.RotateTowards(Self.rotation, targetRotation, Mathf.Max(0f, maxDegreesDelta));
+        }
+
+        private void AcquireManualRotation()
+        {
+            if (manualRotationActive || NavMeshAgent == null)
+            {
+                return;
+            }
+
+            previousAgentUpdateRotation = NavMeshAgent.updateRotation;
+            NavMeshAgent.updateRotation = false;
+            manualRotationActive = true;
+        }
+
+        private void ReleaseManualRotationIfUnused()
+        {
+            if (!manualRotationActive || facePlayerContinuously ||
+                InvestigationPhase == PoliceInvestigationPhase.LookingAround)
+            {
+                return;
+            }
+
+            if (NavMeshAgent != null)
+            {
+                NavMeshAgent.updateRotation = previousAgentUpdateRotation;
+            }
+
+            manualRotationActive = false;
         }
 
         private bool TryGetArrestStandPosition(out Vector3 standPosition)

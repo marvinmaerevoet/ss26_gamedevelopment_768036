@@ -17,9 +17,16 @@ namespace CustomApproachDemo.Police.Nodes
             }
 
             Context.SetMovementMode(PoliceMovementMode.Walk);
+            Context.BeginInvestigationTravel();
             blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Investigate;
             destination = blackboard.LastKnownPlayerPosition;
             return true;
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+            Context?.CancelInvestigation();
         }
     }
 }

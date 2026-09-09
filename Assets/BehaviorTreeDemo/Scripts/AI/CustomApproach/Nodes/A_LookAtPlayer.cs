@@ -1,6 +1,4 @@
 using CustomApproachDemo.BehaviorTree;
-using UnityEngine;
-
 namespace CustomApproachDemo.Police.Nodes
 {
     public sealed class A_LookAtPlayer : BTAction
@@ -9,6 +7,7 @@ namespace CustomApproachDemo.Police.Nodes
         private bool warnedMissingContext;
         private bool warnedMissingBlackboard;
         private bool warnedMissingPlayer;
+        private bool facingStarted;
 
         public A_LookAtPlayer(PoliceAIContext context) : base("Look At Player")
         {
@@ -31,21 +30,18 @@ namespace CustomApproachDemo.Police.Nodes
                 return BTStatus.Failure;
             }
 
-            Vector3 direction = blackboard.Player.position - context.Self.position;
-            direction.y = 0f;
+            facingStarted = context.BeginFacingPlayer();
+            return facingStarted ? BTStatus.Running : BTStatus.Failure;
+        }
 
-            if (direction.sqrMagnitude <= 0.001f)
+        public override void Reset()
+        {
+            base.Reset();
+            if (facingStarted)
             {
-                return BTStatus.Success;
+                context.StopFacingPlayer();
+                facingStarted = false;
             }
-
-            Quaternion targetRotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
-            context.Self.rotation = Quaternion.Slerp(
-                context.Self.rotation,
-                targetRotation,
-                Time.deltaTime * 12f);
-
-            return BTStatus.Success;
         }
     }
 }
