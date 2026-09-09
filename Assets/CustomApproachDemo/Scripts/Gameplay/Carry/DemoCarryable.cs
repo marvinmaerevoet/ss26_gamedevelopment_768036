@@ -26,6 +26,9 @@ namespace CustomApproachDemo.Gameplay.Carry
         private bool usedGravity;
         private bool detectedCollisions;
         private bool[] colliderEnabledStates;
+        private Transform resetParent;
+        private RigidbodyInterpolation resetInterpolation;
+        private CollisionDetectionMode resetCollisionMode;
 
         public bool IsCarried { get; private set; }
         public bool IsPickupLocked { get; private set; }
@@ -40,6 +43,43 @@ namespace CustomApproachDemo.Gameplay.Carry
         private void Awake()
         {
             ResolveReferences();
+            resetParent = transform.parent;
+            if (carriedRigidbody != null)
+            {
+                resetInterpolation = carriedRigidbody.interpolation;
+                resetCollisionMode = carriedRigidbody.collisionDetectionMode;
+            }
+        }
+
+        // The owning carry controller must release its reference before calling this.
+        public void ResetTo(Transform target)
+        {
+            if (target == null) return;
+            ResolveReferences();
+            if (IsCarried) EndCarry(target.position, target.rotation);
+            activeCarryAnchor = null;
+            IsCarried = false;
+            IsPickupLocked = false;
+            transform.SetParent(resetParent, true);
+            if (carriedRigidbody != null)
+            {
+                carriedRigidbody.interpolation = RigidbodyInterpolation.None;
+                carriedRigidbody.detectCollisions = false;
+            }
+            transform.SetPositionAndRotation(target.position, target.rotation);
+            if (carriedRigidbody != null)
+            {
+                carriedRigidbody.position = target.position;
+                carriedRigidbody.rotation = target.rotation;
+                carriedRigidbody.isKinematic = false;
+                carriedRigidbody.linearVelocity = Vector3.zero;
+                carriedRigidbody.angularVelocity = Vector3.zero;
+                carriedRigidbody.useGravity = true;
+                carriedRigidbody.collisionDetectionMode = resetCollisionMode;
+                carriedRigidbody.detectCollisions = true;
+                carriedRigidbody.interpolation = resetInterpolation;
+            }
+            SetCollidersEnabled(true);
         }
 
         private void OnValidate()

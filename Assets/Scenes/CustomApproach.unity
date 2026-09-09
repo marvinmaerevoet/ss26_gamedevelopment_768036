@@ -62277,6 +62277,9 @@ MonoBehaviour:
   playerState: {fileID: 439849588}
   movement: {fileID: 439849587}
   jailSpawn: {fileID: 939519733}
+  carryController: {fileID: 439849592}
+  missionCrate: {fileID: 2111562124}
+  crateReset: {fileID: 732542191}
   fadeGroup: {fileID: 1251797130}
   releaseUI: {fileID: 1562964022}
   arrestWait: 5

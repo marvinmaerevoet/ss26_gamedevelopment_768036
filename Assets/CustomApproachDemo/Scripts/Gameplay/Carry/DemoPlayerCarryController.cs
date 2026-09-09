@@ -126,6 +126,13 @@ namespace CustomApproachDemo.Gameplay.Carry
             return true;
         }
 
+        public void ResetCarryable(DemoCarryable carryable, Transform target)
+        {
+            if (carryable == null || target == null) return;
+            if (currentCarryable == carryable) currentCarryable = null;
+            carryable.ResetTo(target);
+        }
+
         private DemoCarryable FindNearestCarryable()
         {
             Vector3 origin = transform.position + pickupOriginOffset;

@@ -1,4 +1,5 @@
 using System.Collections;
+using CustomApproachDemo.Gameplay.Carry;
 using CustomApproachDemo.Player;
 using CustomApproachDemo.Gameplay.UI;
 using UnityEngine;
@@ -10,6 +11,9 @@ namespace CustomApproachDemo.Gameplay.Arrest
         [SerializeField] private DemoPlayerState playerState;
         [SerializeField] private DemoSimplePlayerController movement;
         [SerializeField] private Transform jailSpawn;
+        [SerializeField] private DemoPlayerCarryController carryController;
+        [SerializeField] private DemoCarryable missionCrate;
+        [SerializeField] private Transform crateReset;
         [SerializeField] private CanvasGroup fadeGroup;
         [SerializeField] private DemoJailReleaseUI releaseUI;
         [SerializeField, Min(0f)] private float arrestWait = 5f;
@@ -35,7 +39,8 @@ namespace CustomApproachDemo.Gameplay.Arrest
         private void BeginSequence()
         {
             if (IsSequenceRunning) return;
-            if (playerState == null || movement == null || jailSpawn == null || fadeGroup == null || releaseUI == null)
+            if (playerState == null || movement == null || jailSpawn == null || fadeGroup == null || releaseUI == null ||
+                carryController == null || missionCrate == null || crateReset == null)
             {
                 Debug.LogError("Arrest sequence references are incomplete.", this);
                 return;
@@ -51,6 +56,7 @@ namespace CustomApproachDemo.Gameplay.Arrest
             // Render one fully black frame before changing the player pose.
             yield return null;
             movement.TeleportTo(jailSpawn);
+            carryController.ResetCarryable(missionCrate, crateReset);
             yield return null;
             yield return Fade(1f, 0f, fadeInDuration);
             playerState.IsArrested = false;
