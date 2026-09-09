@@ -68,7 +68,7 @@ Execute the tasks in order. Each task is a standalone Codex assignment and must 
 | Task | Topic | Status | Commit | Manual Playtest |
 |---|---|---|---|---|
 | [01](01_SelectorAndCancelOwnership.md) | Selector and cancel ownership | DONE | THIS COMMIT | PENDING |
-| [02](02_SharedArrestLifecycle.md) | Shared arrest lifecycle | PENDING | — | NOT RUN |
+| [02](02_SharedArrestLifecycle.md) | Shared arrest lifecycle | DONE | THIS COMMIT | PENDING |
 | [03](03_PerceptionAndGameplayRules.md) | Perception and gameplay rules | PENDING | — | NOT RUN |
 | [04](04_SharedFacingAndInvestigation.md) | Shared facing and investigation | PENDING | — | NOT RUN |
 | [05](05_MissionOutcomeAndInteractionRules.md) | Mission outcome and interaction rules | PENDING | — | NOT RUN |

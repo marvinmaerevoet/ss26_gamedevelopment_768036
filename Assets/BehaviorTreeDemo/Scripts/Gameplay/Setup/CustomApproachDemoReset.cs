@@ -94,6 +94,7 @@ namespace CustomApproachDemo.Setup
             delivery?.ResetDeliveryState();
 
             ResetPlayer();
+            ResetPoliceArrestState();
             ResetPolice();
             ResetBlackboard();
 
@@ -226,6 +227,20 @@ namespace CustomApproachDemo.Setup
             }
 
             policeTransform.SetPositionAndRotation(initialPolicePosition, initialPoliceRotation);
+        }
+
+        private void ResetPoliceArrestState()
+        {
+            policeContext?.ResetArrestState();
+
+            for (int i = 0; i < additionalSheriffs.Length; i++)
+            {
+                PoliceAIContext context = additionalSheriffs[i];
+                if (context != null && context != policeContext)
+                {
+                    context.ResetArrestState();
+                }
+            }
         }
 
         private void ResetBlackboard()

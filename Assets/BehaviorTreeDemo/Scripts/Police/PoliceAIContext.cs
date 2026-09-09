@@ -7,6 +7,13 @@ namespace CustomApproachDemo.Police
 {
     public sealed class PoliceAIContext : MonoBehaviour
     {
+        private enum ArrestPhase
+        {
+            None,
+            Approaching,
+            Committed
+        }
+
         [Header("References")]
         public PoliceBlackboard PoliceBlackboard;
         public NavMeshAgent NavMeshAgent;
@@ -26,8 +33,9 @@ namespace CustomApproachDemo.Police
         public float RunSpeed => runSpeed;
         public float ArrestStandDistance => arrestStandDistance;
         public PoliceMovementMode CurrentMovementMode { get; private set; } = PoliceMovementMode.Walk;
-        public bool IsArrestApproachActive { get; private set; }
-        public bool IsArrestLatched { get; private set; }
+        public bool IsArrestApproachActive => arrestPhase == ArrestPhase.Approaching;
+        public bool IsArrestLatched => arrestPhase != ArrestPhase.None;
+        public bool IsArrestCommitted => arrestPhase == ArrestPhase.Committed;
 
         [Header("Perception")]
         public float viewDistance = 12f;
@@ -48,6 +56,8 @@ namespace CustomApproachDemo.Police
 
         private bool warnedMissingPlayerState;
         private bool warnedMissingAgent;
+        private bool loggedArrest;
+        private ArrestPhase arrestPhase;
 
         private void Awake()
         {
@@ -212,7 +222,102 @@ namespace CustomApproachDemo.Police
             return PoliceMovementStatus.Running;
         }
 
-        public PoliceMovementStatus UpdateArrestApproach()
+        public bool TryBeginArrest()
+        {
+            EnsureReferences();
+
+            if (arrestPhase != ArrestPhase.None)
+            {
+                return true;
+            }
+
+            if (PoliceBlackboard == null || PoliceBlackboard.Player == null ||
+                PlayerState == null || PlayerState.IsArrested || Self == null || NavMeshAgent == null)
+            {
+                return false;
+            }
+
+            arrestPhase = ArrestPhase.Approaching;
+            PoliceBlackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
+            StopMovement();
+            return true;
+        }
+
+        public PoliceArrestStatus UpdateArrest()
+        {
+            EnsureReferences();
+
+            if (arrestPhase == ArrestPhase.None)
+            {
+                return PoliceArrestStatus.Failed;
+            }
+
+            if (PoliceBlackboard == null || PoliceBlackboard.Player == null ||
+                PlayerState == null || Self == null || NavMeshAgent == null)
+            {
+                ResetArrestState();
+                return PoliceArrestStatus.Failed;
+            }
+
+            if (arrestPhase == ArrestPhase.Committed)
+            {
+                if (PlayerState.IsArrested)
+                {
+                    HoldCompletedArrest();
+                    return PoliceArrestStatus.Running;
+                }
+
+                ResetArrestState();
+                return PoliceArrestStatus.Completed;
+            }
+
+            // A different officer may have committed before this approach did.
+            if (PlayerState.IsArrested)
+            {
+                ResetArrestState();
+                return PoliceArrestStatus.Failed;
+            }
+
+            PoliceMovementStatus approachStatus = UpdateArrestApproach();
+            if (approachStatus == PoliceMovementStatus.Running)
+            {
+                return PoliceArrestStatus.Running;
+            }
+
+            if (approachStatus == PoliceMovementStatus.Failed)
+            {
+                ResetArrestState();
+                return PoliceArrestStatus.Failed;
+            }
+
+            arrestPhase = ArrestPhase.Committed;
+            PoliceBlackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
+            StopMovement();
+            FacePlayer();
+            PlayerState.IsArrested = true;
+
+            if (!loggedArrest)
+            {
+                Debug.Log("Police demo: Player arrested.");
+                loggedArrest = true;
+            }
+
+            return PoliceArrestStatus.Running;
+        }
+
+        public void CancelArrest()
+        {
+            if (arrestPhase == ArrestPhase.None)
+            {
+                return;
+            }
+
+            bool stillOwnsMovement = PoliceBlackboard == null ||
+                                     PoliceBlackboard.CurrentBehaviorMode == PoliceBehaviorMode.Arrest;
+            ResetArrestState(stillOwnsMovement);
+        }
+
+        private PoliceMovementStatus UpdateArrestApproach()
         {
             EnsureReferences();
 
@@ -222,7 +327,6 @@ namespace CustomApproachDemo.Police
             }
 
             PoliceBlackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
-            IsArrestLatched = true;
 
             Vector3 toPlayer = PoliceBlackboard.Player.position - Self.position;
             toPlayer.y = 0f;
@@ -230,13 +334,10 @@ namespace CustomApproachDemo.Police
 
             if (Mathf.Abs(distanceToPlayer - arrestStandDistance) <= arrestStandTolerance)
             {
-                IsArrestApproachActive = false;
                 StopMovement();
                 FacePlayer();
                 return PoliceMovementStatus.Arrived;
             }
-
-            IsArrestApproachActive = true;
 
             if (!TryGetArrestStandPosition(out Vector3 standPosition))
             {
@@ -263,22 +364,8 @@ namespace CustomApproachDemo.Police
             return PoliceMovementStatus.Running;
         }
 
-        public void BeginArrestApproach()
+        private void HoldCompletedArrest()
         {
-            IsArrestLatched = true;
-            IsArrestApproachActive = true;
-            if (PoliceBlackboard != null)
-            {
-                PoliceBlackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
-            }
-
-            StopMovement();
-        }
-
-        public void HoldCompletedArrest()
-        {
-            IsArrestLatched = true;
-            IsArrestApproachActive = false;
             if (PoliceBlackboard != null)
             {
                 PoliceBlackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
@@ -290,17 +377,11 @@ namespace CustomApproachDemo.Police
 
         public void ResetArrestState(bool stopOwnedMovement = true)
         {
-            IsArrestLatched = false;
-            IsArrestApproachActive = false;
+            arrestPhase = ArrestPhase.None;
             if (stopOwnedMovement)
             {
                 StopMovement();
             }
-        }
-
-        public void CancelArrestApproach()
-        {
-            ResetArrestState();
         }
 
         public void FacePlayer()

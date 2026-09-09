@@ -1,6 +1,4 @@
 using CustomApproachDemo.BehaviorTree;
-using CustomApproachDemo.Player;
-using UnityEngine;
 
 namespace CustomApproachDemo.Police.Nodes
 {
@@ -8,11 +6,6 @@ namespace CustomApproachDemo.Police.Nodes
     {
         private readonly PoliceAIContext context;
         private bool warnedMissingContext;
-        private bool warnedMissingBlackboard;
-        private bool warnedMissingPlayerState;
-        private bool loggedArrest;
-        private bool approachStarted;
-        private bool arrestCommitted;
 
         public A_ArrestPlayer(PoliceAIContext context) : base("Arrest Player")
         {
@@ -21,105 +14,32 @@ namespace CustomApproachDemo.Police.Nodes
 
         protected override BTStatus Execute()
         {
-            PoliceBlackboard blackboard = PoliceNodeSupport.GetBlackboard(
-                context, Name, ref warnedMissingContext, ref warnedMissingBlackboard);
+            if (context == null)
+            {
+                PoliceNodeSupport.WarnOnce($"{Name} needs a PoliceAIContext.", ref warnedMissingContext);
+                return BTStatus.Failure;
+            }
 
-            if (blackboard == null)
+            if (!context.IsArrestLatched && !context.TryBeginArrest())
             {
                 return BTStatus.Failure;
             }
 
-            DemoPlayerState playerState = context.PlayerState;
-            if (playerState == null && blackboard.Player != null)
+            switch (context.UpdateArrest())
             {
-                playerState = blackboard.Player.GetComponentInParent<DemoPlayerState>();
-            }
-
-            if (playerState == null)
-            {
-                PoliceNodeSupport.WarnOnce($"{Name} needs a DemoPlayerState to arrest.", ref warnedMissingPlayerState);
-                return BTStatus.Failure;
-            }
-
-            if (arrestCommitted)
-            {
-                if (playerState.IsArrested)
-                {
-                    context.HoldCompletedArrest();
+                case PoliceArrestStatus.Running:
                     return BTStatus.Running;
-                }
-
-                arrestCommitted = false;
-                approachStarted = false;
-                context.ResetArrestState();
-                return BTStatus.Success;
+                case PoliceArrestStatus.Completed:
+                    return BTStatus.Success;
+                default:
+                    return BTStatus.Failure;
             }
-
-            // Another officer already owns the active arrest. Do not let this
-            // sheriff acquire a second local arrest latch.
-            if (playerState.IsArrested)
-            {
-                ResetOwnedArrest();
-                return BTStatus.Failure;
-            }
-
-            blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
-
-            if (!approachStarted)
-            {
-                context.BeginArrestApproach();
-                approachStarted = true;
-            }
-
-            PoliceMovementStatus approachStatus = context.UpdateArrestApproach();
-            if (approachStatus == PoliceMovementStatus.Running)
-            {
-                return BTStatus.Running;
-            }
-
-            if (approachStatus == PoliceMovementStatus.Failed)
-            {
-                ResetOwnedArrest();
-                return BTStatus.Failure;
-            }
-
-            context.StopMovement();
-            context.FacePlayer();
-            blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
-            context.HoldCompletedArrest();
-            arrestCommitted = true;
-            playerState.IsArrested = true;
-
-            if (!loggedArrest)
-            {
-                Debug.Log("Police demo: Player arrested.");
-                loggedArrest = true;
-            }
-
-            return BTStatus.Running;
         }
 
         public override void Reset()
         {
             base.Reset();
-            ResetOwnedArrest();
-        }
-
-        private void ResetOwnedArrest()
-        {
-            bool ownedArrest = approachStarted || arrestCommitted;
-            bool stillOwnsMovement = ownedArrest &&
-                                     context != null &&
-                                     (context.PoliceBlackboard == null ||
-                                      context.PoliceBlackboard.CurrentBehaviorMode == PoliceBehaviorMode.Arrest);
-
-            approachStarted = false;
-            arrestCommitted = false;
-
-            if (ownedArrest)
-            {
-                context.ResetArrestState(stillOwnsMovement);
-            }
+            context?.CancelArrest();
         }
     }
 }
