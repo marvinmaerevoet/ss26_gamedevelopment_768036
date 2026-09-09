@@ -18,6 +18,8 @@ Nutze eine vorhandene Western-Demo-Szene aus den Synty-Assets, zum Beispiel aus 
 
 ## Setup-Schritte
 
+`CustomApproachSceneSetup` ist nur ein selektiver Bootstrap-/Authoring-Helfer fuer einzelne ausgewaehlte Objekte. Er rekonstruiert weder die heutige Mission und UI noch das vollstaendige Multi-Sheriff-Setup der Hauptszene.
+
 1. Western-Demo-Szene oeffnen.
 2. Spieler-Charakter auswaehlen.
 3. `DemoPlayerState` oder per ContextMenu `Add Simple Player Controller To Selected` hinzufuegen.
@@ -44,14 +46,11 @@ Die Kamera sucht automatisch den ersten `DemoPlayerState`, folgt dem Player und 
 
 ## Synty Animation Setup
 
-Fuer einfache Synty-Animationen gibt es einen sicheren Demo-Workflow, der nur Assets unter `Assets/BehaviorTreeDemo/` erzeugt:
+Die funktionierenden Controller `Player.controller`, `Sheriff.controller` und `Lydia.controller` sind bereits Bestandteil der Demo und sollen nicht neu erzeugt werden.
 
-1. In der Unity-Menueleiste `Tools/Custom Approach Demo/Create Animator Controllers` ausfuehren.
-2. Ein GameObject mit `CustomApproachSceneSetup` auswaehlen und im Component-ContextMenu `Custom Approach Demo/Setup Synty Animations` ausfuehren.
+Der Menuepunkt `Tools/Behavior Tree Demo/Bootstrap Animator Controllers (Empty Demo Only)` ist nur fuer eine neue, leere Bootstrap-Szene vorgesehen. Sobald `Player.controller` oder `Sheriff.controller` bereits existiert, verweigert er die Ausfuehrung und veraendert keine Assets. Der Generator bildet die heutigen Arrest-Enter/Hold/Release-, Investigate- und Locomotion-Details nicht vollstaendig nach.
 
-Der erste Schritt sucht Idle-, Walk- und Run-Clips aus `Assets/ThirdParty/Synty/AnimationBaseLocomotion` und erstellt `Player.controller` sowie `Sheriff.controller` im Demo-Ordner. Wenn passende Spezialclips gefunden werden, werden zusaetzlich einfache States fuer Investigate, Emergency und Arrest angelegt.
-
-Der zweite Schritt sucht den ersten `DemoPlayerState` und den ersten `PoliceAIContext` in der Szene, verdrahtet `BasicAnimationDriver`, weist die Demo-Controller zu und setzt `Animator.applyRootMotion = false`. Szene-Instanzen werden nur geaendert, wenn du diesen ContextMenu-Punkt manuell ausfuehrst.
+Der ContextMenu-Punkt `Behavior Tree Demo Bootstrap/Setup Synty Animations` verdrahtet nur den ersten gefundenen Player und Sheriff. Er ist ebenfalls ein Authoring-Helfer fuer einfache neue Setups und kein Rebuilder der aktuellen Hauptszene.
 
 `BasicAnimationDriver` nutzt einfache Animator-Parameter und keine Positionsdelta-Speed-Berechnung. Beim Sheriff kommt `Speed` aus `NavMeshAgent.velocity.magnitude`; beim Player werden feste visuelle Werte fuer Gehen und Rennen genutzt.
 

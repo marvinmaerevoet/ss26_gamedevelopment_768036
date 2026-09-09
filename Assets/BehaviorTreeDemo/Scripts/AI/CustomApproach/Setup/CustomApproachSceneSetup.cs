@@ -11,13 +11,19 @@ using UnityEditor;
 
 namespace CustomApproachDemo.Setup
 {
+    /// <summary>
+    /// Selective authoring/bootstrap helpers for adding individual demo components.
+    /// This component does not reconstruct the current mission, UI, or multi-Sheriff scene.
+    /// </summary>
+    [AddComponentMenu("Behavior Tree Demo/Authoring/Bootstrap Helper")]
     public sealed class CustomApproachSceneSetup : MonoBehaviour
     {
+        private const string ContextMenuRoot = "Behavior Tree Demo Bootstrap/";
         private const string EyePointName = "EyePoint";
         private const string PlayerAnimatorControllerPath = "Assets/BehaviorTreeDemo/Animations/Player.controller";
         private const string SheriffAnimatorControllerPath = "Assets/BehaviorTreeDemo/Animations/Sheriff.controller";
 
-        [ContextMenu("Custom Approach Demo/Add Player Demo State To Selected")]
+        [ContextMenu(ContextMenuRoot + "Add Player Demo State To Selected")]
         public void AddPlayerDemoStateToSelected()
         {
             #if UNITY_EDITOR
@@ -34,7 +40,7 @@ namespace CustomApproachDemo.Setup
             #endif
         }
 
-        [ContextMenu("Custom Approach Demo/Add Police Components To Selected")]
+        [ContextMenu(ContextMenuRoot + "Add Police Components To Selected")]
         public void AddPoliceComponentsToSelected()
         {
             #if UNITY_EDITOR
@@ -77,7 +83,7 @@ namespace CustomApproachDemo.Setup
             #endif
         }
 
-        [ContextMenu("Custom Approach Demo/Create Patrol Points Around Selected Police")]
+        [ContextMenu(ContextMenuRoot + "Create Patrol Points Around Selected Police")]
         public void CreatePatrolPointsAroundSelectedPolice()
         {
             #if UNITY_EDITOR
@@ -124,7 +130,7 @@ namespace CustomApproachDemo.Setup
             #endif
         }
 
-        [ContextMenu("Custom Approach Demo/Create Restricted Area Trigger")]
+        [ContextMenu(ContextMenuRoot + "Create Restricted Area Trigger")]
         public void CreateRestrictedAreaTrigger()
         {
             #if UNITY_EDITOR
@@ -153,7 +159,7 @@ namespace CustomApproachDemo.Setup
             #endif
         }
 
-        [ContextMenu("Custom Approach Demo/Create Safe Point")]
+        [ContextMenu(ContextMenuRoot + "Create Safe Point")]
         public void CreateSafePoint()
         {
             #if UNITY_EDITOR
@@ -183,7 +189,7 @@ namespace CustomApproachDemo.Setup
             #endif
         }
 
-        [ContextMenu("Custom Approach Demo/Create BehaviorTree Debug UI")]
+        [ContextMenu(ContextMenuRoot + "Create BehaviorTree Debug UI")]
         public void CreateBehaviorTreeDebugUI()
         {
             #if UNITY_EDITOR
@@ -202,7 +208,7 @@ namespace CustomApproachDemo.Setup
             #endif
         }
 
-        [ContextMenu("Custom Approach Demo/Create Demo Reset")]
+        [ContextMenu(ContextMenuRoot + "Create Demo Reset")]
         public void CreateDemoReset()
         {
             #if UNITY_EDITOR
@@ -227,7 +233,7 @@ namespace CustomApproachDemo.Setup
             #endif
         }
 
-        [ContextMenu("Custom Approach Demo/Auto Wire Selected Police To First Player")]
+        [ContextMenu(ContextMenuRoot + "Auto Wire Selected Police To First Player")]
         public void AutoWireSelectedPoliceToFirstPlayer()
         {
             #if UNITY_EDITOR
@@ -274,7 +280,7 @@ namespace CustomApproachDemo.Setup
             #endif
         }
 
-        [ContextMenu("Custom Approach Demo/Add Simple Player Controller To Selected")]
+        [ContextMenu(ContextMenuRoot + "Add Simple Player Controller To Selected")]
         public void AddSimplePlayerControllerToSelected()
         {
             #if UNITY_EDITOR
@@ -299,7 +305,7 @@ namespace CustomApproachDemo.Setup
             #endif
         }
 
-        [ContextMenu("Custom Approach Demo/Add Third Person Camera To Main Camera")]
+        [ContextMenu(ContextMenuRoot + "Add Third Person Camera To Main Camera")]
         public void AddThirdPersonCameraToMainCamera()
         {
             #if UNITY_EDITOR
@@ -336,7 +342,7 @@ namespace CustomApproachDemo.Setup
             #endif
         }
 
-        [ContextMenu("Custom Approach Demo/Add Basic Animation Driver To Selected")]
+        [ContextMenu(ContextMenuRoot + "Add Basic Animation Driver To Selected")]
         public void AddBasicAnimationDriverToSelected()
         {
             #if UNITY_EDITOR
@@ -386,7 +392,7 @@ namespace CustomApproachDemo.Setup
             #endif
         }
 
-        [ContextMenu("Custom Approach Demo/Setup Synty Animations")]
+        [ContextMenu(ContextMenuRoot + "Setup Synty Animations")]
         public void SetupSyntyAnimations()
         {
             #if UNITY_EDITOR
@@ -400,7 +406,7 @@ namespace CustomApproachDemo.Setup
 
             if (playerController == null || sheriffController == null)
             {
-                Debug.LogWarning("Bitte zuerst Tools/Custom Approach Demo/Create Animator Controllers ausfuehren.");
+                Debug.LogWarning("Missing demo controllers. Use Tools/Behavior Tree Demo/Bootstrap Animator Controllers (Empty Demo Only) only in a new empty demo setup.");
             }
 
             if (playerState == null)
@@ -452,7 +458,7 @@ namespace CustomApproachDemo.Setup
             #endif
         }
 
-        [ContextMenu("Custom Approach Demo/Create Full Demo Helpers For Selected Police")]
+        [ContextMenu(ContextMenuRoot + "Create Full Demo Helpers For Selected Police")]
         public void CreateFullDemoHelpersForSelectedPolice()
         {
             #if UNITY_EDITOR

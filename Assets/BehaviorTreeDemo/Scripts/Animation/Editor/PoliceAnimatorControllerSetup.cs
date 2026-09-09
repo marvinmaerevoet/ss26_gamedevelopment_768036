@@ -12,16 +12,26 @@ namespace CustomApproachDemo.EditorTools
         public const string PlayerControllerPath = AnimationsFolder + "/Player.controller";
         public const string SheriffControllerPath = AnimationsFolder + "/Sheriff.controller";
 
-        private const string MenuPath = "Tools/Custom Approach Demo/Create Animator Controllers";
+        private const string MenuPath = "Tools/Behavior Tree Demo/Bootstrap Animator Controllers (Empty Demo Only)";
 
         [MenuItem(MenuPath)]
         public static void CreateAnimatorControllers()
         {
+            if (AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(PlayerControllerPath) != null ||
+                AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(SheriffControllerPath) != null)
+            {
+                Debug.LogWarning(
+                    "Animator controller bootstrap refused: Player.controller or Sheriff.controller already exists. " +
+                    "The current demo controllers contain hand-authored arrest, release, investigate, and locomotion setup " +
+                    "that this bootstrap helper does not reproduce. No assets were changed.");
+                return;
+            }
+
             ClipSelection clips = FindSyntyClips();
             if (!clips.HasRequiredClips)
             {
                 Debug.LogError(
-                    "Could not create Custom Approach animator controllers. " +
+                    "Could not create Behavior Tree Demo animator controllers. " +
                     "Required clips were not found. Search terms: Idle, Walk, Run under Assets/ThirdParty/Synty/AnimationBaseLocomotion.");
                 return;
             }
@@ -38,7 +48,7 @@ namespace CustomApproachDemo.EditorTools
             AssetDatabase.Refresh();
 
             Debug.Log(
-                "Created Custom Approach animator controllers.\n" +
+                "Created Behavior Tree Demo bootstrap animator controllers.\n" +
                 $"Idle: {GetPath(clips.Idle)}\n" +
                 $"Walk: {GetPath(clips.Walk)}\n" +
                 $"Run: {GetPath(clips.Run)}\n" +
@@ -94,12 +104,13 @@ namespace CustomApproachDemo.EditorTools
         {
             if (!path.StartsWith(AnimationsFolder, StringComparison.Ordinal))
             {
-                throw new InvalidOperationException("Refusing to create animator controller outside the Custom Approach demo folder.");
+                throw new InvalidOperationException("Refusing to create animator controller outside the Behavior Tree Demo folder.");
             }
 
-            if (AssetDatabase.LoadAssetAtPath<AnimatorController>(path) != null)
+            if (AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path) != null)
             {
-                AssetDatabase.DeleteAsset(path);
+                throw new InvalidOperationException(
+                    $"Refusing to overwrite existing animator controller asset: {path}");
             }
 
             return AnimatorController.CreateAnimatorControllerAtPath(path);
