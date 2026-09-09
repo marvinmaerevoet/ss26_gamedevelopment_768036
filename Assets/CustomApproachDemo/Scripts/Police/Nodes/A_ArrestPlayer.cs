@@ -11,6 +11,8 @@ namespace CustomApproachDemo.Police.Nodes
         private bool warnedMissingBlackboard;
         private bool warnedMissingPlayerState;
         private bool loggedArrest;
+        private bool approachStarted;
+        private bool arrestCommitted;
 
         public A_ArrestPlayer(PoliceAIContext context) : base("Arrest Player")
         {
@@ -39,9 +41,55 @@ namespace CustomApproachDemo.Police.Nodes
                 return BTStatus.Failure;
             }
 
-            playerState.IsArrested = true;
+            if (arrestCommitted)
+            {
+                if (playerState.IsArrested)
+                {
+                    context.HoldCompletedArrest();
+                    return BTStatus.Running;
+                }
+
+                arrestCommitted = false;
+                approachStarted = false;
+                context.ResetArrestState();
+                return BTStatus.Success;
+            }
+
+            // Another officer already owns the active arrest. Do not let this
+            // sheriff acquire a second local arrest latch.
+            if (playerState.IsArrested)
+            {
+                approachStarted = false;
+                context.ResetArrestState();
+                return BTStatus.Failure;
+            }
+
             blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
+
+            if (!approachStarted)
+            {
+                context.BeginArrestApproach();
+                approachStarted = true;
+            }
+
+            PoliceMovementStatus approachStatus = context.UpdateArrestApproach();
+            if (approachStatus == PoliceMovementStatus.Running)
+            {
+                return BTStatus.Running;
+            }
+
+            if (approachStatus == PoliceMovementStatus.Failed)
+            {
+                approachStarted = false;
+                return BTStatus.Failure;
+            }
+
             context.StopMovement();
+            context.FacePlayer();
+            blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
+            context.HoldCompletedArrest();
+            arrestCommitted = true;
+            playerState.IsArrested = true;
 
             if (!loggedArrest)
             {
@@ -49,7 +97,15 @@ namespace CustomApproachDemo.Police.Nodes
                 loggedArrest = true;
             }
 
-            return BTStatus.Success;
+            return BTStatus.Running;
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+            approachStarted = false;
+            arrestCommitted = false;
+            context?.ResetArrestState();
         }
     }
 }

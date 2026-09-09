@@ -50,7 +50,7 @@ Polish game:
 
 
 
-Okay, nun möchte ich dass das visionlightcone vom sheriff doch etwas subtiler ist. 
+Okay, nun möchte ich dass das visionlightcone vom sheriff doch etwas subtiler ist. ausserdem habe ich eben an dem mission crate rumgefummelt und wieder rückgängig gemacht bitte nochmal prüfen ob da alles so ist wie es sein soll1
 
 Okay dann soll er jetzt mal machen dass es so aussieht als würde man die kiste durch die gegend tragen, bevor du einen prompt schreibst gib mir ideen wie du das sinnvoll zu generieren findest, ich stell mir das nicht so leicht vor codex zu sagen er soll jetzt eine animation bauen und die sieht am ende nicht kacke aus. 
 

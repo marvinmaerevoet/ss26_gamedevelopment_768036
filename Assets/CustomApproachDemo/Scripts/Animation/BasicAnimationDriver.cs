@@ -12,6 +12,7 @@ namespace CustomApproachDemo.Animation {
         public NavMeshAgent agent;
         public DemoPlayerState playerState;
         public PoliceBlackboard blackboard;
+        public PoliceAIContext policeContext;
 
         public float walkingVisualSpeed = 1.5f;
         public float runningVisualSpeed = 4f;
@@ -54,12 +55,18 @@ namespace CustomApproachDemo.Animation {
             PoliceBehaviorMode behaviorMode = blackboard != null
                 ? blackboard.CurrentBehaviorMode
                 : PoliceBehaviorMode.None;
-            bool chasing = behaviorMode == PoliceBehaviorMode.Chase;
-            bool investigating = behaviorMode == PoliceBehaviorMode.Investigate;
-            bool arrested = (playerState != null && playerState.IsArrested) || behaviorMode == PoliceBehaviorMode.Arrest;
-            bool emergency = behaviorMode == PoliceBehaviorMode.Emergency || (blackboard != null && blackboard.OfficerHealthLow);
+            bool isPolice = blackboard != null || policeContext != null;
+            bool localArrestLatched = policeContext != null && policeContext.IsArrestLatched;
+            bool chasing = !localArrestLatched && behaviorMode == PoliceBehaviorMode.Chase;
+            bool investigating = !localArrestLatched && behaviorMode == PoliceBehaviorMode.Investigate;
+            bool emergency = !localArrestLatched &&
+                (behaviorMode == PoliceBehaviorMode.Emergency || (blackboard != null && blackboard.OfficerHealthLow));
 
             AnimationValues values = CalculateAnimationValues(chasing);
+            bool playerArrested = playerState != null && playerState.IsArrested;
+            bool arrestApproachActive = policeContext != null && policeContext.IsArrestApproachActive;
+            bool sheriffArrestPose = localArrestLatched && !arrestApproachActive && !values.IsMoving;
+            bool arrested = isPolice ? sheriffArrestPose : playerArrested;
 
             debugSourceSpeed = values.SourceSpeed;
             debugAnimatorSpeed = values.Speed;
@@ -105,6 +112,14 @@ namespace CustomApproachDemo.Animation {
 
             if(blackboard == null) {
                 blackboard = GetComponentInParent<PoliceBlackboard>();
+            }
+
+            if(policeContext == null) {
+                policeContext = GetComponent<PoliceAIContext>();
+            }
+
+            if(policeContext == null) {
+                policeContext = GetComponentInParent<PoliceAIContext>();
             }
 
             if(playerState != null && carryController == null) {

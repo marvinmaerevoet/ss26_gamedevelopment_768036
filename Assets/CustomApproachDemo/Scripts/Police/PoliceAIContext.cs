@@ -17,10 +17,16 @@ namespace CustomApproachDemo.Police
         [Header("Movement")]
         [SerializeField, Min(0f)] private float walkSpeed = 3f;
         [SerializeField, Min(0f)] private float runSpeed = 6f;
+        [SerializeField, Min(0f)] private float arrestStandDistance = 1.4f;
+        [SerializeField, Min(0f)] private float arrestStandTolerance = 0.15f;
+        [SerializeField, Min(0f)] private float arrestNavMeshSampleRadius = 1f;
 
         public float WalkSpeed => walkSpeed;
         public float RunSpeed => runSpeed;
+        public float ArrestStandDistance => arrestStandDistance;
         public PoliceMovementMode CurrentMovementMode { get; private set; } = PoliceMovementMode.Walk;
+        public bool IsArrestApproachActive { get; private set; }
+        public bool IsArrestLatched { get; private set; }
 
         [Header("Perception")]
         public float viewDistance = 12f;
@@ -57,6 +63,9 @@ namespace CustomApproachDemo.Police
         {
             walkSpeed = Mathf.Max(0f, walkSpeed);
             runSpeed = Mathf.Max(0f, runSpeed);
+            arrestStandDistance = Mathf.Max(0f, arrestStandDistance);
+            arrestStandTolerance = Mathf.Max(0f, arrestStandTolerance);
+            arrestNavMeshSampleRadius = Mathf.Max(0f, arrestNavMeshSampleRadius);
         }
 
         public void RefreshPerception()
@@ -205,6 +214,166 @@ namespace CustomApproachDemo.Police
             return PoliceMovementStatus.Running;
         }
 
+        public PoliceMovementStatus UpdateArrestApproach()
+        {
+            EnsureReferences();
+
+            if (PoliceBlackboard == null || PoliceBlackboard.Player == null || Self == null || NavMeshAgent == null)
+            {
+                return PoliceMovementStatus.Failed;
+            }
+
+            PoliceBlackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
+            IsArrestLatched = true;
+
+            Vector3 toPlayer = PoliceBlackboard.Player.position - Self.position;
+            toPlayer.y = 0f;
+            float distanceToPlayer = toPlayer.magnitude;
+
+            if (Mathf.Abs(distanceToPlayer - arrestStandDistance) <= arrestStandTolerance)
+            {
+                IsArrestApproachActive = false;
+                StopMovement();
+                FacePlayer();
+                return PoliceMovementStatus.Arrived;
+            }
+
+            IsArrestApproachActive = true;
+
+            if (!TryGetArrestStandPosition(out Vector3 standPosition))
+            {
+                StopMovement();
+                FacePlayer();
+                return PoliceMovementStatus.Running;
+            }
+
+            SetMovementMode(PoliceMovementMode.Walk);
+            if (!TrySetDestination(standPosition))
+            {
+                return PoliceMovementStatus.Failed;
+            }
+
+            PoliceMovementStatus movementStatus = GetMovementStatus();
+            if (movementStatus == PoliceMovementStatus.Failed)
+            {
+                StopMovement();
+                FacePlayer();
+                return PoliceMovementStatus.Running;
+            }
+
+            FacePlayer();
+            return PoliceMovementStatus.Running;
+        }
+
+        public void BeginArrestApproach()
+        {
+            IsArrestLatched = true;
+            IsArrestApproachActive = true;
+            if (PoliceBlackboard != null)
+            {
+                PoliceBlackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
+            }
+
+            StopMovement();
+        }
+
+        public void HoldCompletedArrest()
+        {
+            IsArrestLatched = true;
+            IsArrestApproachActive = false;
+            if (PoliceBlackboard != null)
+            {
+                PoliceBlackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
+            }
+
+            StopMovement();
+            FacePlayer();
+        }
+
+        public void ResetArrestState()
+        {
+            IsArrestLatched = false;
+            IsArrestApproachActive = false;
+            StopMovement();
+        }
+
+        public void CancelArrestApproach()
+        {
+            ResetArrestState();
+        }
+
+        public void FacePlayer()
+        {
+            EnsureReferences();
+            if (PoliceBlackboard == null || PoliceBlackboard.Player == null || Self == null)
+            {
+                return;
+            }
+
+            Vector3 direction = PoliceBlackboard.Player.position - Self.position;
+            direction.y = 0f;
+            if (direction.sqrMagnitude > 0.001f)
+            {
+                Self.rotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
+            }
+        }
+
+        private bool TryGetArrestStandPosition(out Vector3 standPosition)
+        {
+            standPosition = Vector3.zero;
+            if (PoliceBlackboard == null || PoliceBlackboard.Player == null || Self == null || NavMeshAgent == null)
+            {
+                return false;
+            }
+
+            Transform player = PoliceBlackboard.Player;
+            Vector3 awayFromPlayer = Self.position - player.position;
+            awayFromPlayer.y = 0f;
+            if (awayFromPlayer.sqrMagnitude <= 0.001f)
+            {
+                awayFromPlayer = -player.forward;
+                awayFromPlayer.y = 0f;
+            }
+
+            if (awayFromPlayer.sqrMagnitude <= 0.001f)
+            {
+                awayFromPlayer = Vector3.back;
+            }
+
+            Vector3 radialDirection = awayFromPlayer.normalized;
+            float[] angularOffsets = { 0f, 15f, -15f, 30f, -30f, 45f, -45f, 60f, -60f, 90f, -90f, 180f };
+            float bestDistanceError = float.PositiveInfinity;
+            bool foundValidPosition = false;
+
+            for (int index = 0; index < angularOffsets.Length; index++)
+            {
+                Vector3 candidateDirection = Quaternion.AngleAxis(angularOffsets[index], Vector3.up) * radialDirection;
+                Vector3 desiredPosition = player.position + candidateDirection * arrestStandDistance;
+                if (!NavMesh.SamplePosition(
+                        desiredPosition,
+                        out NavMeshHit hit,
+                        arrestNavMeshSampleRadius,
+                        NavMeshAgent.areaMask))
+                {
+                    continue;
+                }
+
+                Vector3 sampledOffset = hit.position - player.position;
+                sampledOffset.y = 0f;
+                float distanceError = Mathf.Abs(sampledOffset.magnitude - arrestStandDistance);
+                if (distanceError > arrestStandTolerance || distanceError >= bestDistanceError)
+                {
+                    continue;
+                }
+
+                bestDistanceError = distanceError;
+                standPosition = hit.position;
+                foundValidPosition = true;
+            }
+
+            return foundValidPosition;
+        }
+
         public bool SelectRandomPatrolPoint()
         {
             EnsureReferences();
@@ -276,6 +445,7 @@ namespace CustomApproachDemo.Police
 
             NavMeshAgent.ResetPath();
             NavMeshAgent.isStopped = true;
+            NavMeshAgent.velocity = Vector3.zero;
         }
 
         public void ClearLastKnownPlayerPosition()

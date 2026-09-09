@@ -64,7 +64,10 @@ namespace CustomApproachDemo.Police
 
             context.RefreshPerception();
 
-            if (context.PlayerState != null && context.PlayerState.IsArrested && resetTreeWhenPlayerArrested)
+            if (context.PlayerState != null &&
+                context.PlayerState.IsArrested &&
+                resetTreeWhenPlayerArrested &&
+                !context.IsArrestLatched)
             {
                 PauseAfterArrest();
                 return;

@@ -18168,6 +18168,7 @@ MonoBehaviour:
   agent: {fileID: 0}
   playerState: {fileID: 439849588}
   blackboard: {fileID: 0}
+  policeContext: {fileID: 0}
   walkingVisualSpeed: 1.5
   runningVisualSpeed: 4
   movingThreshold: 0.1
@@ -37646,6 +37647,9 @@ MonoBehaviour:
   PlayerState: {fileID: 439849588}
   walkSpeed: 3
   runSpeed: 6
+  arrestStandDistance: 1.4
+  arrestStandTolerance: 0.15
+  arrestNavMeshSampleRadius: 1
   viewDistance: 12
   viewAngle: 90
   arrestRange: 2
@@ -37718,6 +37722,7 @@ MonoBehaviour:
   agent: {fileID: 920719316}
   playerState: {fileID: 0}
   blackboard: {fileID: 920719315}
+  policeContext: {fileID: 0}
   walkingVisualSpeed: 1.5
   runningVisualSpeed: 4
   movingThreshold: 0.1
@@ -53236,6 +53241,7 @@ MonoBehaviour:
   agent: {fileID: 1268669047}
   playerState: {fileID: 0}
   blackboard: {fileID: 1268669046}
+  policeContext: {fileID: 0}
   walkingVisualSpeed: 1.5
   runningVisualSpeed: 4
   movingThreshold: 0.1
@@ -53305,6 +53311,9 @@ MonoBehaviour:
   PlayerState: {fileID: 439849588}
   walkSpeed: 3
   runSpeed: 6
+  arrestStandDistance: 1.4
+  arrestStandTolerance: 0.15
+  arrestNavMeshSampleRadius: 1
   viewDistance: 12
   viewAngle: 90
   arrestRange: 2
@@ -58848,6 +58857,7 @@ MonoBehaviour:
   agent: {fileID: 1391683336}
   playerState: {fileID: 0}
   blackboard: {fileID: 1391683335}
+  policeContext: {fileID: 0}
   walkingVisualSpeed: 1.5
   runningVisualSpeed: 4
   movingThreshold: 0.1
@@ -58917,6 +58927,9 @@ MonoBehaviour:
   PlayerState: {fileID: 439849588}
   walkSpeed: 3
   runSpeed: 6
+  arrestStandDistance: 1.4
+  arrestStandTolerance: 0.15
+  arrestNavMeshSampleRadius: 1
   viewDistance: 12
   viewAngle: 90
   arrestRange: 2
@@ -91353,6 +91366,7 @@ MonoBehaviour:
   agent: {fileID: 2100151257}
   playerState: {fileID: 0}
   blackboard: {fileID: 2100151256}
+  policeContext: {fileID: 0}
   walkingVisualSpeed: 1.5
   runningVisualSpeed: 4
   movingThreshold: 0.1
@@ -91422,6 +91436,9 @@ MonoBehaviour:
   PlayerState: {fileID: 439849588}
   walkSpeed: 3
   runSpeed: 6
+  arrestStandDistance: 1.4
+  arrestStandTolerance: 0.15
+  arrestNavMeshSampleRadius: 1
   viewDistance: 12
   viewAngle: 90
   arrestRange: 2
