@@ -9,18 +9,12 @@ namespace CustomApproachDemo.Police.Nodes
             PoliceAIContext context,
             string nodeName,
             ref bool warnedMissingContext,
-            ref bool warnedMissingBlackboard,
-            bool refreshPerception = true)
+            ref bool warnedMissingBlackboard)
         {
             if (context == null)
             {
                 WarnOnce($"{nodeName} needs a PoliceAIContext.", ref warnedMissingContext);
                 return null;
-            }
-
-            if (refreshPerception)
-            {
-                context.RefreshPerception();
             }
 
             if (context.PoliceBlackboard == null)

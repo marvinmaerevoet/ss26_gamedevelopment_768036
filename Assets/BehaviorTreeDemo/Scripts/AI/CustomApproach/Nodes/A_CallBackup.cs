@@ -18,7 +18,7 @@ namespace CustomApproachDemo.Police.Nodes
         protected override BTStatus Execute()
         {
             PoliceBlackboard blackboard = PoliceNodeSupport.GetBlackboard(
-                context, Name, ref warnedMissingContext, ref warnedMissingBlackboard, false);
+                context, Name, ref warnedMissingContext, ref warnedMissingBlackboard);
 
             if (blackboard == null)
             {

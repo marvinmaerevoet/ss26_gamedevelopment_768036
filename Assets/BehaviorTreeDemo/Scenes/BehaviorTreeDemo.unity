@@ -37565,7 +37565,7 @@ MonoBehaviour:
   arrestRange: 2
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967291
   playerCarryController: {fileID: 439849592}
   suspiciousCarryable: {fileID: 2111562124}
   lowHealthDemoToggle: 0
@@ -53196,7 +53196,7 @@ MonoBehaviour:
   arrestRange: 2
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967291
   playerCarryController: {fileID: 439849592}
   suspiciousCarryable: {fileID: 2111562124}
   lowHealthDemoToggle: 0
@@ -58795,7 +58795,7 @@ MonoBehaviour:
   arrestRange: 2
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967291
   playerCarryController: {fileID: 439849592}
   suspiciousCarryable: {fileID: 2111562124}
   lowHealthDemoToggle: 0
@@ -91017,7 +91017,7 @@ MonoBehaviour:
   arrestRange: 2
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967291
   playerCarryController: {fileID: 439849592}
   suspiciousCarryable: {fileID: 2111562124}
   lowHealthDemoToggle: 0

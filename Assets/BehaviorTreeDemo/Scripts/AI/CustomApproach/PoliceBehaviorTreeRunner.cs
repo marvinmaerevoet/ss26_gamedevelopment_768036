@@ -62,8 +62,6 @@ namespace CustomApproachDemo.Police
                 context.lowHealthDemoToggle = false;
             }
 
-            context.RefreshPerception();
-
             if (context.PlayerState != null &&
                 context.PlayerState.IsArrested &&
                 resetTreeWhenPlayerArrested &&
@@ -81,6 +79,7 @@ namespace CustomApproachDemo.Police
             }
 
             nextTickTime = Time.time + Mathf.Max(0.01f, tickInterval);
+            context.RefreshPerception();
             TickTree();
         }
 

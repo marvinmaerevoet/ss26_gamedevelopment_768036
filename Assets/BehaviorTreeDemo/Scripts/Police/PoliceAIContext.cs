@@ -41,7 +41,7 @@ namespace CustomApproachDemo.Police
         public float viewDistance = 12f;
         public float viewAngle = 90f;
         public float arrestRange = 2f;
-        public LayerMask obstacleMask;
+        public LayerMask obstacleMask = Physics.DefaultRaycastLayers;
 
         [Header("Suspicion")]
         [SerializeField] private DemoPlayerCarryController playerCarryController;
@@ -90,7 +90,9 @@ namespace CustomApproachDemo.Police
             PoliceBlackboard.PlayerInArrestRange = IsPlayerInArrestRange();
             PoliceBlackboard.OfficerHealthLow = lowHealthDemoToggle;
 
-            if (PoliceBlackboard.PlayerVisible && PoliceBlackboard.Player != null)
+            if (PoliceBlackboard.PlayerVisible &&
+                PoliceBlackboard.PlayerSuspicious &&
+                PoliceBlackboard.Player != null)
             {
                 PoliceBlackboard.LastKnownPlayerPosition = PoliceBlackboard.Player.position;
                 PoliceBlackboard.HasLastKnownPlayerPosition = true;
@@ -128,7 +130,31 @@ namespace CustomApproachDemo.Police
                 return false;
             }
 
-            return !Physics.Raycast(origin, direction, distance, obstacleMask, QueryTriggerInteraction.Ignore);
+            RaycastHit[] hits = Physics.RaycastAll(
+                origin,
+                direction,
+                distance,
+                obstacleMask,
+                QueryTriggerInteraction.Ignore);
+
+            Transform player = PoliceBlackboard.Player;
+            for (int index = 0; index < hits.Length; index++)
+            {
+                Transform hitTransform = hits[index].transform;
+                if (hitTransform == null || IsPartOf(hitTransform, Self) || IsPartOf(hitTransform, player))
+                {
+                    continue;
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool IsPartOf(Transform candidate, Transform root)
+        {
+            return root != null && (candidate == root || candidate.IsChildOf(root));
         }
 
         public bool IsPlayerSuspicious()

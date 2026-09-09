@@ -33,6 +33,13 @@ namespace CustomApproachDemo.Police.Nodes
 
             if (!blackboard.PlayerVisible)
             {
+                context.StopMovement();
+                return BTStatus.Failure;
+            }
+
+            if (!blackboard.PlayerSuspicious)
+            {
+                context.StopMovement();
                 return BTStatus.Failure;
             }
 
