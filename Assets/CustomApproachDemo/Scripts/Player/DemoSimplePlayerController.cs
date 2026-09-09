@@ -144,5 +144,18 @@ namespace CustomApproachDemo.Player
                 playerState.ReportMovement(movementSpeed, isRunning);
             }
         }
+
+        public void TeleportTo(Transform destination)
+        {
+            if (destination == null) return;
+            if (characterController == null) characterController = GetComponent<CharacterController>();
+            bool wasEnabled = characterController != null && characterController.enabled;
+            if (wasEnabled) characterController.enabled = false;
+            transform.SetPositionAndRotation(destination.position, destination.rotation);
+            verticalVelocity = 0f;
+            if (wasEnabled) characterController.enabled = true;
+            if (playerState == null) playerState = GetComponent<DemoPlayerState>();
+            if (playerState != null) playerState.ResetSpeedTracking();
+        }
     }
 }
