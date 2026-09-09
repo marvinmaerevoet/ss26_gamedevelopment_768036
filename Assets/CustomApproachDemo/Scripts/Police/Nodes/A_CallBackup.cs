@@ -26,7 +26,7 @@ namespace CustomApproachDemo.Police.Nodes
             }
 
             blackboard.BackupCalled = true;
-            blackboard.CurrentBehaviorName = "Emergency / Call Backup";
+            blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Emergency;
 
             if (!loggedBackup)
             {

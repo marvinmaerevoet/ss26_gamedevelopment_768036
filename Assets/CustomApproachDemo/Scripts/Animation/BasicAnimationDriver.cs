@@ -51,10 +51,13 @@ namespace CustomApproachDemo.Animation {
                 return;
             }
 
-            bool chasing = HasBehavior("Chase");
-            bool investigating = HasBehavior("Investigate");
-            bool arrested = (playerState != null && playerState.IsArrested) || HasBehavior("Arrest");
-            bool emergency = HasBehavior("Emergency") || (blackboard != null && blackboard.OfficerHealthLow);
+            PoliceBehaviorMode behaviorMode = blackboard != null
+                ? blackboard.CurrentBehaviorMode
+                : PoliceBehaviorMode.None;
+            bool chasing = behaviorMode == PoliceBehaviorMode.Chase;
+            bool investigating = behaviorMode == PoliceBehaviorMode.Investigate;
+            bool arrested = (playerState != null && playerState.IsArrested) || behaviorMode == PoliceBehaviorMode.Arrest;
+            bool emergency = behaviorMode == PoliceBehaviorMode.Emergency || (blackboard != null && blackboard.OfficerHealthLow);
 
             AnimationValues values = CalculateAnimationValues(chasing);
 
@@ -199,12 +202,6 @@ namespace CustomApproachDemo.Animation {
 
         private static float SanitizeSpeed(float speed) {
             return float.IsNaN(speed) || float.IsInfinity(speed) || speed < 0f ? 0f : speed;
-        }
-
-        private bool HasBehavior(string token) {
-            return blackboard != null &&
-                   !string.IsNullOrEmpty(blackboard.CurrentBehaviorName) &&
-                   blackboard.CurrentBehaviorName.IndexOf(token, System.StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private void SetSpeed(float value) {

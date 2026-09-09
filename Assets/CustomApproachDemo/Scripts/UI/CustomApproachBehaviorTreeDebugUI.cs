@@ -247,9 +247,9 @@ namespace CustomApproachDemo.UI
 
             DemoPlayerState playerState = context != null ? context.PlayerState : null;
 
-            builder.Append("Behavior: ").Append(blackboard.CurrentBehaviorName);
-            builder.Append(" | Node: ").Append(blackboard.CurrentNodeName);
-            builder.Append(" | Status: ").AppendLine(blackboard.LastTreeStatus.ToString());
+            builder.Append("Behavior: ").Append(blackboard.CurrentBehaviorMode);
+            builder.Append(" | Node: ").Append(target.CurrentNodeName);
+            builder.Append(" | Status: ").AppendLine(target.LastTreeStatus.ToString());
 
             builder.Append("Visible: ").Append(blackboard.PlayerVisible);
             builder.Append(" | Suspicious: ").Append(blackboard.PlayerSuspicious);

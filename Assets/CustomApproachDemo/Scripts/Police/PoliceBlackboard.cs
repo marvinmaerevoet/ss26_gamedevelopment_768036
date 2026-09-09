@@ -1,8 +1,18 @@
-using CustomApproachDemo.BehaviorTree;
 using UnityEngine;
 
 namespace CustomApproachDemo.Police
 {
+    public enum PoliceBehaviorMode
+    {
+        None,
+        Patrol,
+        Suspicion,
+        Chase,
+        Investigate,
+        Arrest,
+        Emergency
+    }
+
     public sealed class PoliceBlackboard : MonoBehaviour
     {
         public Transform Player;
@@ -15,8 +25,6 @@ namespace CustomApproachDemo.Police
         public bool BackupCalled;
         public Transform CurrentPatrolPoint;
         public int CurrentPatrolIndex;
-        public string CurrentBehaviorName;
-        public string CurrentNodeName;
-        public BTStatus LastTreeStatus;
+        public PoliceBehaviorMode CurrentBehaviorMode;
     }
 }

@@ -16,7 +16,7 @@ namespace CustomApproachDemo.Police.Nodes
                 return false;
             }
 
-            blackboard.CurrentBehaviorName = "Investigate";
+            blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Investigate;
             destination = blackboard.LastKnownPlayerPosition;
             return true;
         }

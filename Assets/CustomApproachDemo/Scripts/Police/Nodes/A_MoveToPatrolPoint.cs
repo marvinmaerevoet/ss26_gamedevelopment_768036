@@ -19,7 +19,7 @@ namespace CustomApproachDemo.Police.Nodes
                 return false;
             }
 
-            blackboard.CurrentBehaviorName = "Patrol";
+            blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Patrol;
             destination = blackboard.CurrentPatrolPoint.position;
             return true;
         }

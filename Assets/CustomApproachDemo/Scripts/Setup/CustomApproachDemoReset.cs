@@ -7,6 +7,7 @@ using CustomApproachDemo.Police;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace CustomApproachDemo.Setup
 {
@@ -15,9 +16,14 @@ namespace CustomApproachDemo.Setup
         [Header("References")]
         public DemoPlayerState playerState;
         public Transform playerTransform;
-        public PoliceBehaviorTreeRunner policeRunner;
+        [FormerlySerializedAs("policeRunner")]
+        public PoliceDecisionController policeDecisionController;
         public PoliceAIContext policeContext;
         public Transform policeTransform;
+        [SerializeField] private PoliceAIContext[] additionalSheriffs = new PoliceAIContext[0];
+        private Vector3[] additionalPositions;
+        private Quaternion[] additionalRotations;
+        private int[] additionalPatrolIndices;
         [SerializeField] private Transform playerSpawn;
         [SerializeField] private DemoSimplePlayerController movement;
         [SerializeField] private DemoPlayerCarryController carryController;
@@ -35,7 +41,8 @@ namespace CustomApproachDemo.Setup
         public bool resetArrestedState = true;
         public bool resetBlackboard = true;
         public bool resetAgent = true;
-        public bool resetTree = true;
+        [FormerlySerializedAs("resetTree")]
+        public bool resetDecisionState = true;
 
         private Vector3 initialPlayerPosition;
         private Quaternion initialPlayerRotation;
@@ -49,6 +56,17 @@ namespace CustomApproachDemo.Setup
         {
             ResolveReferences(false);
             StoreInitialTransforms();
+            additionalPositions = new Vector3[additionalSheriffs.Length];
+            additionalRotations = new Quaternion[additionalSheriffs.Length];
+            additionalPatrolIndices = new int[additionalSheriffs.Length];
+            for (int i = 0; i < additionalSheriffs.Length; i++)
+            {
+                var context = additionalSheriffs[i];
+                if (context == null) continue;
+                additionalPositions[i] = context.transform.position;
+                additionalRotations[i] = context.transform.rotation;
+                additionalPatrolIndices[i] = context.PoliceBlackboard.CurrentPatrolIndex;
+            }
         }
 
         private void Update()
@@ -84,12 +102,13 @@ namespace CustomApproachDemo.Setup
                 policeContext.lowHealthDemoToggle = false;
             }
 
-            if (resetTree && policeRunner != null)
+            if (resetDecisionState && policeDecisionController != null)
             {
-                policeRunner.ResetTree();
+                policeDecisionController.ResetDecisionState();
             }
 
             Debug.Log("Custom Approach Demo reset.", this);
+            ResetAdditionalSheriffs();
             introUI?.ShowIntro();
         }
 
@@ -100,14 +119,14 @@ namespace CustomApproachDemo.Setup
                 playerState = FindAnyObjectByType<DemoPlayerState>();
             }
 
-            if (policeRunner == null)
+            if (policeDecisionController == null)
             {
-                policeRunner = FindAnyObjectByType<PoliceBehaviorTreeRunner>();
+                policeDecisionController = FindAnyObjectByType<PoliceDecisionController>();
             }
 
-            if (policeContext == null && policeRunner != null)
+            if (policeContext == null && policeDecisionController != null)
             {
-                policeContext = policeRunner.GetComponent<PoliceAIContext>();
+                policeContext = policeDecisionController.GetComponent<PoliceAIContext>();
             }
 
             if (policeContext == null)
@@ -215,18 +234,21 @@ namespace CustomApproachDemo.Setup
                 return;
             }
 
-            PoliceBlackboard blackboard = policeContext.PoliceBlackboard;
+            ClearBlackboard(policeContext.PoliceBlackboard, 0);
+        }
+
+        private static void ClearBlackboard(PoliceBlackboard blackboard, int patrolIndex)
+        {
             blackboard.PlayerVisible = false;
             blackboard.PlayerSuspicious = false;
             blackboard.PlayerInArrestRange = false;
             blackboard.HasLastKnownPlayerPosition = false;
             blackboard.BackupCalled = false;
-            blackboard.CurrentPatrolIndex = 0;
+            blackboard.CurrentPatrolIndex = patrolIndex;
             blackboard.CurrentPatrolPoint = null;
             blackboard.LastKnownPlayerPosition = Vector3.zero;
             blackboard.OfficerHealthLow = false;
-            blackboard.CurrentBehaviorName = "Reset";
-            blackboard.CurrentNodeName = "Reset";
+            blackboard.CurrentBehaviorMode = PoliceBehaviorMode.None;
         }
 
         private void WarnMissingReferences()
@@ -237,10 +259,35 @@ namespace CustomApproachDemo.Setup
                 warnedMissingPlayer = true;
             }
 
-            if ((policeRunner == null || policeContext == null) && !warnedMissingPolice)
+            if ((policeDecisionController == null || policeContext == null) && !warnedMissingPolice)
             {
-                Debug.LogWarning("CustomApproachDemoReset could not find a PoliceBehaviorTreeRunner or PoliceAIContext.", this);
+                Debug.LogWarning("CustomApproachDemoReset could not find a PoliceDecisionController or PoliceAIContext.", this);
                 warnedMissingPolice = true;
+            }
+        }
+
+        private void ResetAdditionalSheriffs()
+        {
+            for (int i = 0; i < additionalSheriffs.Length; i++)
+            {
+                var context = additionalSheriffs[i];
+                if (context == null) continue;
+                var agent = context.NavMeshAgent;
+                if (resetAgent && agent != null && agent.isOnNavMesh)
+                {
+                    agent.ResetPath();
+                    agent.velocity = Vector3.zero;
+                }
+                if (resetPolicePosition)
+                {
+                    if (resetAgent && agent != null && agent.isOnNavMesh) agent.Warp(additionalPositions[i]);
+                    else context.transform.position = additionalPositions[i];
+                    context.transform.rotation = additionalRotations[i];
+                }
+                if (resetBlackboard && context.PoliceBlackboard != null)
+                    ClearBlackboard(context.PoliceBlackboard, additionalPatrolIndices[i]);
+                context.lowHealthDemoToggle = false;
+                if (resetDecisionState) context.GetComponent<PoliceDecisionController>()?.ResetDecisionState();
             }
         }
     }

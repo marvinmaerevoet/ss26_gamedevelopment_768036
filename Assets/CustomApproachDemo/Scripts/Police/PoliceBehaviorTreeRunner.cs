@@ -6,7 +6,7 @@ using UnityEngine;
 namespace CustomApproachDemo.Police
 {
     [RequireComponent(typeof(PoliceAIContext))]
-    public sealed class PoliceBehaviorTreeRunner : MonoBehaviour
+    public sealed class PoliceBehaviorTreeRunner : PoliceDecisionController
     {
         [Header("Tick")]
         public float tickInterval = 0.1f;
@@ -32,13 +32,15 @@ namespace CustomApproachDemo.Police
 
         private BTNode deepestRunningNode;
         private BTNode lastMeaningfulNode;
-        private string activeBehaviorName;
+        private PoliceBehaviorMode? activeBehaviorMode;
         private readonly List<BTNode> lastTickPath = new List<BTNode>();
 
         public BTNode TreeRoot => treeRoot;
         public BTNode LastTickedNode { get; private set; }
         public IReadOnlyList<BTNode> LastTickPath => lastTickPath;
         public float LastTickTime { get; private set; } = -1f;
+        public string CurrentNodeName { get; private set; }
+        public BTStatus LastTreeStatus { get; private set; } = BTStatus.Running;
 
         private void Awake()
         {
@@ -170,6 +172,11 @@ namespace CustomApproachDemo.Police
                 rememberRunningChild: false);
         }
 
+        public override void ResetDecisionState()
+        {
+            ResetTree();
+        }
+
         public void ResetTree()
         {
             EnsureReferences();
@@ -182,24 +189,22 @@ namespace CustomApproachDemo.Police
             treeRoot?.Reset();
             deepestRunningNode = null;
             lastMeaningfulNode = null;
-            activeBehaviorName = null;
+            activeBehaviorMode = null;
             LastTickedNode = null;
+            CurrentNodeName = "Reset";
+            LastTreeStatus = BTStatus.Running;
             treePausedAfterArrest = false;
             nextTickTime = Time.time;
             LastTickTime = -1f;
             lastTickPath.Clear();
 
-            if (blackboard != null)
-            {
-                blackboard.LastTreeStatus = BTStatus.Running;
-            }
         }
 
         private void TickTree()
         {
             deepestRunningNode = null;
             lastMeaningfulNode = null;
-            activeBehaviorName = null;
+            activeBehaviorMode = null;
             LastTickedNode = null;
 
             BTNode.NodeTicked += OnNodeTicked;
@@ -214,18 +219,18 @@ namespace CustomApproachDemo.Police
                 BTNode.NodeTicked -= OnNodeTicked;
             }
 
-            blackboard.LastTreeStatus = status;
+            LastTreeStatus = status;
             LastTickTime = Time.time;
 
-            if (!string.IsNullOrEmpty(activeBehaviorName))
+            if (activeBehaviorMode.HasValue)
             {
-                blackboard.CurrentBehaviorName = activeBehaviorName;
+                blackboard.CurrentBehaviorMode = activeBehaviorMode.Value;
             }
 
             BTNode debugNode = deepestRunningNode ?? lastMeaningfulNode;
             if (debugNode != null)
             {
-                blackboard.CurrentNodeName = debugNode.Name;
+                CurrentNodeName = debugNode.Name;
                 BuildLastTickPath(debugNode);
             }
             else
@@ -243,23 +248,23 @@ namespace CustomApproachDemo.Police
 
             if (node == emergencyBehavior)
             {
-                activeBehaviorName = "Emergency";
+                activeBehaviorMode = PoliceBehaviorMode.Emergency;
             }
             else if (node == arrestBehavior)
             {
-                activeBehaviorName = "Arrest";
+                activeBehaviorMode = PoliceBehaviorMode.Arrest;
             }
             else if (node == chaseBehavior)
             {
-                activeBehaviorName = "Chase";
+                activeBehaviorMode = PoliceBehaviorMode.Chase;
             }
             else if (node == investigateBehavior)
             {
-                activeBehaviorName = "Investigate";
+                activeBehaviorMode = PoliceBehaviorMode.Investigate;
             }
             else if (node == patrolBehavior)
             {
-                activeBehaviorName = "Patrol";
+                activeBehaviorMode = PoliceBehaviorMode.Patrol;
             }
 
             if (!IsControlNode(node))
@@ -282,9 +287,9 @@ namespace CustomApproachDemo.Police
                 treePausedAfterArrest = true;
             }
 
-            blackboard.LastTreeStatus = BTStatus.Success;
-            blackboard.CurrentBehaviorName = "Arrested / Paused";
-            blackboard.CurrentNodeName = "Player Arrested";
+            LastTreeStatus = BTStatus.Success;
+            blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
+            CurrentNodeName = "Player Arrested";
             LastTickedNode = null;
             lastTickPath.Clear();
         }

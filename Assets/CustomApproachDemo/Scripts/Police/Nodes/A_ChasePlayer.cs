@@ -1,6 +1,5 @@
 using CustomApproachDemo.BehaviorTree;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace CustomApproachDemo.Police.Nodes
 {
@@ -9,7 +8,6 @@ namespace CustomApproachDemo.Police.Nodes
         private readonly PoliceAIContext context;
         private bool warnedMissingContext;
         private bool warnedMissingBlackboard;
-        private bool warnedMissingAgent;
         private bool warnedMissingPlayer;
 
         public A_ChasePlayer(PoliceAIContext context) : base("Chase Player")
@@ -38,7 +36,7 @@ namespace CustomApproachDemo.Police.Nodes
                 return BTStatus.Failure;
             }
 
-            blackboard.CurrentBehaviorName = "Chase";
+            blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Chase;
             blackboard.LastKnownPlayerPosition = blackboard.Player.position;
             blackboard.HasLastKnownPlayerPosition = true;
 
@@ -48,22 +46,14 @@ namespace CustomApproachDemo.Police.Nodes
                 return BTStatus.Success;
             }
 
-            NavMeshAgent agent = PoliceNodeSupport.GetAgent(
-                context, Name, ref warnedMissingContext, ref warnedMissingAgent);
-
-            if (agent == null)
+            if (!context.TrySetDestination(blackboard.Player.position))
             {
                 return BTStatus.Failure;
             }
 
-            context.SetDestination(blackboard.Player.position);
-
-            if (agent.pathPending)
-            {
-                return BTStatus.Running;
-            }
-
-            return agent.pathStatus != NavMeshPathStatus.PathComplete
+            // Reaching the current chase destination does not finish Chase;
+            // only entering arrest range completes this action.
+            return context.GetMovementStatus() == PoliceMovementStatus.Failed
                 ? BTStatus.Failure
                 : BTStatus.Running;
         }

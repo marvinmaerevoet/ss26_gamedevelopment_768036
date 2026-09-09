@@ -218,7 +218,7 @@ namespace CustomApproachDemo.Setup
             Undo.RecordObject(demoReset, "Configure Custom Approach Demo Reset");
             demoReset.playerState = playerState;
             demoReset.playerTransform = playerState != null ? playerState.transform : null;
-            demoReset.policeRunner = runner;
+            demoReset.policeDecisionController = runner;
             demoReset.policeContext = context;
             demoReset.policeTransform = context != null ? context.transform : null;
             EditorUtility.SetDirty(demoReset);

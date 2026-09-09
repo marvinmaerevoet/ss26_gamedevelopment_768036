@@ -1,6 +1,5 @@
 using CustomApproachDemo.BehaviorTree;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace CustomApproachDemo.Police.Nodes
 {
@@ -11,7 +10,6 @@ namespace CustomApproachDemo.Police.Nodes
         private bool destinationSet;
         private bool warnedMissingContext;
         private bool warnedMissingBlackboard;
-        private bool warnedMissingAgent;
 
         protected PoliceMovementAction(string name, PoliceAIContext context) : base(name)
         {
@@ -28,14 +26,6 @@ namespace CustomApproachDemo.Police.Nodes
                 return BTStatus.Failure;
             }
 
-            NavMeshAgent agent = PoliceNodeSupport.GetAgent(
-                Context, Name, ref warnedMissingContext, ref warnedMissingAgent);
-
-            if (agent == null)
-            {
-                return BTStatus.Failure;
-            }
-
             if (!destinationSet)
             {
                 if (!TryGetDestination(blackboard, out Vector3 destination))
@@ -43,12 +33,16 @@ namespace CustomApproachDemo.Police.Nodes
                     return BTStatus.Failure;
                 }
 
-                Context.SetDestination(destination);
+                if (!Context.TrySetDestination(destination))
+                {
+                    return BTStatus.Failure;
+                }
+
                 destinationSet = true;
                 return BTStatus.Running;
             }
 
-            BTStatus status = PoliceNodeSupport.GetMovementStatus(agent);
+            BTStatus status = PoliceNodeSupport.ToBTStatus(Context.GetMovementStatus());
 
             if (status != BTStatus.Running)
             {

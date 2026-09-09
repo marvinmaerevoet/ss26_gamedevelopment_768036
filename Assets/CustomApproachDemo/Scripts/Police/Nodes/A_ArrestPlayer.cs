@@ -40,7 +40,7 @@ namespace CustomApproachDemo.Police.Nodes
             }
 
             playerState.IsArrested = true;
-            blackboard.CurrentBehaviorName = "Arrest";
+            blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
             context.StopMovement();
 
             if (!loggedArrest)

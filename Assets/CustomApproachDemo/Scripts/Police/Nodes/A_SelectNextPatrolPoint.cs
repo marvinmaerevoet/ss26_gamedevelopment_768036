@@ -1,13 +1,10 @@
 using CustomApproachDemo.BehaviorTree;
-using UnityEngine;
-
 namespace CustomApproachDemo.Police.Nodes
 {
     public sealed class A_SelectNextPatrolPoint : BTAction
     {
         private readonly PoliceAIContext context;
         private bool warnedMissingContext;
-        private bool warnedMissingBlackboard;
         private bool warnedMissingPatrolPoints;
 
         public A_SelectNextPatrolPoint(PoliceAIContext context) : base("Select Next Patrol Point")
@@ -17,42 +14,19 @@ namespace CustomApproachDemo.Police.Nodes
 
         protected override BTStatus Execute()
         {
-            PoliceBlackboard blackboard = PoliceNodeSupport.GetBlackboard(
-                context, Name, ref warnedMissingContext, ref warnedMissingBlackboard, false);
-
-            if (blackboard == null)
+            if (context == null)
             {
+                PoliceNodeSupport.WarnOnce($"{Name} needs a PoliceAIContext.", ref warnedMissingContext);
                 return BTStatus.Failure;
             }
 
-            if (context.PatrolPoints == null || context.PatrolPoints.Length == 0)
+            if (!context.SelectRandomPatrolPoint())
             {
-                PoliceNodeSupport.WarnOnce($"{Name} needs PatrolPoints.", ref warnedMissingPatrolPoints);
+                PoliceNodeSupport.WarnOnce($"{Name} needs at least one valid PatrolPoint.", ref warnedMissingPatrolPoints);
                 return BTStatus.Failure;
             }
 
-            int startIndex = blackboard.CurrentPatrolPoint == null
-                ? Mathf.Clamp(blackboard.CurrentPatrolIndex, 0, context.PatrolPoints.Length - 1)
-                : (blackboard.CurrentPatrolIndex + 1) % context.PatrolPoints.Length;
-
-            for (int offset = 0; offset < context.PatrolPoints.Length; offset++)
-            {
-                int index = (startIndex + offset) % context.PatrolPoints.Length;
-                Transform patrolPoint = context.PatrolPoints[index];
-
-                if (patrolPoint == null)
-                {
-                    continue;
-                }
-
-                blackboard.CurrentPatrolPoint = patrolPoint;
-                blackboard.CurrentPatrolIndex = index;
-                blackboard.CurrentBehaviorName = "Patrol";
-                return BTStatus.Success;
-            }
-
-            PoliceNodeSupport.WarnOnce($"{Name} found only null PatrolPoints.", ref warnedMissingPatrolPoints);
-            return BTStatus.Failure;
+            return BTStatus.Success;
         }
     }
 }

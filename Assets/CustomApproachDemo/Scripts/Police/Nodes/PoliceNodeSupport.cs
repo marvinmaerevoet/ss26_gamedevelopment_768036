@@ -1,6 +1,5 @@
 using CustomApproachDemo.BehaviorTree;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace CustomApproachDemo.Police.Nodes
 {
@@ -30,58 +29,20 @@ namespace CustomApproachDemo.Police.Nodes
                 return null;
             }
 
-            context.PoliceBlackboard.CurrentNodeName = nodeName;
             return context.PoliceBlackboard;
         }
 
-        public static NavMeshAgent GetAgent(
-            PoliceAIContext context,
-            string nodeName,
-            ref bool warnedMissingContext,
-            ref bool warnedMissingAgent)
+        public static BTStatus ToBTStatus(PoliceMovementStatus status)
         {
-            if (context == null)
+            switch (status)
             {
-                WarnOnce($"{nodeName} needs a PoliceAIContext.", ref warnedMissingContext);
-                return null;
+                case PoliceMovementStatus.Arrived:
+                    return BTStatus.Success;
+                case PoliceMovementStatus.Failed:
+                    return BTStatus.Failure;
+                default:
+                    return BTStatus.Running;
             }
-
-            if (context.NavMeshAgent == null)
-            {
-                WarnOnce($"{nodeName} needs a NavMeshAgent.", ref warnedMissingAgent);
-                return null;
-            }
-
-            if (!context.NavMeshAgent.isOnNavMesh)
-            {
-                WarnOnce($"{nodeName} NavMeshAgent is not on a NavMesh.", ref warnedMissingAgent);
-                return null;
-            }
-
-            return context.NavMeshAgent;
-        }
-
-        public static BTStatus GetMovementStatus(NavMeshAgent agent)
-        {
-            if (agent.pathPending)
-            {
-                return BTStatus.Running;
-            }
-
-            if (agent.pathStatus != NavMeshPathStatus.PathComplete)
-            {
-                return BTStatus.Failure;
-            }
-
-            float arrivedDistance = Mathf.Max(agent.stoppingDistance, 0.05f) + 0.1f;
-            if (agent.remainingDistance <= arrivedDistance)
-            {
-                return !agent.hasPath || agent.velocity.sqrMagnitude <= 0.05f
-                    ? BTStatus.Success
-                    : BTStatus.Running;
-            }
-
-            return BTStatus.Running;
         }
 
         public static void WarnOnce(string message, ref bool warned)

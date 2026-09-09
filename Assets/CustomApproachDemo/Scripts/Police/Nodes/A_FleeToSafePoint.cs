@@ -19,7 +19,7 @@ namespace CustomApproachDemo.Police.Nodes
                 return false;
             }
 
-            blackboard.CurrentBehaviorName = "Emergency / Flee";
+            blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Emergency;
             destination = Context.safePoint.position;
             return true;
         }

@@ -122,21 +122,117 @@ namespace CustomApproachDemo.Police
 
         public void SetDestination(Vector3 destination)
         {
+            TrySetDestination(destination);
+        }
+
+        public bool TrySetDestination(Vector3 destination)
+        {
             EnsureReferences();
 
             if (NavMeshAgent == null)
             {
                 WarnMissingAgent();
-                return;
+                return false;
             }
 
             if (!NavMeshAgent.isOnNavMesh)
             {
-                return;
+                return false;
             }
 
             NavMeshAgent.isStopped = false;
             NavMeshAgent.SetDestination(destination);
+            return true;
+        }
+
+        public PoliceMovementStatus GetMovementStatus()
+        {
+            EnsureReferences();
+
+            if (NavMeshAgent == null)
+            {
+                WarnMissingAgent();
+                return PoliceMovementStatus.Failed;
+            }
+
+            if (!NavMeshAgent.isOnNavMesh)
+            {
+                return PoliceMovementStatus.Failed;
+            }
+
+            if (NavMeshAgent.pathPending)
+            {
+                return PoliceMovementStatus.Running;
+            }
+
+            if (NavMeshAgent.pathStatus != NavMeshPathStatus.PathComplete)
+            {
+                return PoliceMovementStatus.Failed;
+            }
+
+            float arrivedDistance = Mathf.Max(NavMeshAgent.stoppingDistance, 0.05f) + 0.1f;
+            if (NavMeshAgent.remainingDistance <= arrivedDistance)
+            {
+                return !NavMeshAgent.hasPath || NavMeshAgent.velocity.sqrMagnitude <= 0.05f
+                    ? PoliceMovementStatus.Arrived
+                    : PoliceMovementStatus.Running;
+            }
+
+            return PoliceMovementStatus.Running;
+        }
+
+        public bool SelectRandomPatrolPoint()
+        {
+            EnsureReferences();
+
+            if (PoliceBlackboard == null || PatrolPoints == null || PatrolPoints.Length == 0)
+            {
+                return false;
+            }
+
+            int selectedIndex = -1;
+            int fallbackIndex = -1;
+            int candidateCount = 0;
+
+            for (int index = 0; index < PatrolPoints.Length; index++)
+            {
+                Transform patrolPoint = PatrolPoints[index];
+                if (patrolPoint == null)
+                {
+                    continue;
+                }
+
+                fallbackIndex = index;
+
+                // Compare references so duplicate slots cannot repeat the current target.
+                if (patrolPoint == PoliceBlackboard.CurrentPatrolPoint)
+                {
+                    continue;
+                }
+
+                // Uniform selection over eligible entries without a temporary list.
+                candidateCount++;
+                if (Random.Range(0, candidateCount) == 0)
+                {
+                    selectedIndex = index;
+                }
+            }
+
+            // With only one usable target, reusing it is the only possible choice.
+            if (selectedIndex < 0)
+            {
+                selectedIndex = fallbackIndex;
+            }
+
+            if (selectedIndex < 0)
+            {
+                return false;
+            }
+
+            PoliceBlackboard.CurrentPatrolPoint = PatrolPoints[selectedIndex];
+            PoliceBlackboard.CurrentPatrolIndex = selectedIndex;
+            PoliceBlackboard.CurrentBehaviorMode = PoliceBehaviorMode.Patrol;
+            return true;
         }
 
         public void StopMovement()
