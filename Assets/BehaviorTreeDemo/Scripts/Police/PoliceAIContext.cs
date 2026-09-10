@@ -1,9 +1,9 @@
-using CustomApproachDemo.Player;
-using CustomApproachDemo.Gameplay.Carry;
+using BehaviorTreeDemo.Gameplay.Player;
+using BehaviorTreeDemo.Gameplay.Carry;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace CustomApproachDemo.Police
+namespace BehaviorTreeDemo.Police
 {
     public sealed class PoliceAIContext : MonoBehaviour
     {

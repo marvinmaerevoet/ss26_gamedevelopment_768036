@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CustomApproachDemo.BehaviorTree
+namespace BehaviorTreeDemo.AI.CustomApproach.Runtime
 {
     public abstract class BTNode
     {

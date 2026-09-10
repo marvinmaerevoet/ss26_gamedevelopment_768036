@@ -1,7 +1,9 @@
-using CustomApproachDemo.Player;
-using CustomApproachDemo.Police;
-using CustomApproachDemo.Animation;
-using CustomApproachDemo.UI;
+using BehaviorTreeDemo.Gameplay.Setup;
+using BehaviorTreeDemo.AI.CustomApproach;
+using BehaviorTreeDemo.Gameplay.Player;
+using BehaviorTreeDemo.Police;
+using BehaviorTreeDemo.Animation;
+using BehaviorTreeDemo.AI.CustomApproach.Diagnostics;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,7 +11,7 @@ using UnityEngine.AI;
 using UnityEditor;
 #endif
 
-namespace CustomApproachDemo.Setup
+namespace BehaviorTreeDemo.AI.CustomApproach.Setup
 {
     /// <summary>
     /// Selective authoring/bootstrap helpers for adding individual demo components.
@@ -212,8 +214,8 @@ namespace CustomApproachDemo.Setup
         public void CreateDemoReset()
         {
             #if UNITY_EDITOR
-            GameObject resetObject = CreateUndoGameObject("Custom Approach Demo Reset");
-            CustomApproachDemoReset demoReset = GetOrAddComponent<CustomApproachDemoReset>(resetObject);
+            GameObject resetObject = CreateUndoGameObject("Behavior Tree Demo Reset");
+            DemoReset demoReset = GetOrAddComponent<DemoReset>(resetObject);
 
             DemoPlayerState playerState = FindAnyObjectByType<DemoPlayerState>();
             PoliceBehaviorTreeRunner runner = FindAnyObjectByType<PoliceBehaviorTreeRunner>();
@@ -221,7 +223,7 @@ namespace CustomApproachDemo.Setup
                 ? runner.GetComponent<PoliceAIContext>()
                 : FindAnyObjectByType<PoliceAIContext>();
 
-            Undo.RecordObject(demoReset, "Configure Custom Approach Demo Reset");
+            Undo.RecordObject(demoReset, "Configure Behavior Tree Demo Reset");
             demoReset.playerState = playerState;
             demoReset.playerTransform = playerState != null ? playerState.transform : null;
             demoReset.policeDecisionController = runner;

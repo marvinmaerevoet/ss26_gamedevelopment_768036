@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 
-namespace CustomApproachDemo.EditorTools
+namespace BehaviorTreeDemo.Animation.Editor
 {
     public static class PoliceAnimatorControllerSetup
     {
@@ -199,7 +199,7 @@ namespace CustomApproachDemo.EditorTools
             foreach (string guid in guids)
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid);
-                if (string.IsNullOrEmpty(path) || path.Contains("/CustomApproachDemo/"))
+                if (string.IsNullOrEmpty(path))
                 {
                     continue;
                 }

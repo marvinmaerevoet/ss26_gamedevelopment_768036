@@ -1,4 +1,4 @@
-namespace CustomApproachDemo.BehaviorTree
+namespace BehaviorTreeDemo.AI.CustomApproach.Runtime
 {
     public sealed class BTRetry : BTDecorator
     {

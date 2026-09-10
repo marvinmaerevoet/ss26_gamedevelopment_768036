@@ -1,8 +1,8 @@
-# Custom Approach Demo
+# Behavior Tree Demo
 
 ## Ziel der Demo
 
-Diese Demo zeigt eine kleine Behavior-Tree-KI fuer NPC-Polizisten in einer Western-Stadt. Der Spieler bewegt sich durch die Szene, Sheriffs patrouillieren, erkennen verdachtig wirkendes Verhalten, verfolgen den Spieler, nehmen ihn in Reichweite fest oder untersuchen seine letzte bekannte Position.
+Diese Demo zeigt eine kleine Behavior-Tree-KI fuer NPC-Polizisten in einer Western-Stadt. Der Spieler bewegt sich durch die Szene, Sheriffs patrouillieren, erkennen verdachtig wirkendes Verhalten, verfolgen den Spieler, nehmen ihn in Reichweite fest oder untersuchen seine letzte bekannte Position. Die gemeinsame Gameplay- und Police-Schicht ist vom Decision-Layer getrennt; `AI/CustomApproach` enthaelt den derzeit aktiven eigenen Behavior Tree.
 
 Alles liegt unter `Assets/BehaviorTreeDemo/` und ist optional. Die Demo veraendert keine Game-Creator-Dateien, Packages, Synty-Prefabs oder Szenen automatisch.
 
@@ -133,7 +133,7 @@ Setze den Sheriff auf eine gebackene NavMesh-Flaeche. Falls noetig, verschiebe d
 
 ### Animation bleibt Idle
 
-Fuehre zuerst `Tools/Custom Approach Demo/Create Animator Controllers` aus und danach `Custom Approach Demo/Setup Synty Animations`. Pruefe, ob `BasicAnimationDriver` am Player und Sheriff vorhanden ist und ob im Animator der passende Demo-Controller zugewiesen wurde.
+Der Bootstrap-Befehl lautet `Tools/Behavior Tree Demo/Bootstrap Animator Controllers (Empty Demo Only)`. `Behavior Tree Demo Bootstrap/Setup Synty Animations` ist ein ContextMenu-Befehl am Setup-Helfer. Beide sind nur fuer ein neues, leeres Setup gedacht; die vorhandenen Controller der Hauptszene werden nicht ueberschrieben.
 
 ### Animator Controller fehlt
 
@@ -141,7 +141,7 @@ Die Demo-Controller liegen nach dem Erzeugen unter `Assets/BehaviorTreeDemo/Anim
 
 ### Speed bleibt 0
 
-Beim Player muss `DemoPlayerState.CurrentSpeed` ueber `movingThreshold` liegen. Beim Sheriff muss der `NavMeshAgent` tatsaechlich laufen und im `BasicAnimationDriver.agent` Feld referenziert sein.
+Beim Player muss `DemoPlayerState.CurrentSpeed` die konfigurierte Player-Idle-Deadzone ueberschreiten. Beim Sheriff muss der `NavMeshAgent` die Agent-Idle-Deadzone ueberschreiten und im `BasicAnimationDriver.agent` Feld referenziert sein.
 
 ### Falsche Clips gefunden
 

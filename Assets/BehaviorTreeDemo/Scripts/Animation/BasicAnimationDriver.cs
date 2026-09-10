@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using CustomApproachDemo.Gameplay.Carry;
-using CustomApproachDemo.Player;
-using CustomApproachDemo.Police;
+using BehaviorTreeDemo.Gameplay.Carry;
+using BehaviorTreeDemo.Gameplay.Player;
+using BehaviorTreeDemo.Police;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
-namespace CustomApproachDemo.Animation {
+namespace BehaviorTreeDemo.Animation {
     public sealed class BasicAnimationDriver : MonoBehaviour {
         public Animator animator;
         public NavMeshAgent agent;
@@ -16,7 +16,6 @@ namespace CustomApproachDemo.Animation {
 
         public float walkingVisualSpeed = 1.5f;
         public float runningVisualSpeed = 4f;
-        public float movingThreshold = 0.1f;
         public float playerIdleDeadzone = 0.25f;
         public float agentIdleDeadzone = 0.05f;
         public float speedDampTime = 0.08f;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CustomApproachDemo.Gameplay.Carry
+namespace BehaviorTreeDemo.Gameplay.Carry
 {
     [DisallowMultipleComponent]
     public sealed class DemoCarryable : MonoBehaviour

@@ -1,16 +1,15 @@
 using UnityEngine;
 
-namespace CustomApproachDemo.Police
+namespace BehaviorTreeDemo.Police
 {
     public enum PoliceBehaviorMode
     {
-        None,
-        Patrol,
-        Suspicion,
-        Chase,
-        Investigate,
-        Arrest,
-        Emergency
+        None = 0,
+        Patrol = 1,
+        Chase = 3,
+        Investigate = 4,
+        Arrest = 5,
+        Emergency = 6
     }
 
     public sealed class PoliceBlackboard : MonoBehaviour

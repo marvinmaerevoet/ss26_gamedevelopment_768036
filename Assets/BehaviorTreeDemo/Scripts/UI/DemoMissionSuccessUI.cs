@@ -1,7 +1,7 @@
-using CustomApproachDemo.Gameplay.Mission;
+using BehaviorTreeDemo.Gameplay.Mission;
 using UnityEngine;
 
-namespace CustomApproachDemo.Gameplay.UI
+namespace BehaviorTreeDemo.UI
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(CanvasGroup))]

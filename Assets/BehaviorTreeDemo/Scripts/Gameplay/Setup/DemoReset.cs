@@ -1,17 +1,17 @@
-using CustomApproachDemo.Player;
-using CustomApproachDemo.Gameplay.Carry;
-using CustomApproachDemo.Gameplay.Mission;
-using CustomApproachDemo.Gameplay.Arrest;
-using CustomApproachDemo.Gameplay.UI;
-using CustomApproachDemo.Police;
+using BehaviorTreeDemo.Gameplay.Player;
+using BehaviorTreeDemo.Gameplay.Carry;
+using BehaviorTreeDemo.Gameplay.Mission;
+using BehaviorTreeDemo.Gameplay.Arrest;
+using BehaviorTreeDemo.UI;
+using BehaviorTreeDemo.Police;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
-namespace CustomApproachDemo.Setup
+namespace BehaviorTreeDemo.Gameplay.Setup
 {
-    public sealed class CustomApproachDemoReset : MonoBehaviour
+    public sealed class DemoReset : MonoBehaviour
     {
         [Header("References")]
         public DemoPlayerState playerState;
@@ -97,7 +97,7 @@ namespace CustomApproachDemo.Setup
             ResetPlayer();
             ResetAllSheriffs();
 
-            Debug.Log("Custom Approach Demo reset.", this);
+            Debug.Log("Behavior Tree Demo reset.", this);
             introUI?.ShowIntro();
         }
 
@@ -289,13 +289,13 @@ namespace CustomApproachDemo.Setup
         {
             if (playerState == null && !warnedMissingPlayer)
             {
-                Debug.LogWarning("CustomApproachDemoReset could not find a DemoPlayerState.", this);
+                Debug.LogWarning("DemoReset could not find a DemoPlayerState.", this);
                 warnedMissingPlayer = true;
             }
 
             if ((policeDecisionController == null || policeContext == null) && !warnedMissingPolice)
             {
-                Debug.LogWarning("CustomApproachDemoReset could not find a PoliceDecisionController or PoliceAIContext.", this);
+                Debug.LogWarning("DemoReset could not find a PoliceDecisionController or PoliceAIContext.", this);
                 warnedMissingPolice = true;
             }
         }

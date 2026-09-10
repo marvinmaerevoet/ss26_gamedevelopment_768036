@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CustomApproachDemo.Police
+namespace BehaviorTreeDemo.Police
 {
     public abstract class PoliceDecisionController : MonoBehaviour
     {

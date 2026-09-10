@@ -1,6 +1,6 @@
 using System;
 
-namespace CustomApproachDemo.BehaviorTree
+namespace BehaviorTreeDemo.AI.CustomApproach.Runtime
 {
     public class BTCondition : BTNode
     {

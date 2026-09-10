@@ -1,8 +1,8 @@
-using CustomApproachDemo.Gameplay.Carry;
+using BehaviorTreeDemo.Gameplay.Carry;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace CustomApproachDemo.Player
+namespace BehaviorTreeDemo.Gameplay.Player
 {
     public sealed class DemoSimplePlayerController : MonoBehaviour
     {

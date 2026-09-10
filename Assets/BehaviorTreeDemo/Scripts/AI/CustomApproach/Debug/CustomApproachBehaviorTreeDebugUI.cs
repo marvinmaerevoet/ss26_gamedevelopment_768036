@@ -1,12 +1,13 @@
+using BehaviorTreeDemo.AI.CustomApproach;
 using System.Collections.Generic;
 using System.Text;
-using CustomApproachDemo.BehaviorTree;
-using CustomApproachDemo.Player;
-using CustomApproachDemo.Police;
+using BehaviorTreeDemo.AI.CustomApproach.Runtime;
+using BehaviorTreeDemo.Gameplay.Player;
+using BehaviorTreeDemo.Police;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CustomApproachDemo.UI
+namespace BehaviorTreeDemo.AI.CustomApproach.Diagnostics
 {
     public sealed class CustomApproachBehaviorTreeDebugUI : MonoBehaviour
     {

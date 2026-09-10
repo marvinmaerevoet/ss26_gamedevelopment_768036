@@ -75,7 +75,7 @@ Execute the tasks in order. Each task is a standalone Codex assignment and must 
 | [06](06_AnimatorAndSetupSafety.md) | Animator and setup safety | DONE | THIS COMMIT | PENDING |
 | [07](07_MovementLifecycleAndResetCleanup.md) | Movement lifecycle and reset cleanup | DONE | THIS COMMIT | PENDING |
 | [08](08_SceneAndEnvironmentCleanup.md) | Scene and environment cleanup | DONE | THIS COMMIT | PENDING |
-| [09](09_NamingStructureAndDeadCode.md) | Naming, structure, and dead code | PENDING | — | NOT RUN |
+| [09](09_NamingStructureAndDeadCode.md) | Naming, structure, and dead code | DONE | THIS COMMIT | PENDING |
 | [10](10_DocumentationAndFinalReplaceabilityAudit.md) | Documentation and final replaceability audit | PENDING | — | NOT RUN |
 
 Workflow after each future implementation task:

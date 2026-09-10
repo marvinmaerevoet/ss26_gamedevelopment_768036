@@ -18081,7 +18081,6 @@ MonoBehaviour:
   policeContext: {fileID: 0}
   walkingVisualSpeed: 1.5
   runningVisualSpeed: 4
-  movingThreshold: 0.1
   playerIdleDeadzone: 0.25
   agentIdleDeadzone: 0.05
   speedDampTime: 0.08
@@ -37639,7 +37638,6 @@ MonoBehaviour:
   policeContext: {fileID: 0}
   walkingVisualSpeed: 1.5
   runningVisualSpeed: 4
-  movingThreshold: 0.1
   playerIdleDeadzone: 0.25
   agentIdleDeadzone: 0.05
   speedDampTime: 0.08
@@ -53095,7 +53093,6 @@ MonoBehaviour:
   policeContext: {fileID: 0}
   walkingVisualSpeed: 1.5
   runningVisualSpeed: 4
-  movingThreshold: 0.1
   playerIdleDeadzone: 0.25
   agentIdleDeadzone: 0.05
   speedDampTime: 0.08
@@ -58697,7 +58694,6 @@ MonoBehaviour:
   policeContext: {fileID: 0}
   walkingVisualSpeed: 1.5
   runningVisualSpeed: 4
-  movingThreshold: 0.1
   playerIdleDeadzone: 0.25
   agentIdleDeadzone: 0.05
   speedDampTime: 0.08
@@ -90873,7 +90869,6 @@ MonoBehaviour:
   policeContext: {fileID: 0}
   walkingVisualSpeed: 1.5
   runningVisualSpeed: 4
-  movingThreshold: 0.1
   playerIdleDeadzone: 0.25
   agentIdleDeadzone: 0.05
   speedDampTime: 0.08

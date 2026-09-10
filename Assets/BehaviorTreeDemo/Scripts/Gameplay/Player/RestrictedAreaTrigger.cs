@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CustomApproachDemo.Player
+namespace BehaviorTreeDemo.Gameplay.Player
 {
     public sealed class RestrictedAreaTrigger : MonoBehaviour
     {

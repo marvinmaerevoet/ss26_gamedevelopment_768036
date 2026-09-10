@@ -1,4 +1,4 @@
-namespace CustomApproachDemo.Police
+namespace BehaviorTreeDemo.Police
 {
     public enum PoliceMovementMode
     {

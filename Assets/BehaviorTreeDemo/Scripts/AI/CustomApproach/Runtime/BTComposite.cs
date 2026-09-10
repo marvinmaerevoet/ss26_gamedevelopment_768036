@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CustomApproachDemo.BehaviorTree
+namespace BehaviorTreeDemo.AI.CustomApproach.Runtime
 {
     public abstract class BTComposite : BTNode
     {

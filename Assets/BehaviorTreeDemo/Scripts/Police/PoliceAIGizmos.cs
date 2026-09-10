@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CustomApproachDemo.Police
+namespace BehaviorTreeDemo.Police
 {
     public sealed class PoliceAIGizmos : MonoBehaviour
     {

@@ -1,9 +1,10 @@
+using BehaviorTreeDemo.Police;
 using System.Collections.Generic;
-using CustomApproachDemo.BehaviorTree;
-using CustomApproachDemo.Police.Nodes;
+using BehaviorTreeDemo.AI.CustomApproach.Runtime;
+using BehaviorTreeDemo.AI.CustomApproach.Nodes;
 using UnityEngine;
 
-namespace CustomApproachDemo.Police
+namespace BehaviorTreeDemo.AI.CustomApproach
 {
     [RequireComponent(typeof(PoliceAIContext))]
     public sealed class PoliceBehaviorTreeRunner : PoliceDecisionController

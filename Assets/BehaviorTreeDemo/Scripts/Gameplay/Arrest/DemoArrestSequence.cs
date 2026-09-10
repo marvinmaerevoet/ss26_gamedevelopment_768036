@@ -1,11 +1,11 @@
 using System.Collections;
-using CustomApproachDemo.Gameplay.Carry;
-using CustomApproachDemo.Player;
-using CustomApproachDemo.Gameplay.UI;
-using CustomApproachDemo.Animation;
+using BehaviorTreeDemo.Gameplay.Carry;
+using BehaviorTreeDemo.Gameplay.Player;
+using BehaviorTreeDemo.UI;
+using BehaviorTreeDemo.Animation;
 using UnityEngine;
 
-namespace CustomApproachDemo.Gameplay.Arrest
+namespace BehaviorTreeDemo.Gameplay.Arrest
 {
     public sealed class DemoArrestSequence : MonoBehaviour
     {

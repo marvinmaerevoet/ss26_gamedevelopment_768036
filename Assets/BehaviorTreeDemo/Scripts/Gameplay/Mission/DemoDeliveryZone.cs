@@ -1,9 +1,9 @@
 using System;
-using CustomApproachDemo.Gameplay.Carry;
-using CustomApproachDemo.Player;
+using BehaviorTreeDemo.Gameplay.Carry;
+using BehaviorTreeDemo.Gameplay.Player;
 using UnityEngine;
 
-namespace CustomApproachDemo.Gameplay.Mission
+namespace BehaviorTreeDemo.Gameplay.Mission
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BoxCollider))]

@@ -1,5 +1,6 @@
-using CustomApproachDemo.BehaviorTree;
-namespace CustomApproachDemo.Police.Nodes
+using BehaviorTreeDemo.Police;
+using BehaviorTreeDemo.AI.CustomApproach.Runtime;
+namespace BehaviorTreeDemo.AI.CustomApproach.Nodes
 {
     public sealed class A_LookAround : BTAction
     {

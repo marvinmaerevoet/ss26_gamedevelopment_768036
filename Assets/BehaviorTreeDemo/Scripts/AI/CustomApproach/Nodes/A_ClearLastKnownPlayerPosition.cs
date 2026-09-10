@@ -1,6 +1,7 @@
-using CustomApproachDemo.BehaviorTree;
+using BehaviorTreeDemo.Police;
+using BehaviorTreeDemo.AI.CustomApproach.Runtime;
 
-namespace CustomApproachDemo.Police.Nodes
+namespace BehaviorTreeDemo.AI.CustomApproach.Nodes
 {
     public sealed class A_ClearLastKnownPlayerPosition : BTAction
     {

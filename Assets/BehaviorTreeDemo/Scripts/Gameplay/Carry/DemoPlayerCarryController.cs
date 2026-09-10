@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using CustomApproachDemo.Player;
+using BehaviorTreeDemo.Gameplay.Player;
 
-namespace CustomApproachDemo.Gameplay.Carry
+namespace BehaviorTreeDemo.Gameplay.Carry
 {
     [DisallowMultipleComponent]
     public sealed class DemoPlayerCarryController : MonoBehaviour

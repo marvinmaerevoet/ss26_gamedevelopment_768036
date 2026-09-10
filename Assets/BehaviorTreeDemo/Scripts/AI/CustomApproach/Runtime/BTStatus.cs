@@ -1,4 +1,4 @@
-namespace CustomApproachDemo.BehaviorTree
+namespace BehaviorTreeDemo.AI.CustomApproach.Runtime
 {
     public enum BTStatus
     {

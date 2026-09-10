@@ -1,7 +1,8 @@
-using CustomApproachDemo.BehaviorTree;
+using BehaviorTreeDemo.Police;
+using BehaviorTreeDemo.AI.CustomApproach.Runtime;
 using UnityEngine;
 
-namespace CustomApproachDemo.Police.Nodes
+namespace BehaviorTreeDemo.AI.CustomApproach.Nodes
 {
     public abstract class PoliceMovementAction : BTAction
     {

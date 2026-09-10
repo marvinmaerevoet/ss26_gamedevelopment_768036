@@ -1,6 +1,7 @@
+using BehaviorTreeDemo.Police;
 using UnityEngine;
 
-namespace CustomApproachDemo.Police.Nodes
+namespace BehaviorTreeDemo.AI.CustomApproach.Nodes
 {
     public sealed class A_MoveToPatrolPoint : PoliceMovementAction
     {
