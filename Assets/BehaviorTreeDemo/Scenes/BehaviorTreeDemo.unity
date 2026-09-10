@@ -64469,10 +64469,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomApproachDemo.UI.CustomApproachBehaviorTreeDebugUI
   target: {fileID: 920719312}
+  enableNumberKeySelection: 1
   canvas: {fileID: 0}
   text: {fileID: 0}
-  fontSize: 20
-  titleFontSize: 26
+  fontSize: 16
+  titleFontSize: 24
+  panelWidth: 620
+  panelHeight: 1032
+  panelOffset: {x: 24, y: -24}
+  panelColor: {r: 0.035, g: 0.045, b: 0.06, a: 0.92}
+  sortingOrder: 75
   showBlackboardSummary: 1
   showTree: 1
   showLegend: 1
