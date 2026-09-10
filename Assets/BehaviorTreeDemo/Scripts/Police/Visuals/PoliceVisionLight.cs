@@ -12,7 +12,7 @@ namespace BehaviorTreeDemo.Police.Visuals
     public sealed class PoliceVisionLight : MonoBehaviour
     {
         private const string DefaultLightName = "VisionLight";
-        private const string DefaultVisualOriginName = "VisionLightCone";
+        private const string DefaultVisualOriginName = "Vision Light Origin";
 
         [Header("References")]
         [SerializeField] private PoliceAIContext context;

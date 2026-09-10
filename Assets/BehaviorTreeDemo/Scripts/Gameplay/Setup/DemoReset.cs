@@ -168,7 +168,6 @@ namespace BehaviorTreeDemo.Gameplay.Setup
                     playerState.IsArrested = false;
                 }
 
-                playerState.IsInRestrictedArea = false;
                 playerState.IsRunning = false;
             }
 

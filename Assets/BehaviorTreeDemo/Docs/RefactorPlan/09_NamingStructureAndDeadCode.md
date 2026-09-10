@@ -53,7 +53,7 @@ Evaluate and, only where beneficial, migrate toward:
 Evaluate these candidate names:
 
 - `CustomApproachDemoReset` → `DemoReset`
-- `VisionLightCone` → `VisionLightOrigin`
+- `VisionLightCone` → `Vision Light Origin`
 - `CrateReset` → `ArrestCrateSpawn`
 - `CA_ReadableNight_*` → a neutral demo prefix
 - Custom-specific reset log text → neutral text

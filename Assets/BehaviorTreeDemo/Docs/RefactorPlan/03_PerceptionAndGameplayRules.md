@@ -38,7 +38,6 @@ All four Sheriffs currently have an empty `obstacleMask`, so the line-of-sight r
 - `Gameplay/Carry/DemoPlayerCarryController.cs`
 - `Gameplay/Carry/DemoCarryable.cs`
 - `Gameplay/Player/DemoPlayerState.cs`
-- `Gameplay/Player/RestrictedAreaTrigger.cs`
 - Player, MissionCrate, EyePoint, four PoliceAIContexts, layers, and world colliders in the Scene
 
 ## Required Changes
@@ -63,7 +62,7 @@ Record LastKnownPosition only from a relevant suspicious/pursuit perception. Do 
 
 - Do not redesign FOV geometry or add hearing, memory decay, suspicion meters, or sensor frameworks.
 - Do not change Arrest approach behavior or presentation.
-- Do not remove `IsInRestrictedArea`; it remains a general gameplay state but is not a smuggling suspicion source.
+- Do not reintroduce a Restricted Area state as a smuggling suspicion source.
 - Do not add point reservations or squad coordination.
 
 ## Acceptance Criteria

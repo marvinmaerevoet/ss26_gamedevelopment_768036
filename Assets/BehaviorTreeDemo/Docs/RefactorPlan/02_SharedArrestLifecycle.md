@@ -37,7 +37,7 @@ Arrest ownership is split between `PoliceAIContext`, `A_ArrestPlayer`, `DemoPlay
 - Arrest/Chase conditions and relevant Runner tree construction
 - `Gameplay/Player/DemoPlayerState.cs`
 - `Gameplay/Arrest/DemoArrestSequence.cs`
-- `Gameplay/Setup/CustomApproachDemoReset.cs`
+- `Gameplay/Setup/DemoReset.cs`
 - `Animation/BasicAnimationDriver.cs`
 - Sheriff and Player Animator Controllers, read-only unless a necessary parameter mismatch is proven
 - all four Sheriff component/reference sets in `BehaviorTreeDemo.unity`

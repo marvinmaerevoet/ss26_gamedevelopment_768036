@@ -132,35 +132,6 @@ namespace BehaviorTreeDemo.AI.CustomApproach.Setup
             #endif
         }
 
-        [ContextMenu(ContextMenuRoot + "Create Restricted Area Trigger")]
-        public void CreateRestrictedAreaTrigger()
-        {
-            #if UNITY_EDITOR
-            GameObject anchor = Selection.activeGameObject != null
-                ? Selection.activeGameObject
-                : gameObject;
-
-            GameObject trigger = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            trigger.name = "Restricted Area Trigger";
-            Undo.RegisterCreatedObjectUndo(trigger, "Create Restricted Area Trigger");
-
-            trigger.transform.position = anchor.transform.position + anchor.transform.forward * 4f;
-            trigger.transform.localScale = new Vector3(4f, 2f, 4f);
-
-            BoxCollider boxCollider = trigger.GetComponent<BoxCollider>();
-            if (boxCollider != null)
-            {
-                Undo.RecordObject(boxCollider, "Configure Restricted Area Trigger");
-                boxCollider.isTrigger = true;
-                EditorUtility.SetDirty(boxCollider);
-            }
-
-            GetOrAddComponent<RestrictedAreaTrigger>(trigger);
-            #else
-            Debug.LogWarning("Create Restricted Area Trigger is only available in the Unity Editor.");
-            #endif
-        }
-
         [ContextMenu(ContextMenuRoot + "Create Safe Point")]
         public void CreateSafePoint()
         {
@@ -195,7 +166,7 @@ namespace BehaviorTreeDemo.AI.CustomApproach.Setup
         public void CreateBehaviorTreeDebugUI()
         {
             #if UNITY_EDITOR
-            GameObject debugUIObject = CreateUndoGameObject("CustomApproach BehaviorTree Debug UI");
+            GameObject debugUIObject = CreateUndoGameObject("Custom Approach Behavior Tree Debug UI");
             CustomApproachBehaviorTreeDebugUI debugUI = GetOrAddComponent<CustomApproachBehaviorTreeDebugUI>(debugUIObject);
 
             PoliceBehaviorTreeRunner runner = FindAnyObjectByType<PoliceBehaviorTreeRunner>();
@@ -214,7 +185,7 @@ namespace BehaviorTreeDemo.AI.CustomApproach.Setup
         public void CreateDemoReset()
         {
             #if UNITY_EDITOR
-            GameObject resetObject = CreateUndoGameObject("Behavior Tree Demo Reset");
+            GameObject resetObject = CreateUndoGameObject("Demo Reset");
             DemoReset demoReset = GetOrAddComponent<DemoReset>(resetObject);
 
             DemoPlayerState playerState = FindAnyObjectByType<DemoPlayerState>();

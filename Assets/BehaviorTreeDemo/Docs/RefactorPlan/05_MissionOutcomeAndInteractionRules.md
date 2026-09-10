@@ -37,7 +37,7 @@ Delivery can be triggered by `OnTriggerEnter`/`OnTriggerStay` while an Arrest ha
 - shared Arrest lifecycle from Task 02
 - `Police/PoliceAIContext.cs` suspicion logic
 - Success, Arrest, and Release notification scripts
-- MissionCrate, DeliveryZone, DeliveredCrateAnchor, CrateReset/ArrestCrateSpawn, and Player Scene wiring
+- MissionCrate, DeliveryZone, DeliveredCrateAnchor, Arrest Crate Spawn, and Player Scene wiring
 
 ## Required Changes
 

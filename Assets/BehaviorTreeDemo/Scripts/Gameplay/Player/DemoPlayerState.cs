@@ -6,7 +6,6 @@ namespace BehaviorTreeDemo.Gameplay.Player
     public sealed class DemoPlayerState : MonoBehaviour
     {
         public bool IsRunning;
-        public bool IsInRestrictedArea;
         [UnityEngine.Serialization.FormerlySerializedAs("IsArrested")]
         [SerializeField] private bool isArrested;
         public event System.Action Arrested;

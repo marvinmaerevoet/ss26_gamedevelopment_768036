@@ -50,7 +50,7 @@ Read the relevant implementations completely before editing:
 - Emergency/Flee, Chase, Investigate, Patrol, LookAt, and LookAround actions
 - `Police/PoliceAIContext.cs`, especially arrest reset/cancel and movement methods
 - `AI/CustomApproach/PoliceBehaviorTreeRunner.cs`
-- `Gameplay/Setup/CustomApproachDemoReset.cs`
+- `Gameplay/Setup/DemoReset.cs`
 
 List every `Reset()` override that can affect movement, `CurrentBehaviorMode`, arrest flags, or last-known-position state. Confirm the exact tick/reset order in the reactive selector.
 

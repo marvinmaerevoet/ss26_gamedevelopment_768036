@@ -23,7 +23,7 @@ Gemeinsamer Code importiert keine Typen aus `BehaviorTreeDemo.AI.CustomApproach`
 ## Aktueller Demo-Ablauf
 
 - Vier Sheriffs patrouillieren unabhaengig und waehlen zufaellige gueltige Patrol Points. Bei mindestens zwei Punkten wird eine direkte Wiederholung vermieden.
-- Ein sichtbarer Player ist nur verdaechtig, wenn er die konfigurierte `MissionCrate` traegt. Rennen und `IsInRestrictedArea` sind kein Suspicion-Grund.
+- Ein sichtbarer Player ist nur verdaechtig, wenn er die konfigurierte `MissionCrate` traegt. Rennen und Restricted Areas sind keine Suspicion-Gruende.
 - Sichtbar und verdaechtig fuehrt zu Chase. Ein Drop beendet den noch nicht committed Smuggling-Chase.
 - Bei Sichtverlust bleibt die letzte relevante Position eines verdaechtigen Players erhalten. Der Sheriff geht dorthin und schaut sich ungefaehr zwei Sekunden um.
 - Arrest hat vor Chase und Investigate Vorrang. Der gemeinsame Police-Layer koordiniert Approach, `1.4 m ± 0.15 m` Standdistanz, Commit, Hold, Release und Cancel.

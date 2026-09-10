@@ -35,7 +35,7 @@ Resolve remaining small lifecycle, movement-result, and reset inconsistencies af
 - `AI/CustomApproach/PoliceBehaviorTreeRunner.cs`
 - all Police movement actions
 - `Gameplay/Arrest/DemoArrestSequence.cs`
-- `Gameplay/Setup/CustomApproachDemoReset.cs`
+- `Gameplay/Setup/DemoReset.cs`
 - `Gameplay/Player/DemoPlayerState.cs`
 - `Gameplay/Player/DemoSimplePlayerController.cs`
 - all four Sheriffs' NavMeshAgent/Context/DecisionController wiring

@@ -27,7 +27,7 @@ Die native Ausfuehrungsweise gehoert zur Implementierung des jeweiligen Decision
 ### Suspicion und Chase
 
 - Suspicion ist ausschliesslich wahr, wenn `DemoPlayerCarryController.CurrentCarryable` exakt die im Context referenzierte `MissionCrate` ist und deren Pickup nicht gesperrt ist.
-- Running und `IsInRestrictedArea` beeinflussen Suspicion nicht.
+- Running und Restricted Areas beeinflussen Suspicion nicht.
 - Chase erfordert sichtbaren und verdaechtigen Player.
 - Wird die Kiste vor dem Arrest-Commit abgelegt, endet der Smuggling-Chase. Die letzte relevante Position darf anschliessend untersucht werden.
 
