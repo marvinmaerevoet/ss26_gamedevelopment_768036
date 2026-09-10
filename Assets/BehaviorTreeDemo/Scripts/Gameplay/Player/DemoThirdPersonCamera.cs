@@ -5,6 +5,8 @@ namespace CustomApproachDemo.Player
 {
     public sealed class DemoThirdPersonCamera : MonoBehaviour
     {
+        private const int MaxCollisionHits = 16;
+
         public Transform target;
         public Vector3 targetOffset = new Vector3(0f, 1.4f, 0f);
         public float distance = 5f;
@@ -18,9 +20,10 @@ namespace CustomApproachDemo.Player
         public bool rotateOnlyWhileRightMouseHeld;
         public bool lockCursorOnPlay = true;
         public bool followInLateUpdate = true;
-        public LayerMask collisionMask;
+        public LayerMask collisionMask = Physics.DefaultRaycastLayers;
         public float collisionRadius = 0.2f;
 
+        private readonly RaycastHit[] collisionHits = new RaycastHit[MaxCollisionHits];
         private float yaw;
         private float pitch;
 
@@ -134,16 +137,32 @@ namespace CustomApproachDemo.Player
             Vector3 direction = toCamera / desiredDistance;
             float radius = Mathf.Max(0.01f, collisionRadius);
 
-            if (Physics.SphereCast(
+            int hitCount = Physics.SphereCastNonAlloc(
                     lookPoint,
                     radius,
                     direction,
-                    out RaycastHit hit,
+                    collisionHits,
                     desiredDistance,
                     collisionMask,
-                    QueryTriggerInteraction.Ignore))
+                    QueryTriggerInteraction.Ignore);
+
+            float nearestHitDistance = float.PositiveInfinity;
+            for (int index = 0; index < hitCount; index++)
             {
-                return lookPoint + direction * Mathf.Max(0f, hit.distance - radius);
+                RaycastHit hit = collisionHits[index];
+                Transform hitTransform = hit.transform;
+                if (hitTransform == null ||
+                    (target != null && (hitTransform == target || hitTransform.IsChildOf(target))))
+                {
+                    continue;
+                }
+
+                nearestHitDistance = Mathf.Min(nearestHitDistance, hit.distance);
+            }
+
+            if (!float.IsPositiveInfinity(nearestHitDistance))
+            {
+                return lookPoint + direction * Mathf.Max(0f, nearestHitDistance - radius);
             }
 
             return desiredPosition;
