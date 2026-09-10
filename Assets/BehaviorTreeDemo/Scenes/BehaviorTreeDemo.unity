@@ -119,6 +119,90 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &2699033
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2699034}
+  - component: {fileID: 2699036}
+  - component: {fileID: 2699035}
+  m_Layer: 0
+  m_Name: Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2699034
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2699033}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1796646157}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -28, y: -16}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2699035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2699033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.88, g: 0.91, b: 0.94, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 3
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 0.9
+  m_Text: 'ACTIVE APPROACH
+
+    F1  Custom Approach   F2  GitAmend
+
+    Current:
+    Custom Approach'
+--- !u!222 &2699036
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2699033}
+  m_CullTransparentMesh: 1
 --- !u!1001 &3121880
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -498,6 +582,53 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4906149303299186, guid: 2e3a851fb51f05946afa4156d0078cae, type: 3}
   m_PrefabInstance: {fileID: 8515803}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &9097764
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9097765}
+  - component: {fileID: 9097766}
+  m_Layer: 0
+  m_Name: Behavior Tree Approach Switcher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9097765
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9097764}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2133902337}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9097766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9097764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fd66958dc8fb744eb8b9452429f2b09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BehaviorTreeDemo.Gameplay.Setup.BehaviorTreeApproachSwitcher
+  customApproachDebugUI: {fileID: 1527001079}
+  gitAmendDebugUI: {fileID: 1882320115}
+  approachStatusText: {fileID: 2699035}
 --- !u!1 &10673796
 GameObject:
   m_ObjectHideFlags: 0
@@ -26075,6 +26206,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1040643676778012, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
       insertIndex: -1
       addedObject: {fileID: 920719319}
+    - targetCorrespondingSourceObject: {fileID: 1040643676778012, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 920719320}
+    - targetCorrespondingSourceObject: {fileID: 1040643676778012, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 920719321}
   m_SourcePrefab: {fileID: 100100000, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
 --- !u!1001 &658464809
 PrefabInstance:
@@ -37341,7 +37478,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920719309}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07f8dd5ba4fc60349a78e1d33d2c5935, type: 3}
   m_Name: 
@@ -37496,6 +37633,36 @@ MonoBehaviour:
   lightIntensity: 2
   shadowStrength: 0.2
   castShadows: 0
+--- !u!114 &920719320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920719309}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a73480ece53974245b7356679aa7dbaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BehaviorTreeDemo.AI.GitAmend.GitAmendPoliceDecisionController
+  enableEmergencyDemo: 1
+--- !u!114 &920719321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920719309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a94ff3d925f383d4a8240c57930a6a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BehaviorTreeDemo.Police.PoliceDecisionHost
+  controllers:
+  - approach: 0
+    controller: {fileID: 920719312}
+  - approach: 1
+    controller: {fileID: 920719320}
 --- !u!1001 &921214709
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -52941,6 +53108,8 @@ GameObject:
   - component: {fileID: 1268669043}
   - component: {fileID: 1268669042}
   - component: {fileID: 1268669041}
+  - component: {fileID: 1268669051}
+  - component: {fileID: 1268669050}
   m_Layer: 0
   m_Name: Sheriff 04
   m_TagString: Untagged
@@ -53017,7 +53186,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1268669040}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07f8dd5ba4fc60349a78e1d33d2c5935, type: 3}
   m_Name: 
@@ -53158,6 +53327,36 @@ Transform:
   - {fileID: 1702455826}
   m_Father: {fileID: 1101406875}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1268669050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268669040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a94ff3d925f383d4a8240c57930a6a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BehaviorTreeDemo.Police.PoliceDecisionHost
+  controllers:
+  - approach: 0
+    controller: {fileID: 1268669044}
+  - approach: 1
+    controller: {fileID: 1268669051}
+--- !u!114 &1268669051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268669040}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a73480ece53974245b7356679aa7dbaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BehaviorTreeDemo.AI.GitAmend.GitAmendPoliceDecisionController
+  enableEmergencyDemo: 1
 --- !u!1001 &1269379633
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54202,6 +54401,7 @@ Transform:
   - {fileID: 1385305024}
   - {fileID: 1345257656}
   - {fileID: 1527001081}
+  - {fileID: 1882320116}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1297100002
@@ -58209,6 +58409,7 @@ RectTransform:
   - {fileID: 1745361387}
   - {fileID: 768651585}
   - {fileID: 1562964026}
+  - {fileID: 1796646157}
   m_Father: {fileID: 1296457765}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -58571,6 +58772,8 @@ GameObject:
   - component: {fileID: 1391683332}
   - component: {fileID: 1391683331}
   - component: {fileID: 1391683330}
+  - component: {fileID: 1391683340}
+  - component: {fileID: 1391683339}
   m_Layer: 0
   m_Name: Sheriff 02
   m_TagString: Untagged
@@ -58647,7 +58850,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1391683329}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07f8dd5ba4fc60349a78e1d33d2c5935, type: 3}
   m_Name: 
@@ -58788,6 +58991,36 @@ Transform:
   - {fileID: 1609988001}
   m_Father: {fileID: 1101406875}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1391683339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391683329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a94ff3d925f383d4a8240c57930a6a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BehaviorTreeDemo.Police.PoliceDecisionHost
+  controllers:
+  - approach: 0
+    controller: {fileID: 1391683333}
+  - approach: 1
+    controller: {fileID: 1391683340}
+--- !u!114 &1391683340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391683329}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a73480ece53974245b7356679aa7dbaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BehaviorTreeDemo.AI.GitAmend.GitAmendPoliceDecisionController
+  enableEmergencyDemo: 1
 --- !u!1 &1395588998
 GameObject:
   m_ObjectHideFlags: 0
@@ -64434,7 +64667,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1527001080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78866,13 +79099,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomApproachDemo.Setup.CustomApproachDemoReset
   playerState: {fileID: 439849588}
   playerTransform: {fileID: 439849590}
-  policeDecisionController: {fileID: 920719312}
+  policeDecisionController: {fileID: 920719321}
   policeContext: {fileID: 920719314}
   policeTransform: {fileID: 920719311}
   additionalSheriffs:
   - {fileID: 1391683334}
   - {fileID: 2100151255}
   - {fileID: 1268669045}
+  additionalDecisionControllers:
+  - {fileID: 1391683339}
+  - {fileID: 2100151260}
+  - {fileID: 1268669050}
   playerSpawn: {fileID: 1676240674}
   movement: {fileID: 439849587}
   carryController: {fileID: 439849592}
@@ -78966,6 +79203,82 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4163020846523182, guid: 04c852aad9fc0b44f9d3e1319fdbfd09, type: 3}
   m_PrefabInstance: {fileID: 1795648741}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1796646156
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1796646157}
+  - component: {fileID: 1796646159}
+  - component: {fileID: 1796646158}
+  m_Layer: 0
+  m_Name: Approach Indicator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1796646157
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1796646156}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2699034}
+  m_Father: {fileID: 1385305024}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -20, y: 20}
+  m_SizeDelta: {x: 410, y: 82}
+  m_Pivot: {x: 1, y: 0}
+--- !u!114 &1796646158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1796646156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.035, g: 0.045, b: 0.06, a: 0.86}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1796646159
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1796646156}
+  m_CullTransparentMesh: 1
 --- !u!1001 &1797285437
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -82081,6 +82394,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4106105673953012, guid: 8775010392441964e99ddb12d63a5e10, type: 3}
   m_PrefabInstance: {fileID: 1881847521}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1882320115
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1882320116}
+  - component: {fileID: 1882320117}
+  m_Layer: 0
+  m_Name: GitAmend Behaviour Tree Debug UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1882320116
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882320115}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1296457765}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1882320117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882320115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd450e310e6b4a440a1aa49fee33e557, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BehaviorTreeDemo.AI.GitAmend.Diagnostics.GitAmendBehaviorTreeDebugUI
+  target: {fileID: 920719320}
+  enableNumberKeySelection: 1
+  canvas: {fileID: 0}
+  text: {fileID: 0}
+  fontSize: 16
+  titleFontSize: 24
+  panelWidth: 580
+  panelHeight: 900
+  panelOffset: {x: 24, y: -24}
+  panelColor: {r: 0.09, g: 0.065, b: 0.035, a: 0.94}
+  sortingOrder: 75
+  refreshInterval: 0.1
+  useRichText: 1
 --- !u!1001 &1882774236
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -90789,6 +91159,8 @@ GameObject:
   - component: {fileID: 2100151253}
   - component: {fileID: 2100151252}
   - component: {fileID: 2100151251}
+  - component: {fileID: 2100151261}
+  - component: {fileID: 2100151260}
   m_Layer: 0
   m_Name: Sheriff 03
   m_TagString: Untagged
@@ -90865,7 +91237,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2100151250}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07f8dd5ba4fc60349a78e1d33d2c5935, type: 3}
   m_Name: 
@@ -91006,6 +91378,36 @@ Transform:
   - {fileID: 530720954}
   m_Father: {fileID: 1101406875}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2100151260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100151250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a94ff3d925f383d4a8240c57930a6a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BehaviorTreeDemo.Police.PoliceDecisionHost
+  controllers:
+  - approach: 0
+    controller: {fileID: 2100151254}
+  - approach: 1
+    controller: {fileID: 2100151261}
+--- !u!114 &2100151261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100151250}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a73480ece53974245b7356679aa7dbaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BehaviorTreeDemo.AI.GitAmend.GitAmendPoliceDecisionController
+  enableEmergencyDemo: 1
 --- !u!1001 &2100983559
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -92196,6 +92598,7 @@ Transform:
   m_Children:
   - {fileID: 1794410443}
   - {fileID: 1642170449}
+  - {fileID: 9097765}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2134157274

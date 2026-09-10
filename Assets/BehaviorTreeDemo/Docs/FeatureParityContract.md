@@ -59,9 +59,16 @@ Die native Ausfuehrungsweise gehoert zur Implementierung des jeweiligen Decision
 ### Delivery, Reset und Presentation
 
 - Delivery und Arrest koennen nicht beide erfolgreich committen. Nach Delivery ist die Kiste gesperrt und nicht mehr suspicious.
-- Der gemeinsame `DemoReset` setzt Gameplay, Presentation und Police-State zurueck. Ein Adapter setzt ueber `PoliceDecisionController.ResetDecisionState()` nur seinen Graph-/Tree-State zurueck.
-- Vier Sheriffs besitzen je einen eigenen Context, Blackboard, Agent und Decision-Adapter. Sie duerfen keine lokalen Laufzeitwerte gegenseitig schreiben.
+- Der gemeinsame `DemoReset` setzt Gameplay, Presentation und Police-State zurueck. Er ruft pro Sheriff den neutralen `PoliceDecisionHost` auf; dieser delegiert `ResetDecisionState()` ausschliesslich an den ausgewaehlten Adapter.
+- Vier Sheriffs besitzen je einen eigenen Context, Blackboard, Agent, Host, Custom-Runner und GitAmend-Controller. Genau ein konkreter Adapter pro Sheriff ist aktiv; lokale Laufzeitwerte duerfen nicht zwischen Sheriffs geteilt werden.
 - Animator, Mission-/Arrest-UI, Fade, Jail-Sequenz, Carry, Delivery und Reset bleiben fuer alle Adapter identisch.
+
+### Approach-Auswahl
+
+- `F1` waehlt CustomApproach, `F2` waehlt GitAmend. Beide Tasten laden die einzige Build-Szene vollstaendig neu, auch wenn der gewaehlte Ansatz bereits aktiv ist.
+- Die Auswahl ueberlebt diesen Scene-Reload, faellt bei einem neuen App-/Play-Start aber auf CustomApproach zurueck.
+- `R` wechselt den Ansatz nicht, sondern setzt die laufende Demo ueber den neutralen Host zurueck.
+- Das aktive Debug UI darf adaptereigene Diagnosemoeglichkeiten zeigen; fehlende GitAmend-Debughooks werden nicht durch Aenderungen an dessen Core-Runtime simuliert.
 
 ## Kleiner kuenftiger Testkatalog
 

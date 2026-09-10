@@ -16,15 +16,24 @@ These findings apply to `Assets/BehaviorTreeDemo/Scenes/BehaviorTreeDemo.unity`.
 - The three null Avatar references on the two Synty rope objects and the train-station platform remain vendor-owned and have no demonstrated project runtime effect.
 - Vision Spot Light shadows remain disabled. There is no demonstrated need to add four shadow-casting lights.
 - Project-owned roots are grouped under `Actors`, `Mission`, `Markers`, `Systems`, and `UI`; world transforms and serialized references are preserved.
-- No neutral Sheriff prefab was created. The original Sheriff is a Synty prefab instance, while the three copies are Scene objects containing the concrete Custom Approach runner. Turning that current composition into a shared base prefab would entangle a decision adapter.
+- No neutral Sheriff prefab was created. The original Sheriff is a Synty prefab instance and the three copies are Scene objects. Each Scene Sheriff now owns a neutral host plus both concrete adapters without changing Vendor prefabs.
 
 ## Sheriff consistency checklist
 
 For `Sheriff 01`, `Sheriff 02`, `Sheriff 03`, and `Sheriff 04`, verify:
 
-- one local `NavMeshAgent`, `PoliceBlackboard`, `PoliceAIContext`, `PoliceDecisionController`, `PoliceAIGizmos`, `BasicAnimationDriver`, and Animator;
+- one local `NavMeshAgent`, `PoliceBlackboard`, `PoliceAIContext`, `PoliceDecisionHost`, `PoliceBehaviorTreeRunner`, `GitAmendPoliceDecisionController`, `PoliceAIGizmos`, `BasicAnimationDriver`, and Animator;
+- two local host slots; both concrete adapters are serialized disabled and the earlier-running host enables only the selected one at Scene start;
 - local `EyePoint`, lantern glow, `Vision Light Origin`, and synchronized Spot Light;
 - own component references remain on the same Sheriff;
 - shared Player, MissionCrate, patrol points, and safe point references are intentional;
 - view distance/angle remain 12/90 and the obstacle mask uses normal raycast layers;
 - `Sheriff.controller` remains assigned.
+
+## Dual-approach integration
+
+- `Systems/Behavior Tree Approach Switcher` maps `F1` to CustomApproach and `F2` to GitAmend, then reloads the active Build Scene.
+- `Demo Reset` references the four `PoliceDecisionHost` components and therefore resets only the active adapter without knowing its concrete type.
+- `UI/Custom Approach Behavior Tree Debug UI` and `UI/GitAmend Behaviour Tree Debug UI` are mutually exclusive. Both use `1` to `4` for Sheriff selection.
+- `UI/Notifications UI/Approach Indicator` shows the controls and current selection independently of either adapter UI.
+- `Assets/BehaviorTreeDemo/Scenes/BehaviorTreeDemo.unity` is the sole enabled Build Settings entry.

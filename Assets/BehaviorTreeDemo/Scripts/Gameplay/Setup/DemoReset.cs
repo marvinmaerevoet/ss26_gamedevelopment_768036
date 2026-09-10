@@ -21,6 +21,7 @@ namespace BehaviorTreeDemo.Gameplay.Setup
         public PoliceAIContext policeContext;
         public Transform policeTransform;
         [SerializeField] private PoliceAIContext[] additionalSheriffs = new PoliceAIContext[0];
+        [SerializeField] private PoliceDecisionController[] additionalDecisionControllers = new PoliceDecisionController[0];
         private Vector3[] additionalPositions;
         private Quaternion[] additionalRotations;
         private int[] additionalPatrolIndices;
@@ -206,7 +207,9 @@ namespace BehaviorTreeDemo.Gameplay.Setup
                     additionalPositions[i],
                     additionalRotations[i],
                     additionalPatrolIndices[i],
-                    context.GetComponent<PoliceDecisionController>());
+                    i < additionalDecisionControllers.Length
+                        ? additionalDecisionControllers[i]
+                        : null);
             }
         }
 
