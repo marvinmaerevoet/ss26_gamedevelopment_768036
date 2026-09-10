@@ -8,7 +8,6 @@ namespace BehaviorTreeDemo.Gameplay.Carry
     public sealed class DemoPlayerCarryController : MonoBehaviour
     {
         private const int MaxCarryableHits = 12;
-        private const string DefaultCarryAnchorName = "CarryAnchor";
 
         [Header("References")]
         [SerializeField] private Transform carryAnchor;
@@ -30,6 +29,7 @@ namespace BehaviorTreeDemo.Gameplay.Carry
         private readonly Collider[] carryableHits = new Collider[MaxCarryableHits];
         private DemoCarryable currentCarryable;
         private DemoPlayerState playerState;
+        private bool warnedMissingCarryAnchor;
 
         public bool IsCarrying => currentCarryable != null;
         public DemoCarryable CurrentCarryable => currentCarryable;
@@ -122,15 +122,17 @@ namespace BehaviorTreeDemo.Gameplay.Carry
                 playerState = GetComponent<DemoPlayerState>();
             }
 
-            if (carryAnchor != null)
+            if (carryAnchor == null)
             {
-                return;
+                if (!warnedMissingCarryAnchor)
+                {
+                    Debug.LogError("DemoPlayerCarryController needs an assigned CarryAnchor reference.", this);
+                    warnedMissingCarryAnchor = true;
+                }
             }
-
-            Transform foundAnchor = transform.Find(DefaultCarryAnchorName);
-            if (foundAnchor != null)
+            else
             {
-                carryAnchor = foundAnchor;
+                warnedMissingCarryAnchor = false;
             }
         }
 

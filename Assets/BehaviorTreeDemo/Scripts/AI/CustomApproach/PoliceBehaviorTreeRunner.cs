@@ -11,7 +11,6 @@ namespace BehaviorTreeDemo.AI.CustomApproach
     {
         [Header("Tick")]
         public float tickInterval = 0.1f;
-        public bool resetTreeWhenPlayerArrested;
 
         [Header("Debug")]
         public bool enableEmergencyDemo = true;
@@ -29,15 +28,12 @@ namespace BehaviorTreeDemo.AI.CustomApproach
         private float nextTickTime;
         private bool warnedMissingContext;
         private bool warnedMissingBlackboard;
-        private bool treePausedAfterArrest;
-
         private BTNode deepestRunningNode;
         private BTNode lastMeaningfulNode;
         private PoliceBehaviorMode? activeBehaviorMode;
         private readonly List<BTNode> lastTickPath = new List<BTNode>();
 
         public BTNode TreeRoot => treeRoot;
-        public BTNode LastTickedNode { get; private set; }
         public IReadOnlyList<BTNode> LastTickPath => lastTickPath;
         public float LastTickTime { get; private set; } = -1f;
         public string CurrentNodeName { get; private set; }
@@ -53,7 +49,6 @@ namespace BehaviorTreeDemo.AI.CustomApproach
         {
             treeRoot?.Reset();
             context?.CancelActiveOperations();
-            treePausedAfterArrest = false;
         }
 
         private void Update()
@@ -69,17 +64,6 @@ namespace BehaviorTreeDemo.AI.CustomApproach
             {
                 context.lowHealthDemoToggle = false;
             }
-
-            if (context.PlayerState != null &&
-                context.PlayerState.IsArrested &&
-                resetTreeWhenPlayerArrested &&
-                !context.IsArrestLatched)
-            {
-                PauseAfterArrest();
-                return;
-            }
-
-            treePausedAfterArrest = false;
 
             if (Time.time < nextTickTime)
             {
@@ -199,10 +183,8 @@ namespace BehaviorTreeDemo.AI.CustomApproach
             deepestRunningNode = null;
             lastMeaningfulNode = null;
             activeBehaviorMode = null;
-            LastTickedNode = null;
             CurrentNodeName = "Reset";
             LastTreeStatus = BTStatus.Running;
-            treePausedAfterArrest = false;
             nextTickTime = Time.time;
             LastTickTime = -1f;
             lastTickPath.Clear();
@@ -214,8 +196,6 @@ namespace BehaviorTreeDemo.AI.CustomApproach
             deepestRunningNode = null;
             lastMeaningfulNode = null;
             activeBehaviorMode = null;
-            LastTickedNode = null;
-
             BTNode.NodeTicked += OnNodeTicked;
 
             BTStatus status;
@@ -279,28 +259,12 @@ namespace BehaviorTreeDemo.AI.CustomApproach
             if (!IsControlNode(node))
             {
                 lastMeaningfulNode = node;
-                LastTickedNode = node;
             }
 
             if (status == BTStatus.Running && deepestRunningNode == null && !IsControlNode(node))
             {
                 deepestRunningNode = node;
             }
-        }
-
-        private void PauseAfterArrest()
-        {
-            if (!treePausedAfterArrest)
-            {
-                treeRoot.Reset();
-                treePausedAfterArrest = true;
-            }
-
-            LastTreeStatus = BTStatus.Success;
-            blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
-            CurrentNodeName = "Player Arrested";
-            LastTickedNode = null;
-            lastTickPath.Clear();
         }
 
         private void EnsureReferences()
@@ -320,18 +284,6 @@ namespace BehaviorTreeDemo.AI.CustomApproach
             {
                 blackboard = context.PoliceBlackboard;
             }
-
-            if (blackboard == null)
-            {
-                blackboard = GetComponent<PoliceBlackboard>();
-            }
-
-            if (blackboard == null)
-            {
-                blackboard = gameObject.AddComponent<PoliceBlackboard>();
-            }
-
-            context.PoliceBlackboard = blackboard;
 
             if (blackboard == null)
             {

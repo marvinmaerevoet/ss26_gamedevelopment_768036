@@ -16,7 +16,7 @@ Die Demo ist das gemeinsame Testspiel fuer mehrere austauschbare Police-Decision
 - `Scripts/Gameplay/`: Player, Carry, Delivery, Arrest-Praesentation und gemeinsamer Reset.
 - `Scripts/Animation/`: gemeinsame Animator-Ansteuerung.
 - `Scripts/UI/`: BT-unabhaengige Mission- und Arrest-Notifications.
-- `Scripts/AI/CustomApproach/`: eigene BT-Runtime, Nodes, Runner, Diagnose-UI und selektiver Setup-Helfer.
+- `Scripts/AI/CustomApproach/`: eigene BT-Runtime, Nodes, Runner und Diagnose-UI.
 
 Gemeinsamer Code importiert keine Typen aus `BehaviorTreeDemo.AI.CustomApproach`. Der Reset spricht Adapter nur ueber `PoliceDecisionController.ResetDecisionState()` an. Weitere Adapter muessen denselben fachlichen Vertrag aus [FeatureParityContract.md](Docs/FeatureParityContract.md) erfuellen.
 
@@ -39,9 +39,9 @@ Gemeinsamer Code importiert keine Typen aus `BehaviorTreeDemo.AI.CustomApproach`
 
 ## Animation und UI
 
-`Player.controller`, `Sheriff.controller` und `Lydia.controller` sind handgepflegte Demo-Assets. `BasicAnimationDriver` verwendet beim Sheriff `NavMeshAgent.velocity.magnitude` und gemeinsame Police-Zustaende; beim Player verwendet er Player-State und Eingabe. Arrest-, Investigate- und Release-Praesentation bleiben BT-unabhaengig.
+`Player.controller`, `Sheriff.controller` und `Lydia.controller` sind handgepflegte Demo-Assets. `BasicAnimationDriver` verwendet beim Sheriff `NavMeshAgent.velocity.magnitude` und gemeinsame Police-Zustaende; beim Player verwendet er ausschliesslich den vom Movement Controller gemeldeten Player-State. Arrest-, Investigate- und Release-Praesentation bleiben BT-unabhaengig.
 
-Der Menuepunkt `Tools/Behavior Tree Demo/Bootstrap Animator Controllers (Empty Demo Only)` verweigert das Ueberschreiben vorhandener Controller. Die Hauptszene ist vollstaendig verdrahtet und benoetigt kein separates Custom-Approach-Setup-MonoBehaviour.
+Die handgepflegten Animator Controller werden direkt als Projekt-Assets gepflegt und benoetigen keinen Bootstrap-Generator. Die Hauptszene ist vollstaendig verdrahtet und benoetigt kein separates Custom-Approach-Setup-MonoBehaviour.
 
 ## Blackboard und Adapter-Debug
 

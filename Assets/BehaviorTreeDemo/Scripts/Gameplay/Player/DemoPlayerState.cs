@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace BehaviorTreeDemo.Gameplay.Player
 {
@@ -20,8 +19,6 @@ namespace BehaviorTreeDemo.Gameplay.Player
             }
         }
         public float CurrentSpeed;
-        public Key runSimulationKey = Key.LeftShift;
-        public bool simulateRunningFromKey = true;
         public float runningSpeedThreshold = 3.5f;
         public float maxReasonableFallbackSpeed = 12f;
         public float teleportDistanceThreshold = 3f;
@@ -65,10 +62,9 @@ namespace BehaviorTreeDemo.Gameplay.Player
                 }
             }
 
-            bool runningFromKey = simulateRunningFromKey && IsRunSimulationKeyPressed();
             bool runningFromSpeed = CurrentSpeed > runningSpeedThreshold;
 
-            IsRunning = runningFromKey || runningFromSpeed;
+            IsRunning = runningFromSpeed;
             previousPosition = transform.position;
         }
 
@@ -86,22 +82,6 @@ namespace BehaviorTreeDemo.Gameplay.Player
             movementReportedFrame = -1;
             CurrentSpeed = 0f;
             IsRunning = false;
-        }
-
-        private bool IsRunSimulationKeyPressed()
-        {
-            if (!simulateRunningFromKey)
-            {
-                return false;
-            }
-
-            Keyboard keyboard = Keyboard.current;
-            if (keyboard == null)
-            {
-                return false;
-            }
-
-            return keyboard[runSimulationKey].isPressed;
         }
 
         private static float SanitizeSpeed(float speed)

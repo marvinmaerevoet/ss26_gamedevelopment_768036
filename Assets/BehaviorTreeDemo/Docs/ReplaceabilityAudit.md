@@ -46,8 +46,8 @@ Diese Punkte sind Decision-Logik oder Adapter-Praesentation. Die fachlichen Oper
 
 - Unity-Version: `6000.4.5f1` (`cc83ebd631f8`).
 - `ProjectSettings/EditorBuildSettings.asset` enthaelt derzeit keine Scene. Vor einer Build-Abgabe muss `Assets/BehaviorTreeDemo/Scenes/BehaviorTreeDemo.unity` hinzugefuegt werden.
-- Es wurden keine getrackten Recovery-, Temp-, Logs-, Obj- oder Library-Pfade und keine unbeabsichtigten ungetrackten Dateien gefunden.
-- `Marvin/todo.md` ist eine vorbestehende lokale Aenderung und gehoert nicht zu den Refactor-Commits.
+- Getrackte Recovery-, Temp-, Logs-, Obj- und Library-Pfade gehoeren nicht zur Demo-Baseline. Der jeweils lokale Working-Tree-Zustand ist kein Bestandteil dieser Austauschbarkeitsbewertung.
+- `Marvin/` bleibt ausserhalb des Demo-Refactor-Scopes.
 - Der projektlokale Synty-PropBone-Config-Pfad in `PropBoneToolEditorUtil.cs` muss nach Vendor-Updates kontrolliert werden.
 - Die bekannten drei Vendor-Animatoren ohne Controller und die Game-Creator-`SerializeReference`-Warnung bleiben dokumentierte Vendor-Befunde.
 - Die Scene-YAML enthaelt weiterhin historische `m_EditorClassIdentifier`-Texte aus den alten Namespaces. Unity loest die Komponenten ueber unveraenderte MonoScript-GUIDs korrekt auf; der Edit-Mode-Audit fand keine Missing Scripts. Diese Texte wurden nicht blind in YAML bearbeitet.

@@ -18046,6 +18046,8 @@ MonoBehaviour:
   IsRunning: 0
   isArrested: 0
   CurrentSpeed: 0
+  runSimulationKey: 51
+  simulateRunningFromKey: 1
   runningSpeedThreshold: 3.5
   maxReasonableFallbackSpeed: 12
   teleportDistanceThreshold: 3
@@ -18084,10 +18086,14 @@ MonoBehaviour:
   forceRootMotionOff: 1
   logMissingParametersOnce: 0
   snapSpeedToZeroWhenIdle: 1
+  useInputForPlayerMovement: 1
   debugSourceSpeed: 0
   debugAnimatorSpeed: 0
   debugIsMoving: 0
   debugIsRunning: 0
+  debugInputMoving: 0
+  debugInputRunning: 0
+  debugUsedInputForPlayer: 0
 --- !u!114 &439849592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37347,6 +37353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomApproachDemo.Police.PoliceBehaviorTreeRunner
   tickInterval: 0.1
+  resetTreeWhenPlayerArrested: 0
   enableEmergencyDemo: 1
 --- !u!114 &920719313
 MonoBehaviour:
@@ -37472,10 +37479,14 @@ MonoBehaviour:
   forceRootMotionOff: 1
   logMissingParametersOnce: 0
   snapSpeedToZeroWhenIdle: 1
+  useInputForPlayerMovement: 1
   debugSourceSpeed: 0
   debugAnimatorSpeed: 0
   debugIsMoving: 0
   debugIsRunning: 0
+  debugInputMoving: 0
+  debugInputRunning: 0
+  debugUsedInputForPlayer: 0
 --- !u!114 &920719319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52993,10 +53004,14 @@ MonoBehaviour:
   forceRootMotionOff: 1
   logMissingParametersOnce: 0
   snapSpeedToZeroWhenIdle: 1
+  useInputForPlayerMovement: 1
   debugSourceSpeed: 0
   debugAnimatorSpeed: 0
   debugIsMoving: 0
   debugIsRunning: 0
+  debugInputMoving: 0
+  debugInputRunning: 0
+  debugUsedInputForPlayer: 0
 --- !u!114 &1268669043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53023,6 +53038,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomApproachDemo.Police.PoliceBehaviorTreeRunner
   tickInterval: 0.1
+  resetTreeWhenPlayerArrested: 0
   enableEmergencyDemo: 1
 --- !u!114 &1268669045
 MonoBehaviour:
@@ -58623,10 +58639,14 @@ MonoBehaviour:
   forceRootMotionOff: 1
   logMissingParametersOnce: 0
   snapSpeedToZeroWhenIdle: 1
+  useInputForPlayerMovement: 1
   debugSourceSpeed: 0
   debugAnimatorSpeed: 0
   debugIsMoving: 0
   debugIsRunning: 0
+  debugInputMoving: 0
+  debugInputRunning: 0
+  debugUsedInputForPlayer: 0
 --- !u!114 &1391683332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58653,6 +58673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomApproachDemo.Police.PoliceBehaviorTreeRunner
   tickInterval: 0.1
+  resetTreeWhenPlayerArrested: 0
   enableEmergencyDemo: 1
 --- !u!114 &1391683334
 MonoBehaviour:
@@ -70112,7 +70133,7 @@ MonoBehaviour:
   jailSpawn: {fileID: 939519733}
   carryController: {fileID: 439849592}
   missionCrate: {fileID: 2111562124}
-  arrestCrateSpawn: {fileID: 732542191}
+  crateReset: {fileID: 732542191}
   fadeGroup: {fileID: 1251797130}
   releaseUI: {fileID: 1562964022}
   playerAnimation: {fileID: 439849591}
@@ -90841,10 +90862,14 @@ MonoBehaviour:
   forceRootMotionOff: 1
   logMissingParametersOnce: 0
   snapSpeedToZeroWhenIdle: 1
+  useInputForPlayerMovement: 1
   debugSourceSpeed: 0
   debugAnimatorSpeed: 0
   debugIsMoving: 0
   debugIsRunning: 0
+  debugInputMoving: 0
+  debugInputRunning: 0
+  debugUsedInputForPlayer: 0
 --- !u!114 &2100151253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90871,6 +90896,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomApproachDemo.Police.PoliceBehaviorTreeRunner
   tickInterval: 0.1
+  resetTreeWhenPlayerArrested: 0
   enableEmergencyDemo: 1
 --- !u!114 &2100151255
 MonoBehaviour:

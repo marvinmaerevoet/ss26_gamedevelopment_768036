@@ -65,6 +65,7 @@ namespace BehaviorTreeDemo.Police
 
         private bool warnedMissingPlayerState;
         private bool warnedMissingAgent;
+        private bool warnedMissingBlackboard;
         private bool loggedArrest;
         private ArrestPhase arrestPhase;
         private bool facePlayerContinuously;
@@ -829,7 +830,7 @@ namespace BehaviorTreeDemo.Police
 
             if (PoliceBlackboard == null)
             {
-                PoliceBlackboard = gameObject.AddComponent<PoliceBlackboard>();
+                WarnMissingBlackboard();
             }
 
             TryResolvePlayerState();
@@ -902,6 +903,17 @@ namespace BehaviorTreeDemo.Police
 
             Debug.LogWarning("PoliceAIContext has no NavMeshAgent assigned or found on this GameObject.", this);
             warnedMissingAgent = true;
+        }
+
+        private void WarnMissingBlackboard()
+        {
+            if (warnedMissingBlackboard)
+            {
+                return;
+            }
+
+            Debug.LogError("PoliceAIContext needs a PoliceBlackboard on the same GameObject.", this);
+            warnedMissingBlackboard = true;
         }
 
         private void ApplyMovementSpeed()

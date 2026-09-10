@@ -103,24 +103,9 @@ namespace BehaviorTreeDemo.Gameplay.Setup
 
         private void ResolveReferences(bool warnIfMissing)
         {
-            if (playerState == null)
-            {
-                playerState = FindAnyObjectByType<DemoPlayerState>();
-            }
-
-            if (policeDecisionController == null)
-            {
-                policeDecisionController = FindAnyObjectByType<PoliceDecisionController>();
-            }
-
             if (policeContext == null && policeDecisionController != null)
             {
                 policeContext = policeDecisionController.GetComponent<PoliceAIContext>();
-            }
-
-            if (policeContext == null)
-            {
-                policeContext = FindAnyObjectByType<PoliceAIContext>();
             }
 
             if (playerTransform == null && playerState != null)
@@ -289,13 +274,13 @@ namespace BehaviorTreeDemo.Gameplay.Setup
         {
             if (playerState == null && !warnedMissingPlayer)
             {
-                Debug.LogWarning("DemoReset could not find a DemoPlayerState.", this);
+                Debug.LogWarning("DemoReset needs an assigned DemoPlayerState reference.", this);
                 warnedMissingPlayer = true;
             }
 
             if ((policeDecisionController == null || policeContext == null) && !warnedMissingPolice)
             {
-                Debug.LogWarning("DemoReset could not find a PoliceDecisionController or PoliceAIContext.", this);
+                Debug.LogWarning("DemoReset needs assigned PoliceDecisionController and PoliceAIContext references.", this);
                 warnedMissingPolice = true;
             }
         }

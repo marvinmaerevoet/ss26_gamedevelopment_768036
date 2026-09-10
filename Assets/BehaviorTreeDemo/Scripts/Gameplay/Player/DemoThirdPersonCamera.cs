@@ -26,6 +26,7 @@ namespace BehaviorTreeDemo.Gameplay.Player
         private readonly RaycastHit[] collisionHits = new RaycastHit[MaxCollisionHits];
         private float yaw;
         private float pitch;
+        private bool warnedMissingTarget;
 
         private void Start()
         {
@@ -87,10 +88,10 @@ namespace BehaviorTreeDemo.Gameplay.Player
                 return;
             }
 
-            DemoPlayerState playerState = FindAnyObjectByType<DemoPlayerState>();
-            if (playerState != null)
+            if (!warnedMissingTarget)
             {
-                target = playerState.transform;
+                Debug.LogError("DemoThirdPersonCamera needs an assigned target reference.", this);
+                warnedMissingTarget = true;
             }
         }
 

@@ -11,9 +11,6 @@ namespace BehaviorTreeDemo.Police.Visuals
     [DisallowMultipleComponent]
     public sealed class PoliceVisionLight : MonoBehaviour
     {
-        private const string DefaultLightName = "VisionLight";
-        private const string DefaultVisualOriginName = "Vision Light Origin";
-
         [Header("References")]
         [SerializeField] private PoliceAIContext context;
         [Tooltip("Independent visual position. Move this Transform to place the lamp; direction follows EyePoint.")]
@@ -27,22 +24,22 @@ namespace BehaviorTreeDemo.Police.Visuals
         [SerializeField, Range(0f, 1f)] private float shadowStrength = 0.25f;
         [SerializeField] private bool castShadows;
 
+        private bool warnedMissingContext;
+        private bool warnedMissingVisualReferences;
+
         private void Reset()
         {
             context = GetComponent<PoliceAIContext>();
-            EnsureVisualObjects();
             SyncVisuals();
         }
 
         private void Awake()
         {
-            EnsureVisualObjects();
             SyncVisuals();
         }
 
         private void OnEnable()
         {
-            EnsureVisualObjects();
             SyncVisuals();
         }
 
@@ -72,12 +69,10 @@ namespace BehaviorTreeDemo.Police.Visuals
         [ContextMenu("Sync Vision Light")]
         public void SyncVisuals()
         {
-            if (!ResolveContext())
+            if (!ResolveConfiguredReferences())
             {
                 return;
             }
-
-            EnsureVisualObjects();
 
             float range = Mathf.Max(0.1f, context.viewDistance);
             float angle = Mathf.Clamp(context.viewAngle, 1f, 179f);
@@ -86,68 +81,54 @@ namespace BehaviorTreeDemo.Police.Visuals
             SyncSpotLight(range, angle);
         }
 
-        private bool ResolveContext()
+        private bool ResolveConfiguredReferences()
         {
             if (context == null)
             {
                 context = GetComponent<PoliceAIContext>();
             }
 
-            return context != null;
-        }
-
-        private void EnsureVisualObjects()
-        {
-            if (!ResolveContext())
+            if (context == null)
             {
-                return;
+                if (!warnedMissingContext)
+                {
+                    Debug.LogError("PoliceVisionLight needs a PoliceAIContext on the same GameObject.", this);
+                    warnedMissingContext = true;
+                }
+
+                return false;
             }
 
-            if (visualOrigin == null)
+            warnedMissingContext = false;
+
+            if (visualOrigin == null || lightRoot == null || spotLight == null)
             {
-                visualOrigin = transform.Find(DefaultVisualOriginName);
+                if (!warnedMissingVisualReferences)
+                {
+                    Debug.LogError("PoliceVisionLight needs assigned Visual Origin, Light Root, and Spot Light references.", this);
+                    warnedMissingVisualReferences = true;
+                }
+
+                return false;
             }
 
-            if (visualOrigin == null)
-            {
-                visualOrigin = new GameObject(DefaultVisualOriginName).transform;
-                visualOrigin.SetParent(transform, false);
-                visualOrigin.localPosition = new Vector3(0f, 1.4f, 0.3f);
-            }
-
-            if (lightRoot == null)
-            {
-                lightRoot = visualOrigin.Find(DefaultLightName);
-            }
-
-            if (lightRoot == null)
-            {
-                lightRoot = new GameObject(DefaultLightName).transform;
-                lightRoot.SetParent(visualOrigin, false);
-                lightRoot.localPosition = Vector3.zero;
-                lightRoot.localRotation = Quaternion.identity;
-            }
-
-            if (spotLight == null)
-            {
-                spotLight = lightRoot.GetComponent<Light>();
-            }
-
-            if (spotLight == null)
-            {
-                spotLight = lightRoot.gameObject.AddComponent<Light>();
-            }
+            warnedMissingVisualReferences = false;
+            return true;
         }
 
         private void SyncTransform()
         {
-            if (lightRoot.parent != visualOrigin)
+            Quaternion rotation = context.EyePoint != null ? context.EyePoint.rotation : transform.rotation;
+            if (lightRoot.parent == visualOrigin)
             {
-                lightRoot.SetParent(visualOrigin, false);
+                lightRoot.localPosition = Vector3.zero;
+                lightRoot.rotation = rotation;
+            }
+            else
+            {
+                lightRoot.SetPositionAndRotation(visualOrigin.position, rotation);
             }
 
-            lightRoot.localPosition = Vector3.zero;
-            lightRoot.rotation = context.EyePoint != null ? context.EyePoint.rotation : transform.rotation;
             lightRoot.localScale = Vector3.one;
         }
 

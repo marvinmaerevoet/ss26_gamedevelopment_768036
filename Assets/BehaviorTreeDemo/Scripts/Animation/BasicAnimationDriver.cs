@@ -4,7 +4,6 @@ using BehaviorTreeDemo.Gameplay.Player;
 using BehaviorTreeDemo.Police;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem;
 
 namespace BehaviorTreeDemo.Animation {
     public sealed class BasicAnimationDriver : MonoBehaviour {
@@ -23,18 +22,11 @@ namespace BehaviorTreeDemo.Animation {
         public bool logMissingParametersOnce;
         public bool snapSpeedToZeroWhenIdle = true;
 
-        [Header("Player Input")]
-        public bool useInputForPlayerMovement = true;
-
         [Header("Debug")]
         public float debugSourceSpeed;
         public float debugAnimatorSpeed;
         public bool debugIsMoving;
         public bool debugIsRunning;
-        public bool debugInputMoving;
-        public bool debugInputRunning;
-        public bool debugUsedInputForPlayer;
-
         private readonly HashSet<string> warnedMissingParameters = new HashSet<string>();
         private DemoPlayerCarryController carryController;
 
@@ -137,10 +129,6 @@ namespace BehaviorTreeDemo.Animation {
             bool isMoving = false;
             bool isRunning = false;
 
-            debugInputMoving = false;
-            debugInputRunning = false;
-            debugUsedInputForPlayer = false;
-
             // Sheriff / NPC: use NavMeshAgent velocity.
             if(agent != null) {
                 sourceSpeed = SanitizeSpeed(agent.velocity.magnitude);
@@ -151,36 +139,18 @@ namespace BehaviorTreeDemo.Animation {
                     isRunning = chasing;
                 }
             }
-            // Player: prefer direct input, because CurrentSpeed can contain tiny residual values.
+            // Player: use the authoritative movement state reported by the player controller.
             else if(playerState != null) {
                 bool isCarrying = carryController != null && carryController.IsCarrying;
-                if(useInputForPlayerMovement && TryReadPlayerInput(out bool inputMoving, out bool inputRunning)) {
-                    inputRunning = inputRunning && !isCarrying;
-                    debugInputMoving = inputMoving;
-                    debugInputRunning = inputRunning;
-                    debugUsedInputForPlayer = true;
+                sourceSpeed = SanitizeSpeed(playerState.CurrentSpeed);
+                isMoving = sourceSpeed > playerIdleDeadzone;
 
-                    isMoving = inputMoving;
-                    isRunning = inputMoving && inputRunning;
-
-                    if(isMoving) {
-                        speed = isRunning ? runningVisualSpeed : walkingVisualSpeed;
-                        sourceSpeed = speed;
-                    } else {
-                        speed = 0f;
-                        sourceSpeed = 0f;
-                    }
+                if(isMoving) {
+                    isRunning = playerState.IsRunning && !isCarrying;
+                    speed = isRunning ? runningVisualSpeed : walkingVisualSpeed;
                 } else {
-                    sourceSpeed = SanitizeSpeed(playerState.CurrentSpeed);
-                    isMoving = sourceSpeed > playerIdleDeadzone;
-
-                    if(isMoving) {
-                        isRunning = playerState.IsRunning && !isCarrying;
-                        speed = isRunning ? runningVisualSpeed : walkingVisualSpeed;
-                    } else {
-                        speed = 0f;
-                        isRunning = false;
-                    }
+                    speed = 0f;
+                    isRunning = false;
                 }
             }
 
@@ -188,32 +158,6 @@ namespace BehaviorTreeDemo.Animation {
             speed = isMoving ? Mathf.Clamp(speed, 0f, 6f) : 0f;
 
             return new AnimationValues(sourceSpeed, speed, isMoving, isRunning);
-        }
-
-        private static bool TryReadPlayerInput(out bool moving, out bool running) {
-            moving = false;
-            running = false;
-
-            Keyboard keyboard = Keyboard.current;
-            if(keyboard == null) {
-                return false;
-            }
-
-            moving =
-                keyboard.wKey.isPressed ||
-                keyboard.aKey.isPressed ||
-                keyboard.sKey.isPressed ||
-                keyboard.dKey.isPressed ||
-                keyboard.upArrowKey.isPressed ||
-                keyboard.downArrowKey.isPressed ||
-                keyboard.leftArrowKey.isPressed ||
-                keyboard.rightArrowKey.isPressed;
-
-            running =
-                keyboard.leftShiftKey.isPressed ||
-                keyboard.rightShiftKey.isPressed;
-
-            return true;
         }
 
         private static float SanitizeSpeed(float speed) {

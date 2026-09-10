@@ -2,7 +2,7 @@
 
 ## Kurze Erklaerung
 
-Diese Dokumentation beschreibt die aktuell in `PoliceBehaviorTreeRunner.cs` gebaute Behavior-Tree-Struktur. Der Runner laesst pro Decision-Tick genau einen gemeinsamen Perception-Snapshot im `PoliceAIContext` erzeugen und tickt danach den Tree in einer konfigurierbaren Tickrate.
+Diese Dokumentation beschreibt die aktuell in `PoliceBehaviorTreeRunner.cs` gebaute Behavior-Tree-Struktur. Jeder `PoliceAIContext` erzeugt unabhaengig vom Decision-Adapter alle `0.1 s` einen autoritativen Perception-Snapshot. Der Runner liest diesen Snapshot und tickt den Tree in seiner eigenen konfigurierbaren Tickrate.
 
 Der Root ist ein reaktiver Selector (`rememberRunningChild: false`). Dadurch startet die Prioritaetspruefung bei jedem Tick wieder beim ersten Child. Eine laufende Patrol kann also sofort durch Emergency, Arrest, Chase oder Investigate unterbrochen werden.
 

@@ -12,7 +12,6 @@ namespace BehaviorTreeDemo.AI.CustomApproach.Runtime
 
         public string Name { get; }
         public BTStatus LastStatus { get; protected set; }
-        public int LastTickFrame { get; private set; } = -1;
         public float LastTickTime { get; private set; } = -1f;
         public bool WasTickedRecently => LastTickTime >= 0f && Time.time - LastTickTime <= 0.25f;
         public bool IsRunning => LastStatus == BTStatus.Running;
@@ -28,7 +27,6 @@ namespace BehaviorTreeDemo.AI.CustomApproach.Runtime
         public BTStatus Tick()
         {
             LastStatus = OnTick();
-            LastTickFrame = Time.frameCount;
             LastTickTime = Time.time;
             NodeTicked?.Invoke(this, LastStatus);
             return LastStatus;
@@ -37,7 +35,6 @@ namespace BehaviorTreeDemo.AI.CustomApproach.Runtime
         public virtual void Reset()
         {
             LastStatus = BTStatus.Running;
-            LastTickFrame = -1;
             LastTickTime = -1f;
         }
 

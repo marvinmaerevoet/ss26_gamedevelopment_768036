@@ -4,6 +4,7 @@ using BehaviorTreeDemo.Gameplay.Player;
 using BehaviorTreeDemo.UI;
 using BehaviorTreeDemo.Animation;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BehaviorTreeDemo.Gameplay.Arrest
 {
@@ -14,7 +15,8 @@ namespace BehaviorTreeDemo.Gameplay.Arrest
         [SerializeField] private Transform jailSpawn;
         [SerializeField] private DemoPlayerCarryController carryController;
         [SerializeField] private DemoCarryable missionCrate;
-        [SerializeField] private Transform crateReset;
+        [FormerlySerializedAs("crateReset")]
+        [SerializeField] private Transform arrestCrateSpawn;
         [SerializeField] private CanvasGroup fadeGroup;
         [SerializeField] private DemoJailReleaseUI releaseUI;
         [SerializeField] private BasicAnimationDriver playerAnimation;
@@ -44,7 +46,7 @@ namespace BehaviorTreeDemo.Gameplay.Arrest
         {
             if (IsSequenceRunning) return;
             if (playerState == null || movement == null || jailSpawn == null || fadeGroup == null || releaseUI == null ||
-                carryController == null || missionCrate == null || crateReset == null || playerAnimation == null)
+                carryController == null || missionCrate == null || arrestCrateSpawn == null || playerAnimation == null)
             {
                 Debug.LogError("Arrest sequence references are incomplete.", this);
                 return;
@@ -72,7 +74,7 @@ namespace BehaviorTreeDemo.Gameplay.Arrest
             // Render one fully black frame before changing the player pose.
             yield return null;
             movement.TeleportTo(jailSpawn);
-            carryController.ResetCarryable(missionCrate, crateReset);
+            carryController.ResetCarryable(missionCrate, arrestCrateSpawn);
             yield return null;
             yield return Fade(1f, 0f, fadeInDuration);
 

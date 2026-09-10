@@ -13,6 +13,6 @@ The `A_` and `C_` prefixes are retained as the Custom Approach teaching conventi
 
 The shared Scene uses the neutral names `Vision Light Origin`, `Arrest Crate Spawn`, and `Demo Reset`. It is fully wired and contains no setup-helper component. Runtime links remain serialized object references rather than name lookups.
 
-The empty adapter folders for Git Amend, Unity Behavior, Behavior Designer, and Game Creator Behavior are retained because the repository structure reserves those comparison slots. The empty `Materials`, `Prefabs`, and Custom Approach `Editor` folders are likewise retained as existing Unity folder assets; no placeholder scripts were added.
+The empty adapter folders for Git Amend, Unity Behavior, Behavior Designer, and Game Creator Behavior are retained because the repository structure reserves those comparison slots. The empty `Materials` and `Prefabs` folders are likewise retained as existing Unity folder assets; no placeholder scripts were added. The obsolete empty Custom Approach `Editor` folder was removed with its retired bootstrap tools.
 
-Removed dead declarations were limited to items with no source or serialized consumer: `BasicAnimationDriver.movingThreshold`, the unused `PoliceBehaviorMode.Suspicion` member, and the obsolete `CustomApproachDemo` path exclusion inside a search already restricted to `Assets/ThirdParty/Synty`.
+The final baseline cleanup removed only proven obsolete bootstrap/self-repair paths, duplicate raw-input paths, and unconsumed diagnostics. Shared gameplay fallbacks that still serve teleport and transform-speed recovery remain intentionally available.
