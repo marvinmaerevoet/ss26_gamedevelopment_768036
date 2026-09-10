@@ -37,6 +37,7 @@ namespace CustomApproachDemo.Gameplay.Arrest
         private void OnDisable()
         {
             if (playerState != null) playerState.Arrested -= BeginSequence;
+            ResetSequence();
         }
 
         private void BeginSequence()
@@ -56,6 +57,7 @@ namespace CustomApproachDemo.Gameplay.Arrest
         {
             StopAllCoroutines();
             IsSequenceRunning = false;
+            if (playerState != null) playerState.IsArrested = false;
             if (playerAnimation != null) playerAnimation.ResetReleaseAnimationTrigger();
             if (fadeGroup == null) return;
             fadeGroup.alpha = 0f;

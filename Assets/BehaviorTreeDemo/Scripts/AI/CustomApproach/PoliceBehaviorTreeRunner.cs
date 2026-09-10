@@ -48,6 +48,13 @@ namespace CustomApproachDemo.Police
             BuildTree();
         }
 
+        private void OnDisable()
+        {
+            treeRoot?.Reset();
+            context?.CancelActiveOperations();
+            treePausedAfterArrest = false;
+        }
+
         private void Update()
         {
             EnsureReferences();

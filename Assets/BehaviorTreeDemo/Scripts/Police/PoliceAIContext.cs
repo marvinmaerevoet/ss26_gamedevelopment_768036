@@ -28,6 +28,7 @@ namespace CustomApproachDemo.Police
         [SerializeField, Min(0f)] private float arrestStandDistance = 1.4f;
         [SerializeField, Min(0f)] private float arrestStandTolerance = 0.15f;
         [SerializeField, Min(0f)] private float arrestNavMeshSampleRadius = 1f;
+        [SerializeField, Min(0.1f)] private float arrestApproachMaxDuration = 3f;
 
         public float WalkSpeed => walkSpeed;
         public float RunSpeed => runSpeed;
@@ -67,6 +68,7 @@ namespace CustomApproachDemo.Police
         private bool previousAgentUpdateRotation;
         private float investigationStartedAt;
         private bool investigationCompleted;
+        private float arrestApproachStartedAt;
 
         private void Awake()
         {
@@ -107,6 +109,7 @@ namespace CustomApproachDemo.Police
             arrestStandDistance = Mathf.Max(0f, arrestStandDistance);
             arrestStandTolerance = Mathf.Max(0f, arrestStandTolerance);
             arrestNavMeshSampleRadius = Mathf.Max(0f, arrestNavMeshSampleRadius);
+            arrestApproachMaxDuration = Mathf.Max(0.1f, arrestApproachMaxDuration);
             faceTurnSpeed = Mathf.Max(0f, faceTurnSpeed);
             lookAroundTurnSpeed = Mathf.Max(0f, lookAroundTurnSpeed);
         }
@@ -211,11 +214,6 @@ namespace CustomApproachDemo.Police
             return distance <= arrestRange;
         }
 
-        public void SetDestination(Vector3 destination)
-        {
-            TrySetDestination(destination);
-        }
-
         public void SetMovementMode(PoliceMovementMode mode)
         {
             EnsureReferences();
@@ -223,6 +221,10 @@ namespace CustomApproachDemo.Police
             ApplyMovementSpeed();
         }
 
+        /// <summary>
+        /// Shared movement entry point. Police decision adapters do not manipulate
+        /// NavMesh destinations, path resets, velocity, or transform rotation directly.
+        /// </summary>
         public bool TrySetDestination(Vector3 destination)
         {
             EnsureReferences();
@@ -239,8 +241,13 @@ namespace CustomApproachDemo.Police
             }
 
             NavMeshAgent.isStopped = false;
-            NavMeshAgent.SetDestination(destination);
-            return true;
+            if (NavMeshAgent.SetDestination(destination))
+            {
+                return true;
+            }
+
+            StopMovement();
+            return false;
         }
 
         public PoliceMovementStatus GetMovementStatus()
@@ -300,6 +307,7 @@ namespace CustomApproachDemo.Police
             }
 
             arrestPhase = ArrestPhase.Approaching;
+            arrestApproachStartedAt = Time.time;
             PoliceBlackboard.CurrentBehaviorMode = PoliceBehaviorMode.Arrest;
             StopFacingPlayer();
             CancelInvestigation();
@@ -345,6 +353,12 @@ namespace CustomApproachDemo.Police
             // Delivery or a manual drop can win until this officer commits the arrest.
             // Recheck the shared mission rule so stale decision input cannot commit both outcomes.
             if (!IsPlayerSuspicious())
+            {
+                ResetArrestState();
+                return PoliceArrestStatus.Failed;
+            }
+
+            if (Time.time - arrestApproachStartedAt >= Mathf.Max(0.1f, arrestApproachMaxDuration))
             {
                 ResetArrestState();
                 return PoliceArrestStatus.Failed;
@@ -450,6 +464,7 @@ namespace CustomApproachDemo.Police
         public void ResetArrestState(bool stopOwnedMovement = true)
         {
             arrestPhase = ArrestPhase.None;
+            arrestApproachStartedAt = 0f;
             if (stopOwnedMovement)
             {
                 StopMovement();
@@ -537,6 +552,33 @@ namespace CustomApproachDemo.Police
             investigationStartedAt = 0f;
             investigationCompleted = false;
             ReleaseManualRotationIfUnused();
+        }
+
+        public void CancelActiveOperations()
+        {
+            StopFacingPlayer();
+            CancelInvestigation();
+            ResetArrestState(false);
+            StopMovement();
+        }
+
+        public void ResetMovement(Vector3 position, Quaternion rotation, bool resetPosition, bool useAgentWarp)
+        {
+            EnsureReferences();
+            CancelActiveOperations();
+            if (!resetPosition || Self == null)
+            {
+                return;
+            }
+
+            if (useAgentWarp && NavMeshAgent != null && NavMeshAgent.isOnNavMesh)
+            {
+                NavMeshAgent.Warp(position);
+                Self.rotation = rotation;
+                return;
+            }
+
+            Self.SetPositionAndRotation(position, rotation);
         }
 
         private void CompleteLookingAround()

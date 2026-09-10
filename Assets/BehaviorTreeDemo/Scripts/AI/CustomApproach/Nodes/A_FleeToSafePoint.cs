@@ -19,6 +19,7 @@ namespace CustomApproachDemo.Police.Nodes
                 return false;
             }
 
+            Context.SetMovementMode(PoliceMovementMode.Run);
             blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Emergency;
             destination = Context.safePoint.position;
             return true;

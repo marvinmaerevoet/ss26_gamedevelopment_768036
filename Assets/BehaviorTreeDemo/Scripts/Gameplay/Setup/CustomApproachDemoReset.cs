@@ -48,6 +48,7 @@ namespace CustomApproachDemo.Setup
         private Quaternion initialPlayerRotation;
         private Vector3 initialPolicePosition;
         private Quaternion initialPoliceRotation;
+        private int initialPolicePatrolIndex;
 
         private bool warnedMissingPlayer;
         private bool warnedMissingPolice;
@@ -94,23 +95,9 @@ namespace CustomApproachDemo.Setup
             delivery?.ResetDeliveryState();
 
             ResetPlayer();
-            ResetPoliceArrestState();
-            ResetPolice();
-            ResetBlackboard();
-
-            if (policeContext != null)
-            {
-                policeContext.lowHealthDemoToggle = false;
-                policeContext.SetMovementMode(PoliceMovementMode.Walk);
-            }
-
-            if (resetDecisionState && policeDecisionController != null)
-            {
-                policeDecisionController.ResetDecisionState();
-            }
+            ResetAllSheriffs();
 
             Debug.Log("Custom Approach Demo reset.", this);
-            ResetAdditionalSheriffs();
             introUI?.ShowIntro();
         }
 
@@ -165,6 +152,11 @@ namespace CustomApproachDemo.Setup
                 initialPolicePosition = policeTransform.position;
                 initialPoliceRotation = policeTransform.rotation;
             }
+
+            if (policeContext != null && policeContext.PoliceBlackboard != null)
+            {
+                initialPolicePatrolIndex = policeContext.PoliceBlackboard.CurrentPatrolIndex;
+            }
         }
 
         private void ResetPlayer()
@@ -206,51 +198,77 @@ namespace CustomApproachDemo.Setup
             }
         }
 
-        private void ResetPolice()
+        private void ResetAllSheriffs()
         {
-            if (!resetPolicePosition || policeTransform == null)
-            {
-                return;
-            }
-
-            NavMeshAgent agent = policeContext != null
-                ? policeContext.NavMeshAgent
-                : policeTransform.GetComponent<NavMeshAgent>();
-
-            if (resetAgent && agent != null && agent.isOnNavMesh)
-            {
-                agent.ResetPath();
-                agent.velocity = Vector3.zero;
-                agent.Warp(initialPolicePosition);
-                policeTransform.rotation = initialPoliceRotation;
-                return;
-            }
-
-            policeTransform.SetPositionAndRotation(initialPolicePosition, initialPoliceRotation);
-        }
-
-        private void ResetPoliceArrestState()
-        {
-            policeContext?.ResetArrestState();
+            ResetSheriff(
+                policeContext,
+                policeTransform,
+                initialPolicePosition,
+                initialPoliceRotation,
+                initialPolicePatrolIndex,
+                policeDecisionController);
 
             for (int i = 0; i < additionalSheriffs.Length; i++)
             {
                 PoliceAIContext context = additionalSheriffs[i];
-                if (context != null && context != policeContext)
+                if (context == null || context == policeContext)
                 {
-                    context.ResetArrestState();
+                    continue;
                 }
+
+                ResetSheriff(
+                    context,
+                    context.transform,
+                    additionalPositions[i],
+                    additionalRotations[i],
+                    additionalPatrolIndices[i],
+                    context.GetComponent<PoliceDecisionController>());
             }
         }
 
-        private void ResetBlackboard()
+        private void ResetSheriff(
+            PoliceAIContext context,
+            Transform sheriffTransform,
+            Vector3 initialPosition,
+            Quaternion initialRotation,
+            int initialPatrolIndex,
+            PoliceDecisionController decisionController)
         {
-            if (!resetBlackboard || policeContext == null || policeContext.PoliceBlackboard == null)
+            if (context != null)
             {
-                return;
+                context.ResetMovement(initialPosition, initialRotation, resetPolicePosition, resetAgent);
+            }
+            else if (resetPolicePosition && sheriffTransform != null)
+            {
+                NavMeshAgent agent = sheriffTransform.GetComponent<NavMeshAgent>();
+                if (resetAgent && agent != null && agent.isOnNavMesh)
+                {
+                    agent.ResetPath();
+                    agent.velocity = Vector3.zero;
+                    agent.Warp(initialPosition);
+                    sheriffTransform.rotation = initialRotation;
+                }
+                else
+                {
+                    sheriffTransform.SetPositionAndRotation(initialPosition, initialRotation);
+                }
             }
 
-            ClearBlackboard(policeContext.PoliceBlackboard, 0);
+            if (resetBlackboard && context != null && context.PoliceBlackboard != null)
+            {
+                ClearBlackboard(context.PoliceBlackboard, initialPatrolIndex);
+            }
+
+            if (context != null)
+            {
+                context.lowHealthDemoToggle = false;
+                context.SetMovementMode(PoliceMovementMode.Walk);
+            }
+
+            if (resetDecisionState)
+            {
+                decisionController?.ResetDecisionState();
+            }
         }
 
         private static void ClearBlackboard(PoliceBlackboard blackboard, int patrolIndex)
@@ -282,30 +300,5 @@ namespace CustomApproachDemo.Setup
             }
         }
 
-        private void ResetAdditionalSheriffs()
-        {
-            for (int i = 0; i < additionalSheriffs.Length; i++)
-            {
-                var context = additionalSheriffs[i];
-                if (context == null) continue;
-                var agent = context.NavMeshAgent;
-                if (resetAgent && agent != null && agent.isOnNavMesh)
-                {
-                    agent.ResetPath();
-                    agent.velocity = Vector3.zero;
-                }
-                if (resetPolicePosition)
-                {
-                    if (resetAgent && agent != null && agent.isOnNavMesh) agent.Warp(additionalPositions[i]);
-                    else context.transform.position = additionalPositions[i];
-                    context.transform.rotation = additionalRotations[i];
-                }
-                if (resetBlackboard && context.PoliceBlackboard != null)
-                    ClearBlackboard(context.PoliceBlackboard, additionalPatrolIndices[i]);
-                context.lowHealthDemoToggle = false;
-                context.SetMovementMode(PoliceMovementMode.Walk);
-                if (resetDecisionState) context.GetComponent<PoliceDecisionController>()?.ResetDecisionState();
-            }
-        }
     }
 }

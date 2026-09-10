@@ -73,7 +73,7 @@ Execute the tasks in order. Each task is a standalone Codex assignment and must 
 | [04](04_SharedFacingAndInvestigation.md) | Shared facing and investigation | DONE | THIS COMMIT | PENDING |
 | [05](05_MissionOutcomeAndInteractionRules.md) | Mission outcome and interaction rules | DONE | THIS COMMIT | PENDING |
 | [06](06_AnimatorAndSetupSafety.md) | Animator and setup safety | DONE | THIS COMMIT | PENDING |
-| [07](07_MovementLifecycleAndResetCleanup.md) | Movement lifecycle and reset cleanup | PENDING | — | NOT RUN |
+| [07](07_MovementLifecycleAndResetCleanup.md) | Movement lifecycle and reset cleanup | DONE | THIS COMMIT | PENDING |
 | [08](08_SceneAndEnvironmentCleanup.md) | Scene and environment cleanup | PENDING | — | NOT RUN |
 | [09](09_NamingStructureAndDeadCode.md) | Naming, structure, and dead code | PENDING | — | NOT RUN |
 | [10](10_DocumentationAndFinalReplaceabilityAudit.md) | Documentation and final replaceability audit | PENDING | — | NOT RUN |

@@ -29,22 +29,19 @@ namespace CustomApproachDemo.Player
 
         private Vector3 previousPosition;
         private bool hasPositionSample;
-        private bool movementReportedThisFrame;
-        private bool reportedIsRunning;
+        private int movementReportedFrame = -1;
 
         private void Awake()
         {
             ResetSpeedTracking();
         }
 
-        private void Update()
+        private void LateUpdate()
         {
-            if (movementReportedThisFrame)
+            if (movementReportedFrame == Time.frameCount)
             {
-                IsRunning = reportedIsRunning;
                 previousPosition = transform.position;
                 hasPositionSample = true;
-                movementReportedThisFrame = false;
                 return;
             }
 
@@ -79,17 +76,15 @@ namespace CustomApproachDemo.Player
         public void ReportMovement(float movementSpeed, bool isRunning)
         {
             CurrentSpeed = Mathf.Clamp(SanitizeSpeed(movementSpeed), 0f, maxReasonableFallbackSpeed);
-            reportedIsRunning = isRunning && CurrentSpeed > 0f;
-            IsRunning = reportedIsRunning;
-            movementReportedThisFrame = true;
+            IsRunning = isRunning && CurrentSpeed > 0f;
+            movementReportedFrame = Time.frameCount;
         }
 
         public void ResetSpeedTracking()
         {
             previousPosition = transform.position;
             hasPositionSample = true;
-            movementReportedThisFrame = false;
-            reportedIsRunning = false;
+            movementReportedFrame = -1;
             CurrentSpeed = 0f;
             IsRunning = false;
         }
