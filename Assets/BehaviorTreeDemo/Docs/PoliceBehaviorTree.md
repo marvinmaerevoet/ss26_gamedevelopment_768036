@@ -1,8 +1,8 @@
-# Custom Approach Demo - Police Behavior Tree
+# Behavior Tree Demo - Custom Approach Police Tree
 
 ## Kurze Erklaerung
 
-Diese Dokumentation beschreibt die aktuell in `PoliceBehaviorTreeRunner.cs` gebaute Behavior-Tree-Struktur. Der Sheriff prueft pro Tick seine Perception, schreibt zentrale Werte ins `PoliceBlackboard` und tickt danach den Tree in einer konfigurierbaren Tickrate.
+Diese Dokumentation beschreibt die aktuell in `PoliceBehaviorTreeRunner.cs` gebaute Behavior-Tree-Struktur. Der Runner laesst pro Decision-Tick genau einen gemeinsamen Perception-Snapshot im `PoliceAIContext` erzeugen und tickt danach den Tree in einer konfigurierbaren Tickrate.
 
 Der Root ist ein reaktiver Selector (`rememberRunningChild: false`). Dadurch startet die Prioritaetspruefung bei jedem Tick wieder beim ersten Child. Eine laufende Patrol kann also sofort durch Emergency, Arrest, Chase oder Investigate unterbrochen werden.
 
@@ -119,7 +119,7 @@ flowchart TD
     patrolSequence --> selectPatrol --> retryPatrol --> movePatrol
     retryPatrol --> patrolWait
 
-    blackboard["Blackboard<br/>Perception, LastKnownPosition,<br/>CurrentBehaviorName, LastTreeStatus"]:::note
+    blackboard["Shared Blackboard<br/>Perception, LastKnownPosition,<br/>PoliceBehaviorMode"]:::note
     root -. reads/writes .-> blackboard
 
     classDef root fill:#ffb454,stroke:#b45309,stroke-width:3px,color:#1f1300;
@@ -138,6 +138,8 @@ flowchart TD
 - Gruen: Actions. Sie fuehren Demo-Verhalten aus, z. B. `ChasePlayer`.
 - Violett: Decorators wie `Inverter`, `Timeout(5s)`, `Retry(2)` und `Repeater`.
 - Grau: Blackboard-/Debug-Hinweise.
+
+`CurrentNodeName`, `LastTreeStatus` und der letzte Tick-Pfad liegen am Custom-Runner. Der gemeinsame `PoliceBlackboard` enthaelt keine Custom-BT-Typen.
 
 ## Graphviz
 

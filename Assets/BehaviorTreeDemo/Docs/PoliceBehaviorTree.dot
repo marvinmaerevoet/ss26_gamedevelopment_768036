@@ -6,7 +6,7 @@ digraph PoliceBehaviorTree {
         ranksep=0.7,
         bgcolor="white",
         fontname="Arial",
-        label="Custom Approach Demo: Police Behavior Tree",
+        label="Behavior Tree Demo: Custom Approach Police Tree",
         labelloc="t",
         fontsize=22
     ];
@@ -93,6 +93,6 @@ digraph PoliceBehaviorTree {
     patrol -> patrolSequence -> selectPatrol -> retryPatrol -> movePatrol;
     retryPatrol -> patrolWait;
 
-    blackboard [label="Blackboard\nPerception, LastKnownPosition,\nCurrentBehaviorName, LastTreeStatus", fillcolor="#e5e7eb", color="#6b7280"];
+    blackboard [label="Shared Blackboard\nPerception, LastKnownPosition,\nPoliceBehaviorMode", fillcolor="#e5e7eb", color="#6b7280"];
     root -> blackboard [style=dashed, arrowhead=none, label="reads/writes"];
 }

@@ -67,16 +67,16 @@ Execute the tasks in order. Each task is a standalone Codex assignment and must 
 
 | Task | Topic | Status | Commit | Manual Playtest |
 |---|---|---|---|---|
-| [01](01_SelectorAndCancelOwnership.md) | Selector and cancel ownership | DONE | THIS COMMIT | PENDING |
-| [02](02_SharedArrestLifecycle.md) | Shared arrest lifecycle | DONE | THIS COMMIT | PENDING |
-| [03](03_PerceptionAndGameplayRules.md) | Perception and gameplay rules | DONE | THIS COMMIT | PENDING |
-| [04](04_SharedFacingAndInvestigation.md) | Shared facing and investigation | DONE | THIS COMMIT | PENDING |
-| [05](05_MissionOutcomeAndInteractionRules.md) | Mission outcome and interaction rules | DONE | THIS COMMIT | PENDING |
-| [06](06_AnimatorAndSetupSafety.md) | Animator and setup safety | DONE | THIS COMMIT | PENDING |
-| [07](07_MovementLifecycleAndResetCleanup.md) | Movement lifecycle and reset cleanup | DONE | THIS COMMIT | PENDING |
-| [08](08_SceneAndEnvironmentCleanup.md) | Scene and environment cleanup | DONE | THIS COMMIT | PENDING |
-| [09](09_NamingStructureAndDeadCode.md) | Naming, structure, and dead code | DONE | THIS COMMIT | PENDING |
-| [10](10_DocumentationAndFinalReplaceabilityAudit.md) | Documentation and final replaceability audit | PENDING | — | NOT RUN |
+| [01](01_SelectorAndCancelOwnership.md) | Selector and cancel ownership | DONE | `7ef5bf8b` | PENDING |
+| [02](02_SharedArrestLifecycle.md) | Shared arrest lifecycle | DONE | `da7ab768` | PENDING |
+| [03](03_PerceptionAndGameplayRules.md) | Perception and gameplay rules | DONE | `48c19e7b` | PENDING |
+| [04](04_SharedFacingAndInvestigation.md) | Shared facing and investigation | DONE | `cdb0e070` | PENDING |
+| [05](05_MissionOutcomeAndInteractionRules.md) | Mission outcome and interaction rules | DONE | `c315d42a` | PENDING |
+| [06](06_AnimatorAndSetupSafety.md) | Animator and setup safety | DONE | `ace687ae` | PENDING |
+| [07](07_MovementLifecycleAndResetCleanup.md) | Movement lifecycle and reset cleanup | DONE | `635637e7` | PENDING |
+| [08](08_SceneAndEnvironmentCleanup.md) | Scene and environment cleanup | DONE | `d4a5e4af` | PENDING |
+| [09](09_NamingStructureAndDeadCode.md) | Naming, structure, and dead code | DONE | `2de178b4` | PENDING |
+| [10](10_DocumentationAndFinalReplaceabilityAudit.md) | Documentation and final replaceability audit | DONE | THIS COMMIT | PENDING |
 
 Workflow after each future implementation task:
 

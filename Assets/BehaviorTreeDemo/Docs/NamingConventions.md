@@ -12,7 +12,7 @@ The current custom implementation uses these namespaces:
 
 The `A_` and `C_` prefixes are retained as the Custom Approach teaching convention: actions and conditions remain immediately distinguishable in the tree definition. `CustomApproachSceneSetup` and `CustomApproachBehaviorTreeDebugUI` also keep their names because they are intentionally specific to this adapter.
 
-`VisionLightCone`, `CrateReset`, `Custom Approach Demo Setup`, and `Custom Approach Demo Reset` remain as existing Scene object names. Their optional renaming was skipped because Scene-name mutations were not required for type ownership and the automated mutation review rejected the grouped rename. Runtime references are serialized object references rather than name lookups.
+`VisionLightCone`, `CrateReset`, `Custom Approach Demo Setup`, and `Custom Approach Demo Reset` remain as existing Scene object names. Renaming them would not improve the source ownership boundary and would add avoidable Scene migration risk. Runtime references are serialized object references rather than name lookups.
 
 The empty adapter folders for Git Amend, Unity Behavior, Behavior Designer, and Game Creator Behavior are retained because the repository structure reserves those comparison slots. The empty `Materials`, `Prefabs`, and Custom Approach `Editor` folders are likewise retained as existing Unity folder assets; no placeholder scripts were added.
 
