@@ -263,6 +263,7 @@ namespace BehaviorTreeDemo.Gameplay.Setup
             {
                 context.lowHealthDemoToggle = false;
                 context.SetMovementMode(PoliceMovementMode.Walk);
+                context.ResetPerceptionState();
             }
 
             if (resetDecisionState)

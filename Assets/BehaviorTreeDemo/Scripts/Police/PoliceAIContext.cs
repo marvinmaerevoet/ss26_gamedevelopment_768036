@@ -7,6 +7,8 @@ namespace BehaviorTreeDemo.Police
 {
     public sealed class PoliceAIContext : MonoBehaviour
     {
+        public const float PerceptionRefreshInterval = 0.1f;
+
         private enum ArrestPhase
         {
             None,
@@ -37,6 +39,8 @@ namespace BehaviorTreeDemo.Police
         public bool IsArrestApproachActive => arrestPhase == ArrestPhase.Approaching;
         public bool IsArrestLatched => arrestPhase != ArrestPhase.None;
         public bool IsArrestCommitted => arrestPhase == ArrestPhase.Committed;
+        public float LastPerceptionRefreshTime { get; private set; } = -1f;
+        public uint PerceptionRevision { get; private set; }
 
         [Header("Perception")]
         public float viewDistance = 12f;
@@ -69,6 +73,7 @@ namespace BehaviorTreeDemo.Police
         private float investigationStartedAt;
         private bool investigationCompleted;
         private float arrestApproachStartedAt;
+        private float nextPerceptionRefreshTime;
 
         private void Awake()
         {
@@ -76,8 +81,18 @@ namespace BehaviorTreeDemo.Police
             ApplyMovementSpeed();
         }
 
+        private void OnEnable()
+        {
+            if (Application.isPlaying)
+            {
+                InitializePerceptionState();
+            }
+        }
+
         private void Update()
         {
+            UpdatePerception();
+
             if (facePlayerContinuously)
             {
                 RotateTowardsPlayer(faceTurnSpeed * Time.deltaTime);
@@ -114,7 +129,34 @@ namespace BehaviorTreeDemo.Police
             lookAroundTurnSpeed = Mathf.Max(0f, lookAroundTurnSpeed);
         }
 
-        public void RefreshPerception()
+        public void ResetPerceptionState()
+        {
+            InitializePerceptionState();
+        }
+
+        private void InitializePerceptionState()
+        {
+            EnsureReferences();
+            PoliceBlackboard.PlayerVisible = false;
+            PoliceBlackboard.PlayerSuspicious = false;
+            PoliceBlackboard.PlayerInArrestRange = false;
+            PoliceBlackboard.OfficerHealthLow = false;
+            PoliceBlackboard.LastKnownPlayerPosition = Vector3.zero;
+            PoliceBlackboard.HasLastKnownPlayerPosition = false;
+            LastPerceptionRefreshTime = -1f;
+            PerceptionRevision = 0;
+            RefreshPerception();
+        }
+
+        private void UpdatePerception()
+        {
+            if (Time.time >= nextPerceptionRefreshTime)
+            {
+                RefreshPerception();
+            }
+        }
+
+        private void RefreshPerception()
         {
             EnsureReferences();
 
@@ -130,12 +172,14 @@ namespace BehaviorTreeDemo.Police
                 PoliceBlackboard.LastKnownPlayerPosition = PoliceBlackboard.Player.position;
                 PoliceBlackboard.HasLastKnownPlayerPosition = true;
             }
+
+            LastPerceptionRefreshTime = Time.time;
+            PerceptionRevision++;
+            nextPerceptionRefreshTime = LastPerceptionRefreshTime + PerceptionRefreshInterval;
         }
 
-        public bool CanSeePlayer()
+        private bool CanSeePlayer()
         {
-            EnsureReferences();
-
             if (PoliceBlackboard.Player == null)
             {
                 return false;
@@ -190,10 +234,8 @@ namespace BehaviorTreeDemo.Police
             return root != null && (candidate == root || candidate.IsChildOf(root));
         }
 
-        public bool IsPlayerSuspicious()
+        private bool IsPlayerSuspicious()
         {
-            EnsureReferences();
-
             return playerCarryController != null &&
                    suspiciousCarryable != null &&
                    !suspiciousCarryable.IsPickupLocked &&
@@ -201,10 +243,8 @@ namespace BehaviorTreeDemo.Police
                    playerCarryController.CurrentCarryable == suspiciousCarryable;
         }
 
-        public bool IsPlayerInArrestRange()
+        private bool IsPlayerInArrestRange()
         {
-            EnsureReferences();
-
             if (PoliceBlackboard.Player == null)
             {
                 return false;
@@ -216,7 +256,7 @@ namespace BehaviorTreeDemo.Police
 
         public void SetMovementMode(PoliceMovementMode mode)
         {
-            EnsureReferences();
+            EnsureMovementReferences();
             CurrentMovementMode = mode;
             ApplyMovementSpeed();
         }
@@ -227,7 +267,7 @@ namespace BehaviorTreeDemo.Police
         /// </summary>
         public bool TrySetDestination(Vector3 destination)
         {
-            EnsureReferences();
+            EnsureMovementReferences();
 
             if (NavMeshAgent == null)
             {
@@ -252,7 +292,7 @@ namespace BehaviorTreeDemo.Police
 
         public PoliceMovementStatus GetMovementStatus()
         {
-            EnsureReferences();
+            EnsureMovementReferences();
 
             if (NavMeshAgent == null)
             {
@@ -301,7 +341,7 @@ namespace BehaviorTreeDemo.Police
                 return false;
             }
 
-            if (!IsPlayerSuspicious())
+            if (!PoliceBlackboard.PlayerSuspicious)
             {
                 return false;
             }
@@ -351,8 +391,8 @@ namespace BehaviorTreeDemo.Police
             }
 
             // Delivery or a manual drop can win until this officer commits the arrest.
-            // Recheck the shared mission rule so stale decision input cannot commit both outcomes.
-            if (!IsPlayerSuspicious())
+            // Recheck the current authoritative snapshot so every adapter observes the same input.
+            if (!PoliceBlackboard.PlayerSuspicious)
             {
                 ResetArrestState();
                 return PoliceArrestStatus.Failed;
@@ -564,7 +604,7 @@ namespace BehaviorTreeDemo.Police
 
         public void ResetMovement(Vector3 position, Quaternion rotation, bool resetPosition, bool useAgentWarp)
         {
-            EnsureReferences();
+            EnsureMovementReferences();
             CancelActiveOperations();
             if (!resetPosition || Self == null)
             {
@@ -747,7 +787,7 @@ namespace BehaviorTreeDemo.Police
 
         public void StopMovement()
         {
-            EnsureReferences();
+            EnsureMovementReferences();
 
             if (NavMeshAgent == null)
             {
@@ -775,10 +815,7 @@ namespace BehaviorTreeDemo.Police
 
         private void EnsureReferences()
         {
-            if (Self == null)
-            {
-                Self = transform;
-            }
+            EnsureMovementReferences();
 
             if (EyePoint == null)
             {
@@ -795,13 +832,21 @@ namespace BehaviorTreeDemo.Police
                 PoliceBlackboard = gameObject.AddComponent<PoliceBlackboard>();
             }
 
+            TryResolvePlayerState();
+            ResolveSuspicionReferences();
+        }
+
+        private void EnsureMovementReferences()
+        {
+            if (Self == null)
+            {
+                Self = transform;
+            }
+
             if (NavMeshAgent == null)
             {
                 NavMeshAgent = GetComponent<NavMeshAgent>();
             }
-
-            TryResolvePlayerState();
-            ResolveSuspicionReferences();
         }
 
         private void ResolveSuspicionReferences()

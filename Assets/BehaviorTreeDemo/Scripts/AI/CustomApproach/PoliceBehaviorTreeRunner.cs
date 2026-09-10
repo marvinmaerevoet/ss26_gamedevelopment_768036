@@ -87,7 +87,6 @@ namespace BehaviorTreeDemo.AI.CustomApproach
             }
 
             nextTickTime = Time.time + Mathf.Max(0.01f, tickInterval);
-            context.RefreshPerception();
             TickTree();
         }
 

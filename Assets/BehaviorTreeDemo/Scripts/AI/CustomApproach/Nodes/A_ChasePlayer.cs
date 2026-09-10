@@ -45,8 +45,12 @@ namespace BehaviorTreeDemo.AI.CustomApproach.Nodes
             }
 
             blackboard.CurrentBehaviorMode = PoliceBehaviorMode.Chase;
-            blackboard.LastKnownPlayerPosition = blackboard.Player.position;
-            blackboard.HasLastKnownPlayerPosition = true;
+
+            if (!blackboard.HasLastKnownPlayerPosition)
+            {
+                context.StopMovement();
+                return BTStatus.Failure;
+            }
 
             if (blackboard.PlayerInArrestRange)
             {
@@ -55,7 +59,7 @@ namespace BehaviorTreeDemo.AI.CustomApproach.Nodes
             }
 
             context.SetMovementMode(PoliceMovementMode.Run);
-            if (!context.TrySetDestination(blackboard.Player.position))
+            if (!context.TrySetDestination(blackboard.LastKnownPlayerPosition))
             {
                 return BTStatus.Failure;
             }

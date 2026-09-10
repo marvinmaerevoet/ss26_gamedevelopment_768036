@@ -10,7 +10,19 @@ Jeder Decision-Adapter muss dieselbe gemeinsame Szene, dieselben `PoliceAIContex
 - Sichtwinkel: `90°`.
 - Alle vier Sheriffs verwenden dieselbe Obstacle-Maske und dieselbe Line-of-Sight-Regel.
 - Eigene Sheriff- und Player-Child-Collider blockieren den Ray nicht; andere Treffer der Weltgeometrie blockieren Sicht.
-- Jeder Adapter verarbeitet pro Decision-Tick genau einen durch `PoliceAIContext.RefreshPerception()` erzeugten Snapshot.
+- Jeder Adapter liest ausschliesslich den aktuellen, durch seinen `PoliceAIContext` erzeugten Perception-Snapshot.
+
+## Decision Timing Contract
+
+- Shared Perception wird pro Sheriff durch dessen eigenen `PoliceAIContext` mit einem festen Intervall von `0.1 s` (`10 Hz`) aktualisiert.
+- Jeder Refresh schreibt genau einen autoritativen Snapshot fuer Sichtbarkeit, Suspicion, Arrest-Reichweite und letzte relevante Player-Position in das gemeinsame `PoliceBlackboard`.
+- Decision-Adapter und einzelne Nodes duerfen Shared Perception weder selbst refreshen noch diese fachlichen Werte erneut aus Live-Weltdaten berechnen.
+- Zwischen zwei Refreshes lesen auch schneller evaluierende Adapter denselben Snapshot und erhalten dadurch keine neueren Perception-Daten.
+- Tree-/Graph-Evaluation darf weiterhin systemtypisch und nativ laufen. CustomApproach, GitAmend, UnityBehavior, BehaviorDesigner und GameCreatorBehavior muessen intern nicht auf `10 Hz` gezwungen werden.
+- Shared zeitabhaengige Operationen verwenden reale Dauer in Sekunden statt Adapter- oder Decision-Tickzahlen.
+- NavMesh-Bewegung, Animation, Kamera, UI, Fade und kontinuierliche Presentation duerfen weiterhin framebasiert laufen.
+
+Die native Ausfuehrungsweise gehoert zur Implementierung des jeweiligen Decision-Systems. Fairness entsteht durch identische Shared Inputs, gemeinsame Gameplay-Regeln und gemeinsame Actions; eine kuenstlich identische interne Tickrate wuerde diesen Systemunterschied verdecken.
 
 ### Suspicion und Chase
 
