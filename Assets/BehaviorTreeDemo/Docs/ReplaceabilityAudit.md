@@ -8,6 +8,8 @@ Der gemeinsame Code besitzt keine Source-Abhaengigkeit auf `BehaviorTreeDemo.AI.
 
 Die verbleibenden Punkte liegen in der Scene-Verkabelung und in fehlender Assembly-Grenze: Ohne `.asmdef` erzwingt der Compiler die Richtung Shared → Adapter nicht dauerhaft, und die Hauptszene referenziert den konkreten Adapter weiterhin erwartungsgemaess.
 
+Die Hauptszene ist vollstaendig verdrahtet. Ein separates Custom-Approach-Setup-MonoBehaviour oder Bootstrap-Script ist fuer Runtime und Authoring nicht erforderlich.
+
 ## Wenn `Scripts/AI/CustomApproach/` entfernt wird
 
 ### Compilation
@@ -21,7 +23,6 @@ Die verbleibenden Punkte liegen in der Scene-Verkabelung und in fehlender Assemb
 - Vier `PoliceBehaviorTreeRunner`-Komponenten durch je einen neuen `PoliceDecisionController`-Adapter ersetzen.
 - Die primäre und die drei zusaetzlichen Decision-Controller-Referenzen am `DemoReset` auf diese vier Komponenten setzen.
 - `CustomApproachBehaviorTreeDebugUI` entfernen oder durch ein adaptereigenes Diagnose-UI ersetzen.
-- `CustomApproachSceneSetup` entfernen oder durch einen passenden Authoring-Helfer ersetzen; es ist nicht fuer das Runtime-Gameplay erforderlich.
 - `PoliceAIContext`, `PoliceBlackboard`, NavMeshAgent, Animator, Vision Light, Player-, Mission- und UI-Referenzen bleiben bestehen.
 
 ### Noch Custom-spezifische Entscheidungen

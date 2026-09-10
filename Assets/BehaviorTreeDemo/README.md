@@ -41,7 +41,7 @@ Gemeinsamer Code importiert keine Typen aus `BehaviorTreeDemo.AI.CustomApproach`
 
 `Player.controller`, `Sheriff.controller` und `Lydia.controller` sind handgepflegte Demo-Assets. `BasicAnimationDriver` verwendet beim Sheriff `NavMeshAgent.velocity.magnitude` und gemeinsame Police-Zustaende; beim Player verwendet er Player-State und Eingabe. Arrest-, Investigate- und Release-Praesentation bleiben BT-unabhaengig.
 
-Der Menuepunkt `Tools/Behavior Tree Demo/Bootstrap Animator Controllers (Empty Demo Only)` verweigert das Ueberschreiben vorhandener Controller. `CustomApproachSceneSetup` ist ebenfalls nur ein selektiver Authoring-Helfer fuer leere oder kleine Test-Setups und kein Rebuilder der Hauptszene.
+Der Menuepunkt `Tools/Behavior Tree Demo/Bootstrap Animator Controllers (Empty Demo Only)` verweigert das Ueberschreiben vorhandener Controller. Die Hauptszene ist vollstaendig verdrahtet und benoetigt kein separates Custom-Approach-Setup-MonoBehaviour.
 
 ## Blackboard und Adapter-Debug
 

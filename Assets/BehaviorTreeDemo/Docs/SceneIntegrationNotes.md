@@ -9,6 +9,7 @@ These findings apply to `Assets/BehaviorTreeDemo/Scenes/BehaviorTreeDemo.unity`.
 - Enabled the existing third-person camera collision feature for normal raycast layers. The camera ignores colliders below its Player target.
 - Removed the ineffective `Global Volume` Scene object. The project uses the Built-in Render Pipeline, the camera has no volume/post-processing consumer, and the referenced Synty profile was therefore not applied.
 - Removed the obsolete `Restricted Area` trigger, its project-owned component, and its unused Player state. Suspicion remains exclusively tied to carrying the configured MissionCrate.
+- Removed the obsolete `Custom Approach Setup` Scene object and its editor-only bootstrap component. The finished Scene is fully wired without it.
 
 ## Deliberately unchanged
 
