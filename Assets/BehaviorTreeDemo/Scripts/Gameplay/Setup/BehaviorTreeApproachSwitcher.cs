@@ -37,6 +37,10 @@ namespace BehaviorTreeDemo.Gameplay.Setup
             {
                 ReloadWith(BehaviorTreeApproach.GitAmend);
             }
+            else if (keyboard.f3Key.wasPressedThisFrame)
+            {
+                ReloadWith(BehaviorTreeApproach.UnityBehavior);
+            }
         }
 
         private void ReloadWith(BehaviorTreeApproach approach)
@@ -61,6 +65,7 @@ namespace BehaviorTreeDemo.Gameplay.Setup
         {
             BehaviorTreeApproach approach = BehaviorTreeApproachSelection.CurrentApproach;
             bool customSelected = approach == BehaviorTreeApproach.CustomApproach;
+            bool gitAmendSelected = approach == BehaviorTreeApproach.GitAmend;
 
             if (customApproachDebugUI != null)
             {
@@ -69,15 +74,28 @@ namespace BehaviorTreeDemo.Gameplay.Setup
 
             if (gitAmendDebugUI != null)
             {
-                gitAmendDebugUI.SetActive(!customSelected);
+                gitAmendDebugUI.SetActive(gitAmendSelected);
             }
 
             if (approachStatusText != null)
             {
                 approachStatusText.text =
                     "ACTIVE APPROACH\n" +
-                    "F1  Custom Approach   F2  GitAmend\n" +
-                    $"Current: {(customSelected ? "Custom Approach" : "GitAmend")}";
+                    "F1  Custom   F2  GitAmend   F3  Unity Behavior\n" +
+                    $"Current: {GetApproachDisplayName(approach)}";
+            }
+        }
+
+        private static string GetApproachDisplayName(BehaviorTreeApproach approach)
+        {
+            switch (approach)
+            {
+                case BehaviorTreeApproach.GitAmend:
+                    return "GitAmend";
+                case BehaviorTreeApproach.UnityBehavior:
+                    return "Unity Behavior";
+                default:
+                    return "Custom Approach";
             }
         }
     }

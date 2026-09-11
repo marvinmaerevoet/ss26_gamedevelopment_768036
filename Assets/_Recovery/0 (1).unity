@@ -37484,7 +37484,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920719309}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07f8dd5ba4fc60349a78e1d33d2c5935, type: 3}
   m_Name: 
@@ -37678,7 +37678,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920719309}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
@@ -37720,7 +37720,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920719309}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5603987a8e4c954458f2f7a4b100ce27, type: 3}
   m_Name: 
@@ -53252,7 +53252,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1268669040}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07f8dd5ba4fc60349a78e1d33d2c5935, type: 3}
   m_Name: 
@@ -53292,7 +53292,7 @@ MonoBehaviour:
   arrestRange: 2
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 51
+    m_Bits: 4294967291
   playerCarryController: {fileID: 439849592}
   suspiciousCarryable: {fileID: 2111562124}
   lowHealthDemoToggle: 0
@@ -53411,7 +53411,7 @@ MonoBehaviour:
   - approach: 1
     controller: {fileID: 1268669051}
   - approach: 2
-    controller: {fileID: 1268669052}
+    controller: {fileID: 0}
 --- !u!114 &1268669051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53432,7 +53432,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1268669040}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5603987a8e4c954458f2f7a4b100ce27, type: 3}
   m_Name: 
@@ -53446,41 +53446,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1268669040}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraphAgent
-  m_Graph: {fileID: -8977641878226150490, guid: 320076a24ff8425498c0fe402d8d0584, type: 2}
-  m_BlackboardVariableOverridesList:
-  - rid: 6587714281335422980
-  - rid: 6587714281335422981
-  m_OriginalGraph: {fileID: -8977641878226150490, guid: 320076a24ff8425498c0fe402d8d0584, type: 2}
+  m_Graph: {fileID: 0}
+  m_BlackboardVariableOverridesList: []
+  m_OriginalGraph: {fileID: 0}
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
     version: 2
-    RefIds:
-    - rid: 6587714281335422980
-      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 1
-          m_Value1: 0
-        Name: Self
-        m_Value: {fileID: 1268669040}
-    - rid: 6587714281335422981
-      type: {class: 'BlackboardVariable`1[[System.Collections.Generic.List`1[[UnityEngine.GameObject, UnityEngine.CoreModule]], mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 14172685503444939772
-          m_Value1: 18248640981591291547
-        Name: Waypoints
-        m_Value:
-        - {fileID: 826041755}
-        - {fileID: 83570975}
-        - {fileID: 1887785969}
-        - {fileID: 900862266}
+    RefIds: []
 --- !u!1001 &1269379633
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -58976,7 +58954,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1391683329}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07f8dd5ba4fc60349a78e1d33d2c5935, type: 3}
   m_Name: 
@@ -59016,7 +58994,7 @@ MonoBehaviour:
   arrestRange: 2
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 51
+    m_Bits: 4294967291
   playerCarryController: {fileID: 439849592}
   suspiciousCarryable: {fileID: 2111562124}
   lowHealthDemoToggle: 0
@@ -59135,7 +59113,7 @@ MonoBehaviour:
   - approach: 1
     controller: {fileID: 1391683340}
   - approach: 2
-    controller: {fileID: 1391683341}
+    controller: {fileID: 0}
 --- !u!114 &1391683340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59156,7 +59134,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1391683329}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5603987a8e4c954458f2f7a4b100ce27, type: 3}
   m_Name: 
@@ -59170,41 +59148,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1391683329}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraphAgent
-  m_Graph: {fileID: -8977641878226150490, guid: 320076a24ff8425498c0fe402d8d0584, type: 2}
-  m_BlackboardVariableOverridesList:
-  - rid: 6587714281335422976
-  - rid: 6587714281335422977
+  m_Graph: {fileID: 0}
+  m_BlackboardVariableOverridesList: []
   m_OriginalGraph: {fileID: 0}
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
     version: 2
-    RefIds:
-    - rid: 6587714281335422976
-      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 1
-          m_Value1: 0
-        Name: Self
-        m_Value: {fileID: 1391683329}
-    - rid: 6587714281335422977
-      type: {class: 'BlackboardVariable`1[[System.Collections.Generic.List`1[[UnityEngine.GameObject, UnityEngine.CoreModule]], mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 14172685503444939772
-          m_Value1: 18248640981591291547
-        Name: Waypoints
-        m_Value:
-        - {fileID: 826041755}
-        - {fileID: 83570975}
-        - {fileID: 1887785969}
-        - {fileID: 900862266}
+    RefIds: []
 --- !u!1 &1395588998
 GameObject:
   m_ObjectHideFlags: 0
@@ -91423,7 +91379,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2100151250}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07f8dd5ba4fc60349a78e1d33d2c5935, type: 3}
   m_Name: 
@@ -91582,7 +91538,7 @@ MonoBehaviour:
   - approach: 1
     controller: {fileID: 2100151261}
   - approach: 2
-    controller: {fileID: 2100151262}
+    controller: {fileID: 0}
 --- !u!114 &2100151261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91603,7 +91559,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2100151250}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5603987a8e4c954458f2f7a4b100ce27, type: 3}
   m_Name: 
@@ -91617,41 +91573,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2100151250}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraphAgent
-  m_Graph: {fileID: -8977641878226150490, guid: 320076a24ff8425498c0fe402d8d0584, type: 2}
-  m_BlackboardVariableOverridesList:
-  - rid: 6587714281335422978
-  - rid: 6587714281335422979
-  m_OriginalGraph: {fileID: -8977641878226150490, guid: 320076a24ff8425498c0fe402d8d0584, type: 2}
+  m_Graph: {fileID: 0}
+  m_BlackboardVariableOverridesList: []
+  m_OriginalGraph: {fileID: 0}
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
     version: 2
-    RefIds:
-    - rid: 6587714281335422978
-      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 1
-          m_Value1: 0
-        Name: Self
-        m_Value: {fileID: 2100151250}
-    - rid: 6587714281335422979
-      type: {class: 'BlackboardVariable`1[[System.Collections.Generic.List`1[[UnityEngine.GameObject, UnityEngine.CoreModule]], mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 14172685503444939772
-          m_Value1: 18248640981591291547
-        Name: Waypoints
-        m_Value:
-        - {fileID: 826041755}
-        - {fileID: 83570975}
-        - {fileID: 1887785969}
-        - {fileID: 900862266}
+    RefIds: []
 --- !u!1001 &2100983559
 PrefabInstance:
   m_ObjectHideFlags: 0

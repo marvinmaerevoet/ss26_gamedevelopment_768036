@@ -42,33 +42,52 @@ namespace BehaviorTreeDemo.Police
 
         private void ApplySelection()
         {
-            ActiveApproach = BehaviorTreeApproachSelection.CurrentApproach;
-            ActiveController = null;
+            BehaviorTreeApproach requestedApproach = BehaviorTreeApproachSelection.CurrentApproach;
+            ActiveApproach = requestedApproach;
+            ActiveController = FindLocalController(requestedApproach);
 
-            for (int index = 0; index < controllers.Length; index++)
+            PoliceDecisionController[] localControllers = GetComponents<PoliceDecisionController>();
+
+            // Stop every other local decision layer before the selected one starts.
+            // This also catches stale or accidentally unregistered controllers.
+            for (int index = 0; index < localControllers.Length; index++)
             {
-                PoliceDecisionSlot slot = controllers[index];
-                PoliceDecisionController controller = slot?.controller;
-                if (controller == null)
+                PoliceDecisionController controller = localControllers[index];
+                if (controller == null || controller == this || controller == ActiveController)
                 {
                     continue;
                 }
 
-                bool isLocal = controller.gameObject == gameObject;
-                bool shouldEnable = isLocal && ActiveController == null && slot.approach == ActiveApproach;
-                controller.enabled = shouldEnable;
+                controller.enabled = false;
+            }
 
-                if (shouldEnable)
+            if (ActiveController != null)
+            {
+                ActiveController.enabled = true;
+                warnedMissingController = false;
+                return;
+            }
+
+            if (!warnedMissingController)
+            {
+                Debug.LogWarning($"PoliceDecisionHost on {name} has no local controller for {ActiveApproach}. No decision layer will be activated.", this);
+                warnedMissingController = true;
+            }
+        }
+
+        private PoliceDecisionController FindLocalController(BehaviorTreeApproach approach)
+        {
+            for (int index = 0; index < controllers.Length; index++)
+            {
+                PoliceDecisionSlot slot = controllers[index];
+                PoliceDecisionController controller = slot?.controller;
+                if (controller != null && controller.gameObject == gameObject && slot.approach == approach)
                 {
-                    ActiveController = controller;
+                    return controller;
                 }
             }
 
-            if (ActiveController == null && !warnedMissingController)
-            {
-                Debug.LogWarning($"PoliceDecisionHost on {name} has no local controller for {ActiveApproach}.", this);
-                warnedMissingController = true;
-            }
+            return null;
         }
     }
 }

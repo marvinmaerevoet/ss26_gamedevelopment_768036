@@ -5,7 +5,8 @@ namespace BehaviorTreeDemo.Police
     public enum BehaviorTreeApproach
     {
         CustomApproach = 0,
-        GitAmend = 1
+        GitAmend = 1,
+        UnityBehavior = 2
     }
 
     public static class BehaviorTreeApproachSelection
